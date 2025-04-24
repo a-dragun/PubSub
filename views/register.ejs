@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Register</title>
+    <script>
+        function checkPassword() {
+            const password = document.getElementsByName("password")[0].value;
+            const passwordRepeat = document.getElementsByName("password_repeat")[0].value;
+            const message = document.getElementById("message");
+
+            if (password.length < 8) {
+                message.style.color = "orange";
+                message.textContent = "Password must be at least 8 characters.";
+            } else if (password === passwordRepeat) {
+                message.style.color = "green";
+                message.textContent = "Passwords match!";
+            } else {
+                message.style.color = "red";
+                message.textContent = "Passwords do not match!";
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Register</h1>
+    <form oninput="checkPassword()" method="POST" action="/register">
+        <input type="text" name="name" placeholder="Name" required><br>
+        <input type="email" name="email" placeholder="Email" required><br>
+        <input type="password" name="password" placeholder="Password" required><br>
+        <input type="password" name="password_repeat" placeholder="Repeat Password" required><br>
+        <span id="message"></span><br>
+        <button type="submit">Register</button>
+    </form>
+</body>
+</html>
