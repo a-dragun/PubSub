@@ -4,7 +4,8 @@ const {isAuthenticated} = require("../middleware/authMiddleware")
 
 exports.getAdminDashboard = async (req, res) => {
     let users = await User.find();
-    let questions = await Question.find();
+    let approvedQuestions = await Question.find({status: "approved"})
+    let pendingQuestions = await Question.find({status: "pending"});
     let user = null;
     if (isAuthenticated(req)) {
         const dbUser = await User.findById(req.session.user.id);
@@ -17,9 +18,63 @@ exports.getAdminDashboard = async (req, res) => {
         }
       }
     if(user && user.adminLevel > 0) {
-        res.render("admin/admin_dashboard", {users, questions});
+        res.render("admin/admin_dashboard", {user, users, pendingQuestions, approvedQuestions});
     }
     else {
         res.redirect("/");
     }
+}
+
+exports.postDeleteUser = (req, res) => {
+  const {id} = req.body;
+  deleteUser(id)
+    .then(() => res.status(200)
+    .send('User deleted.'))
+    .catch((err) => res.status(500).send("Failed to delete user"));
+}
+
+exports.postChangeAdminLevel = (req, res) => {
+  const {id, adminLevel} = req.body;
+  updateAdminLevel(id, adminLevel)
+    .then(() => res.status(200)
+    .send('Admin level updated.'))
+    .catch((err) => res.status(500).send("Failed to update admin level."));
+}
+
+exports.postHandleQuestion = (req, res) => {
+  const {id, status} = req.body;
+  handleQuestion(id, status)
+    .then(() => res.status(200)
+    .send('Question status updated.'))
+    .catch((err) => res.status(500).send("Failed to change question status."));
+}
+
+async function deleteUser(id) {
+  try {
+    await User.findById(id).deleteOne();
+    console.log(`Deleting user ${id}`);
+    return Promise.resolve();
+  } catch (e) {
+      print(e);
+  }
+}
+
+async function updateAdminLevel(id, adminLevel) {
+  try {
+    await User.findById(id).updateOne({"adminLevel" : adminLevel});
+    console.log(`Updating user ${id} to admin level ${adminLevel}`);
+    return Promise.resolve();
+  } catch (e) {
+      print(e);
+}
+}
+
+async function handleQuestion(id, status) {
+  try{
+    await Question.findById(id).updateOne({"status": status});
+    console.log(`Updating question ${id} to status ${status}`);
+    return Promise.resolve();
+  } catch (e) {
+      print(e);
+  }
 }

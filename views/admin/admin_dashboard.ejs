@@ -1,10 +1,142 @@
-<% users.forEach (user => { %>
-    <p><%= user.name %></p><br>
+<% users.forEach (u => { %>
+
+    <div id="user-<%= u.id %>">
+        <p><%= u.name %></p>
+        <p><%= u.createdAt %></p>
+        <% if (user.adminLevel > 1) { %>
+            <button onclick="confirmDeleteUser('<%= u.id %>')">Delete user</button>
+            <select onchange="confirmChangeAdminLevel('<%= u.id %>', this)" currentLevel="<%= u.adminLevel %>">
+                <option value="0" <%= u.adminLevel === 0 ? 'selected' : '' %>>Level 0</option>
+                <option value="1" <%= u.adminLevel === 1 ? 'selected' : '' %>>Level 1</option>
+                <option value="2" <%= u.adminLevel === 2 ? 'selected' : '' %>>Level 2</option>
+            </select>
+        <% } %>
+    </div>
+    
+    <button type="submit" id="banUser">Ban user</button>
+    <button type="submit" id="muteUser">Mute user</button>
+    <br>
     <%}) %>
 
+
     <br>
     <br>
 
-    <% questions.forEach (question => { %>
-        <p><%= question.text %></p><br>
-        <%}) %>
+    <% pendingQuestions.forEach (question => { %>
+        <div id="question-<%= question.id %>">
+            <p><%= question.text %></p>
+            <% question.answers.forEach((a) => { %>
+                <p><%= a %></p>
+            <% }) %>
+            <button onclick="handleQuestion('<%= question.id %>', 'approved')">Approve</button>
+            <button onclick="handleQuestion('<%= question.id %>', 'deleted')">Delete</button>
+        </div>
+        
+    <%}) %>
+
+    <% approvedQuestions.forEach (question => { %>
+        <div id="question-<%= question.id %>">
+            <p><%= question.text %></p>
+            <% question.answers.forEach((a) => { %>
+                <p><%= a %></p>
+            <% }) %>
+            <button onclick="confirmDeleteQuestion('<%= question.id %>', 'deleted')">Delete</button>
+        </div>
+        
+    <%}) %>
+
+    
+
+<script>
+
+    function confirmDeleteQuestion(questionId, status) {
+        if(confirm("Are you sure you want to delete this question?")) {
+            handleQuestion(questionId, status);
+        } else {
+            console.log("Question deletion cancelled.");
+        }
+    }
+
+    function confirmDeleteUser(userId) {
+        if(confirm("Are you sure you want to delete this user?")) {
+            deleteUser(userId);
+        } else {
+            console.log("User deletion cancelled.");
+        }
+    }
+
+    function confirmChangeAdminLevel(userId, element) {
+        const adminLevel = element.value;
+        const currentLevel = element.getAttribute('currentLevel');
+        if(confirm(`Are you sure you want to give admin level ${adminLevel} to this user?`)) {
+            changeAdminLevel(userId, adminLevel);
+            element.setAttribute('currentLevel', adminLevel);
+        } else {
+            element.value = currentLevel;
+            console.log(`Admin level to user with id ${userId} updated to level ${adminLevel}.`);
+        }
+    }
+    
+    function deleteUser(userId) {
+        fetch('admin/delete-user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({id: userId}),
+        })
+        .then((response) => {
+            if(response.ok) {
+                document.getElementById(`user-${userId}`).remove();
+                console.log(`User %{userId} deleted`);
+            } else {
+                console.error('Failed to delete user.');
+            }
+        })
+        .catch((error) => console.error('Error:', error));
+    }
+
+    function changeAdminLevel(userId, newLevel) {
+        fetch('/admin/change-admin-level', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id: userId, adminLevel: newLevel }),
+        })
+        .then((response) => {
+            if (response.ok) {
+                console.log(`User ${userId} admin level updated to ${newLevel}.`);
+            } else {
+                console.error('Failed to update admin level.');
+            }
+        })
+        .catch((error) => console.error('Error:', error));
+    }
+
+
+    function handleQuestion(questionId, action) {
+        fetch('/admin/handle-question', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id: questionId, status: action }),
+        })
+        .then((response) => {
+            if (response.ok) {
+                if (action === 'approved') {
+                    document.getElementById(`question-${questionId}`).innerHTML =
+                        `<p>Question approved.</p>`;
+                } else if (action === 'deleted') {
+                    document.getElementById(`question-${questionId}`).innerHTML =
+                    `<p>Question deleted.</p>`;
+                }
+                console.log(`Question ${questionId} ${action}.`);
+            } else {
+                console.error('Failed to handle question.');
+            }
+        })
+        .catch((error) => console.error('Error:', error));
+    }
+</script>

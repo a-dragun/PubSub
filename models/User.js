@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  adminLevel: { type: Number, default: 0, required: true },
+  adminLevel: { type: Number, enum: [0, 1, 2], default: 0, required: true },
   totalScore: { type: Number, default: 0 },
   friends: { type: [mongoose.Schema.Types.ObjectId], ref: "User", default: [] },
   questionsApproved: { type: Number, default: 0 },
