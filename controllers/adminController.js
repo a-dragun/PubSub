@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const Question = require("../models/Question")
-const {isAuthenticated} = require("../middleware/authMiddleware")
+const {isAuthenticated, checkAdminLevel} = require("../middleware/authMiddleware")
 
 exports.getAdminDashboard = async (req, res) => {
     let users = await User.find();
@@ -26,19 +26,29 @@ exports.getAdminDashboard = async (req, res) => {
 }
 
 exports.postDeleteUser = (req, res) => {
-  const {id} = req.body;
-  deleteUser(id)
-    .then(() => res.status(200)
-    .send('User deleted.'))
-    .catch((err) => res.status(500).send("Failed to delete user"));
+  if(checkAdminLevel(req, 2)) { 
+    const {id} = req.body;
+    deleteUser(id)
+      .then(() => res.status(200)
+      .send('User deleted.'))
+      .catch((err) => res.status(500).send("Failed to delete user"));
+  }
+  else {
+    res.status(500).send("Failed to delete user");
+  }
 }
 
 exports.postChangeAdminLevel = (req, res) => {
-  const {id, adminLevel} = req.body;
-  updateAdminLevel(id, adminLevel)
-    .then(() => res.status(200)
-    .send('Admin level updated.'))
-    .catch((err) => res.status(500).send("Failed to update admin level."));
+  if(checkAdminLevel(req, 2)) {
+    const {id, adminLevel} = req.body;
+    updateAdminLevel(id, adminLevel)
+      .then(() => res.status(200)
+      .send('Admin level updated.'))
+      .catch((err) => res.status(500).send("Failed to update admin level."));
+  }
+  else {
+    res.status(500).send("Failed to delete user");
+  }
 }
 
 exports.postHandleQuestion = (req, res) => {

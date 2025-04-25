@@ -10,10 +10,10 @@
                 <option value="1" <%= u.adminLevel === 1 ? 'selected' : '' %>>Level 1</option>
                 <option value="2" <%= u.adminLevel === 2 ? 'selected' : '' %>>Level 2</option>
             </select>
+            <button type="submit" id="banUser">Ban user</button>
         <% } %>
     </div>
     
-    <button type="submit" id="banUser">Ban user</button>
     <button type="submit" id="muteUser">Mute user</button>
     <br>
     <%}) %>
