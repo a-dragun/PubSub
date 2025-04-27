@@ -6,7 +6,7 @@ exports.getCreateQuestion = async (req, res) => {
 
     if(isAuthenticated(req)) {res.render("questions/create_question");}
     else {
-        res.redirect("/");
+        res.redirect("/auth/login");
     }
 };
 
@@ -19,9 +19,9 @@ exports.postCreateQuestion = async (req, res) => {
   } catch (error) {
     res.send("Error: " + error.message);
   }
-  res.redirect("/questions/create");
+  res.redirect("/questions/new");
 }
 else {
-  res.redirect("/");
+  res.redirect("/auth/login");
 }
 };

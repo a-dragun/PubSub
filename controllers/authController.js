@@ -2,27 +2,10 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const { isAuthenticated, blockAuthenticatedPost } = require("../middleware/authMiddleware");
 
-exports.getHome = async (req, res) => {
-  let user = null;
-  if (req.session && req.session.user) {
-    const dbUser = await User.findById(req.session.user.id);
-    if (dbUser) {
-      user = {
-        id: dbUser._id,
-        name: dbUser.name,
-        adminLevel: dbUser.adminLevel
-      };
-      
-    }
-  }
-
-  res.render("home", { user });
-};
-
 
 exports.getRegister = (req, res) => {
   if(!isAuthenticated(req))
-    res.render("register");
+    res.render("auth/register");
   else
     res.redirect("/");
 };
@@ -46,7 +29,7 @@ exports.postRegister = async (req, res) => {
 
 exports.getLogin = (req, res) => {
   if(!isAuthenticated(req))
-    res.render("login");
+    res.render("auth/login");
   else
     res.redirect("/");
 };
@@ -63,6 +46,6 @@ exports.postLogin = [blockAuthenticatedPost, async (req, res) => {
   res.redirect("/");
 }];
 
-exports.getLogout = (req, res) => {
+exports.postLogout = (req, res) => {
   req.session.destroy(() => res.redirect("/"));
 };

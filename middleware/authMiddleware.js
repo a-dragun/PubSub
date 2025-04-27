@@ -1,3 +1,5 @@
+const User = require("../models/User")
+
 function isAuthenticated(req) {
     if (req.session.user != null) {
         return true;
@@ -19,7 +21,7 @@ async function checkAdminLevel(req, adminLevel) {
         if (dbUser) {
             userAdminLevel = dbUser.adminLevel;
         }
-        if(userAdminLevel && userAdminLevel > adminLevel) {
+        if(userAdminLevel && userAdminLevel >= adminLevel) {
             return true;
         }
         else {

@@ -1,6 +1,7 @@
 const express = require("express");
 const session = require("express-session");
 const mongoose = require("mongoose");
+const indexRoutes = require("./routes/index");
 const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
 const questionRoutes = require("./routes/questions");
@@ -26,7 +27,8 @@ mongoose
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-app.use("/", authRoutes);
+app.use("/", indexRoutes);
+app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
 app.use("/questions", questionRoutes);
 
