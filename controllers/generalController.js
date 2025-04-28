@@ -14,5 +14,5 @@ exports.getHome = async (req, res) => {
       }
     }
   
-    res.render("home", { user });
+    return res.render("home", { user });
   };

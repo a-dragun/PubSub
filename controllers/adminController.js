@@ -1,90 +1,127 @@
 const User = require("../models/User");
 const Question = require("../models/Question")
-const {isAuthenticated, checkAdminLevel} = require("../middleware/authMiddleware")
 
 exports.getAdminDashboard = async (req, res) => {
     let users = await User.find();
     let approvedQuestions = await Question.find({status: "approved"})
     let pendingQuestions = await Question.find({status: "pending"});
-    let user = null;
-    if (isAuthenticated(req)) {
-        const dbUser = await User.findById(req.session.user.id);
-        if (dbUser) {
-          user = {
-            id: dbUser._id,
-            name: dbUser.name,
-            adminLevel: dbUser.adminLevel
-          };
-        }
-      }
-    if(user && user.adminLevel > 0) {
-        res.render("admin/admin_dashboard", {user, users, pendingQuestions, approvedQuestions});
-    }
-    else {
-        res.redirect("/");
-    }
+    return res.render("admin/admin_dashboard", {users, pendingQuestions, approvedQuestions});
 }
 
-exports.postDeleteUser = (req, res) => {
-  if(checkAdminLevel(req, 2)) { 
-    const {id} = req.body;
-    deleteUser(id)
-      .then(() => res.status(200)
-      .send('User deleted.'))
-      .catch((err) => res.status(500).send("Failed to delete user"));
-  }
-  else {
-    res.status(500).send("Failed to delete user");
-  }
+exports.getUsers = async(req, res) => {
+  let users = await User.find();
+  return res.render("admin/users/index", {users});
 }
 
-exports.postChangeAdminLevel = (req, res) => {
-  if(checkAdminLevel(req, 2)) {
-    const {id, adminLevel} = req.body;
-    updateAdminLevel(id, adminLevel)
-      .then(() => res.status(200)
-      .send('Admin level updated.'))
-      .catch((err) => res.status(500).send("Failed to update admin level."));
-  }
-  else {
-    res.status(500).send("Failed to delete user");
-  }
+exports.getQuestions = async(req, res) => {
+  let questions = await Question.find();
+  return res.render("admin/questions/index", {questions});
 }
 
-exports.postHandleQuestion = (req, res) => {
-  const {id, status} = req.body;
-  handleQuestion(id, status)
-    .then(() => res.status(200)
-    .send('Question status updated.'))
-    .catch((err) => res.status(500).send("Failed to change question status."));
+exports.getUser = async(req, res) => {
+  let userId = req.params.id;
+  user = await User.findById(userId);
+  return res.render("admin/users/user", {user});
 }
 
-async function deleteUser(id) {
+exports.getQuestion = async(req, res) => {
+  let questionId = req.params.id;
+  question = await Question.findById(questionId);
+  return res.render("admin/questions/question", {question});
+}
+
+exports.patchUsers = async (req, res) => {
   try {
-    await User.findById(id).deleteOne();
-    console.log(`Deleting user ${id}`);
-    return Promise.resolve();
-  } catch (e) {
-      print(e);
+    const updates = req.body.users;
+
+    if (!Array.isArray(updates)) {
+      return res.status(400).json({ message: "Invalid users payload" });
+    }
+
+    const updatePromises = updates.map(userUpdate => {
+      const { id, ...changes } = userUpdate;
+      if (!id) return Promise.resolve();
+      return User.findByIdAndUpdate(id, changes, { new: true });
+    });
+
+    await Promise.all(updatePromises);
+
+    return res.json({ message: "Users updated successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.patchQuestions = async (req, res) => {
+  try {
+    const updates = req.body.questions;
+
+    if (!Array.isArray(updates)) {
+      return res.status(400).json({ message: "Invalid questions payload" });
+    }
+
+    const updatePromises = updates.map(questionUpdate => {
+      const { id, ...changes } = questionUpdate;
+      if (!id) return Promise.resolve();
+      return Question.findByIdAndUpdate(id, changes, { new: true });
+    });
+
+    await Promise.all(updatePromises);
+
+    return res.json({ message: "Questions updated successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.patchUser = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const updates = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(id, updates, { new: true });
+
+    return res.json({ message: "User updated successfully", user: updatedUser });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.patchQuestion = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const updates = req.body;
+
+    const updatedQuestion = await Question.findByIdAndUpdate(id, updates, { new: true });
+
+    return res.json({ message: "Question updated successfully", user: updatedQuestion });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.deleteQuestion = async (req, res) => {
+  try {
+    const id = req.params.id;
+    await Question.findByIdAndDelete(id);
+    return res.json({message: "Question deleted successfuly"});
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
   }
 }
 
-async function updateAdminLevel(id, adminLevel) {
+exports.deleteUser = async (req, res) => {
   try {
-    await User.findById(id).updateOne({"adminLevel" : adminLevel});
-    console.log(`Updating user ${id} to admin level ${adminLevel}`);
-    return Promise.resolve();
-  } catch (e) {
-      print(e);
-}
-}
-
-async function handleQuestion(id, status) {
-  try{
-    await Question.findById(id).updateOne({"status": status});
-    console.log(`Updating question ${id} to status ${status}`);
-    return Promise.resolve();
-  } catch (e) {
-      print(e);
+    const id = req.params.id;
+    await User.findByIdAndDelete(id);
+    return res.json({message: "User deleted successfuly"});
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
   }
 }

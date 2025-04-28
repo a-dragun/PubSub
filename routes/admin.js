@@ -1,10 +1,20 @@
 const express = require("express");
 const router = express.Router();
 const adminController = require("../controllers/adminController");
+const authMiddleware = require("../middleware/authMiddleware");
 
 router.get("/dashboard", adminController.getAdminDashboard);
-router.post("/delete-user", adminController.postDeleteUser);
-router.post("/change-admin-level", adminController.postChangeAdminLevel);
-router.post("/handle-question", adminController.postHandleQuestion);
+router.get("/users", adminController.getUsers);
+router.get("/questions", adminController.getQuestions);
+router.get("/users/:id", adminController.getUser);
+router.get("/questions/:id", adminController.getQuestion);
+
+router.patch("/users", adminController.patchUsers);
+router.patch("/questions", adminController.patchQuestions);
+router.patch("/users/:id", adminController.patchUser);
+router.patch("/questions/:id", adminController.patchQuestion);
+
+router.delete("/users/:id", authMiddleware.checkAdminLevel(2), adminController.deleteUser);
+router.delete("/questions/:id", authMiddleware.checkAdminLevel(2), adminController.deleteQuestion);
 
 module.exports = router;

@@ -5,6 +5,7 @@ const indexRoutes = require("./routes/index");
 const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
 const questionRoutes = require("./routes/questions");
+const authMiddleware = require("./middleware/authMiddleware");
 
 require("dotenv").config();
 
@@ -29,7 +30,7 @@ mongoose
 
 app.use("/", indexRoutes);
 app.use("/auth", authRoutes);
-app.use("/admin", adminRoutes);
-app.use("/questions", questionRoutes);
+app.use("/admin", authMiddleware.requireAuth, authMiddleware.checkAdminLevel(1), adminRoutes);
+app.use("/questions", authMiddleware.requireAuth, questionRoutes);
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
