@@ -2,35 +2,55 @@ const User = require("../models/User");
 const Question = require("../models/Question")
 
 exports.getAdminDashboard = async (req, res) => {
-    let users = await User.find();
-    let approvedQuestions = await Question.find({status: "approved"})
-    let pendingQuestions = await Question.find({status: "pending"});
-    return res.render("admin/admin_dashboard", {users, pendingQuestions, approvedQuestions});
+  try{
+      let users = await User.find();
+      let approvedQuestions = await Question.find({status: "approved"})
+      let pendingQuestions = await Question.find({status: "pending"});
+      return res.render("admin/admin_dashboard", {users, pendingQuestions, approvedQuestions});
+  } catch (error) {
+    return res.send("Error: " + error.message);
+  }
 }
 
 exports.getUsers = async(req, res) => {
-  let users = await User.find();
-  return res.render("admin/users/index", {users});
+  try {
+    let users = await User.find();
+    return res.render("admin/users/index", {users});
+  } catch (error) {
+    return res.send("Error: " + error.message);
+  }
 }
 
 exports.getQuestions = async(req, res) => {
-  let questions = await Question.find();
-  return res.render("admin/questions/index", {questions});
+  try {
+    let questions = await Question.find();
+    return res.render("admin/questions/index", {questions});
+  } catch (error) {
+    return res.send("Error: " + error.message);
+  }
 }
 
 exports.getUser = async(req, res) => {
-  let userId = req.params.id;
-  user = await User.findById(userId);
-  return res.render("admin/users/user", {user});
+  try {
+    let userId = req.params.id;
+    let user = await User.findById(userId);
+    return res.render("admin/users/user", {user});
+  } catch (error) {
+    return res.send("Error: " + error.message);
+  }
 }
 
 exports.getQuestion = async(req, res) => {
-  let questionId = req.params.id;
-  question = await Question.findById(questionId);
-  return res.render("admin/questions/question", {question});
+  try {
+    let questionId = req.params.id;
+    question = await Question.findById(questionId);
+    return res.render("admin/questions/question", {question});
+  } catch (error) {
+    return res.send("Error: " + error.message);
+  }
 }
 
-exports.patchUsers = async (req, res) => {
+exports.putUsers = async (req, res) => {
   try {
     const updates = req.body.users;
 
@@ -48,12 +68,11 @@ exports.patchUsers = async (req, res) => {
 
     return res.json({ message: "Users updated successfully" });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Server error" });
+    return res.send("Error: " + error.message);
   }
-};
+}
 
-exports.patchQuestions = async (req, res) => {
+exports.putQuestions = async (req, res) => {
   try {
     const updates = req.body.questions;
 
@@ -71,12 +90,11 @@ exports.patchQuestions = async (req, res) => {
 
     return res.json({ message: "Questions updated successfully" });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Server error" });
+    return res.send("Error: " + error.message);
   }
-};
+}
 
-exports.patchUser = async (req, res) => {
+exports.putUser = async (req, res) => {
   try {
     const id = req.params.id;
     const updates = req.body;
@@ -85,12 +103,11 @@ exports.patchUser = async (req, res) => {
 
     return res.json({ message: "User updated successfully", user: updatedUser });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Server error" });
+    return res.send("Error: " + error.message);
   }
-};
+}
 
-exports.patchQuestion = async (req, res) => {
+exports.putQuestion = async (req, res) => {
   try {
     const id = req.params.id;
     const updates = req.body;
@@ -99,10 +116,9 @@ exports.patchQuestion = async (req, res) => {
 
     return res.json({ message: "Question updated successfully", user: updatedQuestion });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Server error" });
+    return res.send("Error: " + error.message);
   }
-};
+}
 
 exports.deleteQuestion = async (req, res) => {
   try {
@@ -110,8 +126,7 @@ exports.deleteQuestion = async (req, res) => {
     await Question.findByIdAndDelete(id);
     return res.json({message: "Question deleted successfuly"});
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Server error" });
+    return res.send("Error: " + error.message);
   }
 }
 
@@ -121,7 +136,6 @@ exports.deleteUser = async (req, res) => {
     await User.findByIdAndDelete(id);
     return res.json({message: "User deleted successfuly"});
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Server error" });
+    return res.send("Error: " + error.message);
   }
 }

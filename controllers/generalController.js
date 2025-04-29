@@ -1,6 +1,7 @@
 const User = require("../models/User");
 
 exports.getHome = async (req, res) => {
+  try {
     let user = null;
     if (req.session && req.session.user) {
       const dbUser = await User.findById(req.session.user.id);
@@ -15,4 +16,7 @@ exports.getHome = async (req, res) => {
     }
   
     return res.render("home", { user });
+  } catch (error) {
+    return res.send("Error: " + error.message);
+  }
   };

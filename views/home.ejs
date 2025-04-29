@@ -10,6 +10,8 @@
         <form action="/auth/logout" method="POST">
             <button type="submit">Logout</button>
         </form>
+
+        <a href="/user/profile">Profile</a>
     
         <% if (user.adminLevel > 0) { %>
             <a href="/admin/dashboard">Admin Dashboard</a>

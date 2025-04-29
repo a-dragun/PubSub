@@ -6,6 +6,7 @@ const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
 const questionRoutes = require("./routes/questions");
 const authMiddleware = require("./middleware/authMiddleware");
+const userRoutes = require("./routes/user");
 
 require("dotenv").config();
 
@@ -32,5 +33,6 @@ app.use("/", indexRoutes);
 app.use("/auth", authRoutes);
 app.use("/admin", authMiddleware.requireAuth, authMiddleware.checkAdminLevel(1), adminRoutes);
 app.use("/questions", authMiddleware.requireAuth, questionRoutes);
+app.use("/user", authMiddleware.requireAuth, userRoutes);
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
