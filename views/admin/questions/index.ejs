@@ -2,6 +2,7 @@
 <% pendingQuestions.forEach(question => { %>
   <div class="question-box">
     <h2> <a href="/admin/questions/<%= question._id %>/"><%= question.text %></a></h2>
+    <p><strong>HINT: </strong> <%= question.hint %></p>
     <p>Answer 1: <%= question.answers[0] %></p>
     <p>Answer 2: <%= question.answers[1] %></p>
     <p>Answer 3: <%= question.answers[2] %></p>
@@ -15,6 +16,7 @@
 <% approvedQuestions.forEach(question => { %>
     <div class="question-box">
       <h2> <a href="/admin/questions/<%= question._id %>/"><%= question.text %></a></h2>
+      <p><strong>HINT: </strong> <%= question.hint %></p>
       <p>Answer 1: <%= question.answers[0] %></p>
       <p>Answer 2: <%= question.answers[1] %></p>
       <p>Answer 3: <%= question.answers[2] %></p>

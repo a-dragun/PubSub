@@ -6,6 +6,7 @@ const questionSchema = new mongoose.Schema({
   text: {type: String, required: true, unique: true},
   answers: {type: [String], required: true},
   status: {type: String, enum: ['approved', 'pending'], required: true},
+  hint: {type: String, default: ""},
   createdAt: {type: Date, default: Date.now, required: true}
 });
 

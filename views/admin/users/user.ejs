@@ -14,7 +14,7 @@
 
 <form method="POST" action="<%= filteredUser.id %>?_method=DELETE">
     <input type="hidden" name="_method" value="DELETE">
-    <button type="submit">Delete user</button>
+    <button type="submit" id="deleteBtn">Delete user</button>
 </form>
 <form action="<%= filteredUser.id %>?_method=PUT" method="POST">
     <input type="hidden" name="_method" value="PUT">
@@ -25,16 +25,21 @@
         <option value="2" <%= filteredUser.adminLevel === 2 ? "selected" : "" %>>Level 2</option>
     </select>
     
-    <button type="submit" id="deleteBtn">Update Admin Level</button>
+    <button type="submit" id="updateAdminBtn">Update Admin Level</button>
 </form>
 
 <script>
-    document.getElementById('deleteBtn').addEventListener('click', function () {
+    document.getElementById('deleteBtn').addEventListener('click', function (e) {
       const confirmed = confirm("Are you sure you want to delete this user?");
-      if (confirmed) {
-        alert("User deleted.");
-      } else {
-        alert("Deletion canceled.");
+      if (!confirmed) {
+        e.preventDefault();
       }
     });
+
+    document.getElementById('updateAdminBtn').addEventListener('click', function (e) {
+        const confirmed = confirm(`Are you sure you want to change admin level of this user?`);
+        if (!confirmed) {
+          e.preventDefault();
+        }
+      });
 </script>

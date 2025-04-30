@@ -13,11 +13,12 @@
 </form>
 
 <script>
-    document.getElementById('deleteBtn').addEventListener('click', function () {
+    document.getElementById('deleteBtn').addEventListener('click', function (e) {
       const confirmed = confirm("Are you sure you want to delete your account?");
       if (confirmed) {
         alert("Account deleted.");
       } else {
+        e.preventDefault();
         alert("Deletion canceled.");
       }
     });

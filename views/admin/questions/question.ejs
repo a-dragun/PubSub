@@ -1,4 +1,5 @@
 <h1><%= question.text %></h2>
+<p><strong>HINT: </strong> <%= question.hint %></p>
 <p>Answer 1: <%= question.answers[0] %></p>
 <p>Answer 2: <%= question.answers[1] %></p>
 <p>Answer 3: <%= question.answers[2] %></p>
@@ -8,22 +9,28 @@
 
 <form method="POST" action="/admin/questions/<%= question.id %>?_method=DELETE">
     <input type="hidden" name="_method" value="DELETE">
-    <button type="submit">Delete Question</button>
+    <button type="submit" id="deleteBtn">Delete Question</button>
 </form>
 
-
-<form method="POST" action="/admin/questions/<%= question.id %>?_method=PUT">
-    <input type="hidden" name="_method" value="PUT">
-    <button type="submit" id="deleteBtn">Approve</button>
-</form>
+<% if (question.status != 'approved') { %>
+    <form method="POST" action="/admin/questions/<%= question.id %>?_method=PUT">
+        <input type="hidden" name="_method" value="PUT">
+        <button type="submit" id="approveBtn">Approve</button>
+    </form>
+<% } %>
 
 <script>
-    document.getElementById('deleteBtn').addEventListener('click', function () {
+    document.getElementById('deleteBtn').addEventListener('click', function (e) {
       const confirmed = confirm("Are you sure you want to delete this question?");
-      if (confirmed) {
-        alert("Question deleted.");
-      } else {
-        alert("Deletion canceled.");
+      if (!confirmed) {
+        e.preventDefault();
       }
     });
+
+    document.getElementById('approveBtn').addEventListener('click', function (e) {
+        const confirmed = confirm("Are you sure you want to approve this question?");
+        if (!confirmed) {
+          e.preventDefault();
+        }
+      });
 </script>
