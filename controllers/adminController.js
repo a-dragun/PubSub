@@ -63,7 +63,7 @@ exports.getQuestion = async(req, res) => {
   }
 }
 
-exports.putUsers = async (req, res) => {
+exports.updateUsers = async (req, res) => {
   try {
 
   } catch (error) {
@@ -71,15 +71,15 @@ exports.putUsers = async (req, res) => {
   }
 }
 
-exports.putQuestions = async (req, res) => {
+exports.updateQuestions = async (req, res) => {
   try {
-    
+
   } catch (error) {
     return res.send("Error: " + error.message);
   }
 }
 
-exports.putUser = async (req, res) => {
+exports.updateUser = async (req, res) => {
   try {
     const id = req.params.id;
     const updates = req.body;
@@ -94,7 +94,7 @@ exports.putUser = async (req, res) => {
   }
 }
 
-exports.putQuestion = async (req, res) => {
+exports.updateQuestion = async (req, res) => {
   try {
     const id = req.params.id;
     await Question.findByIdAndUpdate(id, {"status" : "approved"});

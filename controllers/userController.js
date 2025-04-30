@@ -25,7 +25,7 @@ exports.getProfile = async (req, res) => {
     }
 }
 
-exports.putUser = async (req, res) => {
+exports.editUser = async (req, res) => {
   try {
     const user = req.session.user;
     const id = req.params.id;

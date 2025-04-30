@@ -9,10 +9,10 @@ router.get("/questions", adminController.getQuestions);
 router.get("/users/:id", adminController.getUser);
 router.get("/questions/:id", adminController.getQuestion);
 
-router.put("/users", adminController.putUsers);
-router.put("/questions", adminController.putQuestions);
-router.put("/users/:id", authMiddleware.checkAdminLevel(2), adminController.putUser);
-router.put("/questions/:id", adminController.putQuestion);
+router.put("/users", adminController.updateUsers);
+router.put("/questions", adminController.updateQuestions);
+router.put("/users/:id", authMiddleware.checkAdminLevel(2), adminController.updateUser);
+router.put("/questions/:id", adminController.updateQuestion);
 
 router.delete("/users/:id", authMiddleware.checkAdminLevel(2), adminController.deleteUser);
 router.delete("/questions/:id", authMiddleware.checkAdminLevel(2), adminController.deleteQuestion);

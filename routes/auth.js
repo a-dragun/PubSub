@@ -7,6 +7,6 @@ router.get("/register", authMiddleware.blockAuthenticatedUser, authController.ge
 router.post("/register", authMiddleware.blockAuthenticatedUser, authController.postRegister);
 router.get("/login", authMiddleware.blockAuthenticatedUser, authController.getLogin);
 router.post("/login", authMiddleware.blockAuthenticatedUser, authController.postLogin);
-router.post("/logout", authMiddleware.requireAuth, authController.postLogout);
+router.post("/logout", authMiddleware.requireAuth, authController.logout);
 
 module.exports = router;
