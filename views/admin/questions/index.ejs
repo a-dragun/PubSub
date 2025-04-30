@@ -1,1 +1,26 @@
-question index
+<h1>Pending Questions</h1>
+<% pendingQuestions.forEach(question => { %>
+  <div class="question-box">
+    <h2> <a href="/admin/questions/<%= question._id %>/"><%= question.text %></a></h2>
+    <p>Answer 1: <%= question.answers[0] %></p>
+    <p>Answer 2: <%= question.answers[1] %></p>
+    <p>Answer 3: <%= question.answers[2] %></p>
+    <p>Answer 4: <%= question.answers[3] %></p>
+    <p>Status: <%= question.status %></p>
+  </div>
+  <br>
+<% }); %>
+
+<h1>Approved questions</h1>
+<% approvedQuestions.forEach(question => { %>
+    <div class="question-box">
+      <h2> <a href="/admin/questions/<%= question._id %>/"><%= question.text %></a></h2>
+      <p>Answer 1: <%= question.answers[0] %></p>
+      <p>Answer 2: <%= question.answers[1] %></p>
+      <p>Answer 3: <%= question.answers[2] %></p>
+      <p>Answer 4: <%= question.answers[3] %></p>
+      <p>Status: <%= question.status %></p>
+    </div>
+    <br>
+  <% }); %>
+

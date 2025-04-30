@@ -7,13 +7,15 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   adminLevel: { type: Number, enum: [0, 1, 2], default: 0, required: true },
   totalScore: { type: Number, default: 0 },
-  friends: { type: [mongoose.Schema.Types.ObjectId], ref: "User", default: [] },
   questionsApproved: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
   isActive: { type: Boolean, default: false },
   isMuted: { type: Boolean, default: false },
   isBanned: { type: Boolean, default: false },
-  mailbox: { type: [Object], default: [] },
+  banDuration: {type: Date, default: null},
+  muteDuration: {type: Date, default: null},
+  banReason: {type: String, default: null},
+  muteReason: {type: String, default: null},
 });
 
 userSchema.pre("save", async function (next) {

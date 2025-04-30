@@ -1,4 +1,4 @@
-const User = require("../models/User")
+const User = require("../models/User");
 
 function requireAuth(req, res, next) {
     if (!req.session.user) {
@@ -8,11 +8,12 @@ function requireAuth(req, res, next) {
 }
 
 function checkAdminLevel(requiredLevel) {
-  return (req, res, next) => {
-    const userAdminLevel = req.user && req.user.adminLevel;
+  return async (req, res, next) => {
+    const userId = req.session.user.id;
+    const user = await User.findById(userId);
     
-    if (userAdminLevel < requiredLevel) {
-      res.status(403).send('Forbidden: Insufficient privileges');
+    if (user.adminLevel < requiredLevel) {
+      return res.redirect("/");
     } else {
       next();
     }

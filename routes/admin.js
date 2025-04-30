@@ -11,7 +11,7 @@ router.get("/questions/:id", adminController.getQuestion);
 
 router.put("/users", adminController.putUsers);
 router.put("/questions", adminController.putQuestions);
-router.put("/users/:id", adminController.putUser);
+router.put("/users/:id", authMiddleware.checkAdminLevel(2), adminController.putUser);
 router.put("/questions/:id", adminController.putQuestion);
 
 router.delete("/users/:id", authMiddleware.checkAdminLevel(2), adminController.deleteUser);

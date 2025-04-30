@@ -1,1 +1,18 @@
-question page
+<h1><%= question.text %></h2>
+<p>Answer 1: <%= question.answers[0] %></p>
+<p>Answer 2: <%= question.answers[1] %></p>
+<p>Answer 3: <%= question.answers[2] %></p>
+<p>Answer 4: <%= question.answers[3] %></p>
+<p>Status: <%= question.status %></p>
+<p>Created at: <%= question.createdAt %> by <%= username %></p>
+
+<form method="POST" action="/admin/questions/<%= question.id %>?_method=DELETE">
+    <input type="hidden" name="_method" value="DELETE">
+    <button type="submit">Delete Question</button>
+</form>
+
+
+<form method="POST" action="/admin/questions/<%= question.id %>?_method=PUT">
+    <input type="hidden" name="_method" value="PUT">
+    <button type="submit">Approve</button>
+</form>

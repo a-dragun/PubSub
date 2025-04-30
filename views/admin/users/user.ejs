@@ -1,1 +1,29 @@
-user page
+<h1><%= filteredUser.name %></h1>
+<p>isActive: <%= filteredUser.isActive %></p>
+<p>Created at: <%= filteredUser.createdAt %></p>
+<p>Admin level: <%= filteredUser.adminLevel %></p>
+<p>Total score: <%= filteredUser.totalScore %></p>
+<p>Questions approved: <%= filteredUser.questionsApproved %></p>
+<% if (filteredUser.isBanned) { %>
+    <p>Ban reason: <%= filteredUser.banReason %></p>
+    <p>Ban duration: <%= filteredUser.banDuration %></p>
+<% } else if (filteredUser.isMuted) {  %>
+    <p>Mute reason: <%= filteredUser.muteReason %></p>
+    <p>Mute duration: <%= filteredUser.muteDuration %></p>
+<% } %>
+
+<form method="POST" action="<%= filteredUser.id %>?_method=DELETE">
+    <input type="hidden" name="_method" value="DELETE">
+    <button type="submit">Delete user</button>
+</form>
+<form action="<%= filteredUser.id %>?_method=PUT" method="POST">
+    <input type="hidden" name="_method" value="PUT">
+    <label for="adminLevel">New Admin Level:</label>
+    <select name="adminLevel" id="adminLevel">
+        <option value="0" <%= filteredUser.adminLevel === 0 ? "selected" : "" %>>Level 0</option>
+        <option value="1" <%= filteredUser.adminLevel === 1 ? "selected" : "" %>>Level 1</option>
+        <option value="2" <%= filteredUser.adminLevel === 2 ? "selected" : "" %>>Level 2</option>
+    </select>
+    
+    <button type="submit">Update Admin Level</button>
+</form>

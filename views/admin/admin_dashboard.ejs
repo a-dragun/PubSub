@@ -1,1 +1,37 @@
-dashboard test
+<h2><a href="/admin/users/">All users</a></h2>
+<h2><a href="/admin/questions/">All questions</a></h2>
+
+<h1>Muted users</h1>
+<% mutedUsers.forEach(user => { %>
+    <div class="user-box">
+        <h2><a href="/admin/users/<%= user._id %>/"><%= user.name %></a></h2>
+        <p>isActive: <%= user.isActive %></p>
+        <p>Mute reason: <%= user.muteReason %></p>
+        <p>Mute duration: <%= user.muteDuration %></p>
+    </div>
+    <br>
+<% }); %>
+
+<h1>Banned users</h1>
+<% bannedUsers.forEach(user => { %>
+    <div class="user-box">
+        <h2><a href="/admin/users/<%= user._id %>/"><%= user.name %></a></h2>
+        <p>isActive: <%= user.isActive %></p>
+        <p>Mute reason: <%= user.banReason %></p>
+        <p>Mute duration: <%= user.banDuration %></p>
+    </div>
+    <br>
+<% }); %>
+
+<h1>Pending questions</h1>
+<% pendingQuestions.forEach(question => { %>
+    <div class="question-box">
+        <h2> <a href="/admin/questions/<%= question._id %>/"><%= question.text %></a></h2>
+        <p>Answer 1: <%= question.answers[0] %></p>
+        <p>Answer 2: <%= question.answers[1] %></p>
+        <p>Answer 3: <%= question.answers[2] %></p>
+        <p>Answer 4: <%= question.answers[3] %></p>
+        <p>Status: <%= question.status %></p>
+    </div>
+    <br>
+<% }); %>
