@@ -1,4 +1,24 @@
+<img src="<%= user.profilePicture %>" alt="Profile Picture" width="150">
+
 <p>Tvoj username je: <%= user.name %></p>
 <p>Tvoja email adresa je: <%= user.email %></p>
 <p>Trenutno imas: <%= user.totalScore %> bodova</p>
 <p>Tvoj admin level je: <%= user.adminLevel %></p>
+
+<a href="/user/edit">Edit profile</a>
+
+<form method="POST" action="/user/?_method=DELETE">
+    <input type="hidden" name="_method" value="DELETE">
+    <button type="submit" id="deleteBtn">Delete account</button>
+</form>
+
+<script>
+    document.getElementById('deleteBtn').addEventListener('click', function () {
+      const confirmed = confirm("Are you sure you want to delete your account?");
+      if (confirmed) {
+        alert("Account deleted.");
+      } else {
+        alert("Deletion canceled.");
+      }
+    });
+</script>

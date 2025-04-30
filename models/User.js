@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema({
   muteDuration: {type: Date, default: null},
   banReason: {type: String, default: null},
   muteReason: {type: String, default: null},
+  profilePicture: {type: String, default: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"}
 });
 
 userSchema.pre("save", async function (next) {

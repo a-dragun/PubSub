@@ -14,5 +14,16 @@
 
 <form method="POST" action="/admin/questions/<%= question.id %>?_method=PUT">
     <input type="hidden" name="_method" value="PUT">
-    <button type="submit">Approve</button>
+    <button type="submit" id="deleteBtn">Approve</button>
 </form>
+
+<script>
+    document.getElementById('deleteBtn').addEventListener('click', function () {
+      const confirmed = confirm("Are you sure you want to delete this question?");
+      if (confirmed) {
+        alert("Question deleted.");
+      } else {
+        alert("Deletion canceled.");
+      }
+    });
+</script>

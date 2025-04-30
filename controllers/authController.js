@@ -12,9 +12,9 @@ exports.getRegister = (req, res) => { //user koji je logiran ne smije vidjet reg
 
 exports.postRegister = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    const user = await User.create({ name, email, password });
-    req.session.user = { id: user._id, name: user.name };
+    const { name, email, password, profile_picture } = req.body;
+    const user = await User.create({ name, email, password, profilePicture: profile_picture });
+    req.session.user = { id: user._id, name: user.name, profile_picture };
     return res.redirect("/");
   } catch (error) {
     return res.send("Error: " + error.message);
@@ -38,7 +38,7 @@ exports.postLogin = async (req, res) => {
       return res.send("Invalid email or password");
     }
 
-    req.session.user = { id: user._id, name: user.name };
+    req.session.user = { id: user._id, name: user.name, profilePicture: user.profilePicture };
     return res.redirect("/");
   } catch (error) {
     return res.send("Error: " + error.message);
