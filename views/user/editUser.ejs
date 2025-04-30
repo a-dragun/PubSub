@@ -1,14 +1,5 @@
 <form action="/user/edit?_method=PUT" method="POST">
     <input type="hidden" name="_method" value="PUT">
-
-    
-
-    <p>Tvoj username je: <%= user.name %></p>
-    <p>Tvoja email adresa je: <%= user.email %></p>
-    <p>Trenutno imas: <%= user.totalScore %> bodova</p>
-    <p>Tvoj admin level je: <%= user.adminLevel %></p>
-
-
     <input type="text" name="username" value="<%= user.name %>"><br>
     <input type="password" name="newPassword" placeholder="New Password"><br>
     <input type="password" name="repeatPassword" placeholder="Repeat New Password"><br>
