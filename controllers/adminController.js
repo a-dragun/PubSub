@@ -1,5 +1,7 @@
 const User = require("../models/User");
-const Question = require("../models/Question")
+const Question = require("../models/Question");
+const Room = require('../models/Room');
+const categories = require('../config/categories');
 
 exports.getAdminDashboard = async (req, res) => {
   try{
@@ -146,6 +148,73 @@ exports.bulkUpdate = async (req, res) => {
 
     return res.json({ success: true });
   } catch (error) {
-    return res.json({ success: false, message: error.message });
+    return res.send("Error: " + error.message);
   }
-};
+}
+
+exports.getCreateRoomPage = (req, res) => {
+  try {
+    res.render('admin/rooms/create_room', { categories });
+  } catch (error) {
+    return res.send("Error: " + error.message);
+  }
+}
+
+exports.createRoom = async (req, res) => {
+  try {
+    const {name, type, timeToAnswer, points, categories, maxUsers, timeBetweenQuestions} = req.body;
+
+    if (!name || !type || !points || !categories) {
+      return res.status(400).send('All fields are required');
+    }
+
+    const selectedCategories = JSON.parse(categories);
+    if (selectedCategories.length === 0) {
+      return res.status(400).send('You must select at least one category');
+    }
+
+    await Room.create({
+      'name': name,
+      'type': type,
+      'timeToAnswer': timeToAnswer,
+      'points': points,
+      'categories': selectedCategories,
+      'maxUsers': maxUsers,
+      'timeBetweenQuestions': timeBetweenQuestions
+    }
+    );
+    res.redirect("/admin/dashboard");
+  } catch (error) {
+    return res.send("Error: " + error.message);
+  }
+}
+
+exports.getRooms = async(req, res) => {
+  try {
+    let rooms = await Room.find().lean();
+    return res.render("admin/rooms/index", {rooms});
+  } catch (error) {
+    return res.send("Error: " + error.message);
+  }
+}
+
+
+exports.getRoom = async(req, res) => {
+  try {
+    let roomId = req.params.id;
+    let room = await Room.findById(roomId).lean();
+    return res.render("admin/rooms/room", {room});
+  } catch (error) {
+    return res.send("Error: " + error.message);
+  }
+}
+
+exports.deleteRoom = async (req, res) => {
+  try {
+    const id = req.params.id;
+    await Room.findByIdAndDelete(id);
+    return res.redirect("/admin/rooms/");
+  } catch (error) {
+    return res.send("Error: " + error.message);
+  }
+}

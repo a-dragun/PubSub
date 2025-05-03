@@ -1,0 +1,39 @@
+<h1>All Rooms</h1>
+
+<% rooms.forEach(room => { %>
+  <div class="room-box">
+    <h2><a href="/admin/rooms/<%= room._id %>"><%= room.name %></a></h2>
+    <ul>
+      <li><strong>Type:</strong> <%= room.type %></li>
+      <li><strong>Max Users:</strong> <%= room.maxUsers %></li>
+      <li><strong>Categories:</strong> 
+        <% room.categories.forEach(cat => { %>
+          <span class="category"><%= cat %></span>
+        <% }); %>
+      </li>
+    </ul>
+  </div>
+  <hr>
+<% }); %>
+
+<style>
+  .room-box {
+    background: #f4f4f4;
+    padding: 15px;
+    border-radius: 8px;
+  }
+
+  .category {
+    display: inline-block;
+    background-color: #d9edf7;
+    padding: 4px 8px;
+    margin-right: 5px;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 0;
+  }
+</style>
