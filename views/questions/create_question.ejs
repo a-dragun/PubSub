@@ -11,6 +11,13 @@
         <input type="text" name="answer2" placeholder="Answer2"><br>
         <input type="text" name="answer3" placeholder="Answer3"><br>
         <input type="text" name="answer4" placeholder="Answer4"><br>
+        <label for="category">Choose a category:</label><br>
+        <select name="category" id="category" required>
+            <% categories.forEach(category => { %>
+                <option value="<%= category %>"><%= category %></option>
+            <% }); %>
+        </select>
+        <br>
         <input type="text" name="hint" placeholder="Hint"><br>
         <input type="text" name="image" placeholder="Image URL"<br>
         <button type="submit">Submit a question</button>

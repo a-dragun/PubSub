@@ -3,6 +3,7 @@
 <% if (question.image && question.image!="") { %>
   <img src="<%= question.image %>" alt="Question image" width="250">
 <% } %>
+<p>Category: <%= question.category %></p>
 <p>Answer 1: <%= question.answers[0] %></p>
 <p>Answer 2: <%= question.answers[1] %></p>
 <p>Answer 3: <%= question.answers[2] %></p>
