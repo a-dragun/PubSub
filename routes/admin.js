@@ -9,8 +9,8 @@ router.get("/questions", adminController.getQuestions);
 router.get("/users/:id", adminController.getUser);
 router.get("/questions/:id", adminController.getQuestion);
 
-router.put("/users", adminController.updateUsers);
-router.put("/questions", adminController.updateQuestions);
+router.post("/bulk_update", adminController.bulkUpdate);
+
 router.put("/users/:id", authMiddleware.checkAdminLevel(2), adminController.updateUser);
 router.put("/questions/:id", adminController.updateQuestion);
 

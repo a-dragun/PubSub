@@ -12,8 +12,8 @@ exports.getCreateQuestionPage = async (req, res) => {
 
 exports.createQuestion = async (req, res) => {
   try {
-    const { text, answer1, answer2, answer3, answer4, hint} = req.body;
-    await Question.create({ text: text, answers: [answer1, answer2, answer3, answer4], authorId: req.session.user.id, status: 'pending', 'hint': hint });
+    const { text, answer1, answer2, answer3, answer4, hint, image} = req.body;
+    await Question.create({ text: text, answers: [answer1, answer2, answer3, answer4], authorId: req.session.user.id, status: 'pending', 'hint': hint, 'image': image});
     return res.redirect("/questions/new");
   } catch (error) {
     return res.send("Error: " + error.message);

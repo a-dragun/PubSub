@@ -3,35 +3,131 @@
 
 <h1>Muted users</h1>
 <% mutedUsers.forEach(user => { %>
-    <div class="user-box">
-        <h2><a href="/admin/users/<%= user._id %>/"><%= user.name %></a></h2>
-        <p>isActive: <%= user.isActive %></p>
-        <p>Mute reason: <%= user.muteReason %></p>
-        <p>Mute duration: <%= user.muteDuration %></p>
-    </div>
-    <br>
+  <div class="user-box" id="user-<%= user._id %>">
+    <h2><a href="/admin/users/<%= user._id %>/"><%= user.name %></a></h2>
+    <p>isActive: <%= user.isActive %></p>
+    <p>Mute reason: <%= user.muteReason %></p>
+    <p>Mute duration: <%= user.muteDuration %></p>
+    <button class="user-action-btn" data-id="<%= user._id %>" data-action="unmute">Unmute</button>
+  </div>
 <% }); %>
 
 <h1>Banned users</h1>
 <% bannedUsers.forEach(user => { %>
-    <div class="user-box">
-        <h2><a href="/admin/users/<%= user._id %>/"><%= user.name %></a></h2>
-        <p>isActive: <%= user.isActive %></p>
-        <p>Mute reason: <%= user.banReason %></p>
-        <p>Mute duration: <%= user.banDuration %></p>
-    </div>
-    <br>
+  <div class="user-box" id="user-<%= user._id %>">
+    <h2><a href="/admin/users/<%= user._id %>/"><%= user.name %></a></h2>
+    <p>Ban reason: <%= user.banReason %></p>
+    <p>Ban duration: <%= user.banDuration %></p>
+    <button class="user-action-btn" data-id="<%= user._id %>" data-action="unban">Unban</button>
+  </div>
 <% }); %>
 
 <h1>Pending questions</h1>
 <% pendingQuestions.forEach(question => { %>
-    <div class="question-box">
-        <h2> <a href="/admin/questions/<%= question._id %>/"><%= question.text %></a></h2>
-        <p>Answer 1: <%= question.answers[0] %></p>
-        <p>Answer 2: <%= question.answers[1] %></p>
-        <p>Answer 3: <%= question.answers[2] %></p>
-        <p>Answer 4: <%= question.answers[3] %></p>
-        <p>Status: <%= question.status %></p>
-    </div>
-    <br>
+  <div class="question-box" id="question-<%= question._id %>">
+    <h2><a href="/admin/questions/<%= question._id %>/"><%= question.text %></a></h2>
+    <% if (question.image && question.image!="") { %>
+        <img src="<%= question.image %>" alt="Question image" width="250">
+    <% } %>
+    <p>Answer 1: <%= question.answers[0] %></p>
+    <p>Answer 2: <%= question.answers[1] %></p>
+    <p>Answer 3: <%= question.answers[2] %></p>
+    <p>Answer 4: <%= question.answers[3] %></p>
+    <p>Status: <%= question.status %></p>
+    <button class="question-action-btn" data-id="<%= question._id %>" data-action="approve">Approve</button>
+    <button class="question-action-btn" data-id="<%= question._id %>" data-action="delete">Delete</button>
+  </div>
 <% }); %>
+
+<button id="submit-all-changes" onclick="submitBulkChanges()">Submit All Changes</button>
+
+
+<script>
+    const actions = {
+      users: [],
+      questions: []
+    };
+  
+    function updateSubmitButtonVisibility() {
+      const btn = document.getElementById('submit-all-changes');
+      if (actions.users.length === 0 && actions.questions.length === 0) {
+        btn.style.display = 'none';
+      } else {
+        btn.style.display = 'inline-block';
+      }
+    }
+  
+    document.querySelectorAll('.user-action-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        const action = btn.dataset.action;
+        const box = document.getElementById(`user-${id}`);
+        const existingIndex = actions.users.findIndex(a => a.id === id);
+        const alreadySelected = btn.classList.contains('selected');
+        box.querySelectorAll('.user-action-btn').forEach(b => b.classList.remove('selected'));
+  
+        if (alreadySelected) {
+          if (existingIndex !== -1) actions.users.splice(existingIndex, 1);
+        } else {
+          btn.classList.add('selected');
+          if (existingIndex !== -1) actions.users.splice(existingIndex, 1);
+          actions.users.push({ id, actionType: action });
+        }
+  
+        updateSubmitButtonVisibility();
+      });
+    });
+  
+    document.querySelectorAll('.question-action-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        const action = btn.dataset.action;
+        const box = document.getElementById(`question-${id}`);
+        const existingIndex = actions.questions.findIndex(a => a.id === id);
+  
+        const alreadySelected = btn.classList.contains('selected');
+        box.querySelectorAll('.question-action-btn').forEach(b => b.classList.remove('selected'));
+  
+        if (alreadySelected) {
+          if (existingIndex !== -1) actions.questions.splice(existingIndex, 1);
+        } else {
+          btn.classList.add('selected');
+          if (existingIndex !== -1) actions.questions.splice(existingIndex, 1);
+          actions.questions.push({ id, actionType: action });
+        }
+  
+        updateSubmitButtonVisibility();
+      });
+    });
+    function submitBulkChanges() {
+      if (actions.users.length === 0 && actions.questions.length === 0) {
+        alert("No changes selected.");
+        return;
+      }
+  
+      fetch("/admin/bulk_update", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ actions })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          location.reload();
+        } else {
+          alert("Error: " + data.message);
+        }
+      });
+    }
+    window.onload = () => {
+      updateSubmitButtonVisibility();
+    };
+  </script>
+  
+
+<style>
+.selected {
+    background-color: #d0f0d0;
+    border: 2px solid #0a0;
+}
+</style>

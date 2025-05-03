@@ -7,8 +7,8 @@ exports.getAdminDashboard = async (req, res) => {
       let users = dbUsers.map(({ password, ...user }) => user);
       let questions = await Question.find().lean();
       let pendingQuestions = [...(questions.filter(q => q.status == 'pending'))];
-      let mutedUsers = [...(users.filter(u => u.isMuted == 'true'))];
-      let bannedUsers = [...(users.filter(u => u.isBanned == 'true'))];
+      let mutedUsers = [...(users.filter(u => u.isMuted == true))];
+      let bannedUsers = [...(users.filter(u => u.isBanned == true))];
       return res.render("admin/admin_dashboard", {mutedUsers, bannedUsers, pendingQuestions});
   } catch (error) {
     return res.send("Error: " + error.message);
@@ -58,22 +58,6 @@ exports.getQuestion = async(req, res) => {
       username = "deleted user"
     }
     return res.render("admin/questions/question", {question, username});
-  } catch (error) {
-    return res.send("Error: " + error.message);
-  }
-}
-
-exports.updateUsers = async (req, res) => {
-  try {
-
-  } catch (error) {
-    return res.send("Error: " + error.message);
-  }
-}
-
-exports.updateQuestions = async (req, res) => {
-  try {
-
   } catch (error) {
     return res.send("Error: " + error.message);
   }
@@ -130,3 +114,38 @@ exports.deleteUser = async (req, res) => {
     return res.send("Error: " + error.message);
   }
 }
+
+exports.bulkUpdate = async (req, res) => {
+  try {
+    const { actions } = req.body;
+
+    for (const action of actions.users) {
+      const { id, actionType } = action;
+      const user = await User.findById(id);
+
+      if (actionType === 'unmute' && user) {
+        user.isMuted = false;
+        await user.save();
+      } else if (actionType === 'unban' && user) {
+        user.isBanned = false;
+        await user.save();
+      }
+    }
+    
+    for (const action of actions.questions) {
+      const { id, actionType } = action;
+      const question = await Question.findById(id);
+
+      if (actionType === 'approve' && question) {
+        question.status = 'approved';
+        await question.save();
+      } else if (actionType === 'delete' && question) {
+        await question.deleteOne();
+      }
+    }
+
+    return res.json({ success: true });
+  } catch (error) {
+    return res.json({ success: false, message: error.message });
+  }
+};
