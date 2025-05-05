@@ -1,1 +1,61 @@
-<h1><%= room.name %></h1>
+<h1>Chat Room: <%= room.name %></h1>
+
+<ul id="messages"></ul>
+
+<form id="chat-form">
+  <input id="message-input" autocomplete="off" placeholder="Type a message..." />
+  <button type="submit">Send</button>
+</form>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+
+  const form = document.getElementById('chat-form');
+  const input = document.getElementById('message-input');
+  const messages = document.getElementById('messages');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const msg = input.value.trim();
+    if (msg !== '') {
+      socket.emit('chatMessage', msg);
+      input.value = '';
+    }
+  });
+
+  socket.on('chatMessage', (msg) => {
+    const li = document.createElement('li');
+    li.textContent = msg;
+    messages.appendChild(li);
+  });
+</script>
+
+
+<style>
+    #messages {
+      list-style: none;
+      padding: 0;
+      max-height: 250px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      margin-bottom: 10px;
+      padding: 10px;
+      background: #f9f9f9;
+    }
+  
+    #chat-form {
+      display: flex;
+      gap: 10px;
+    }
+  
+    #message-input {
+      flex: 1;
+      padding: 8px;
+    }
+  
+    button {
+      padding: 8px 12px;
+    }
+</style>
+  
