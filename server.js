@@ -7,6 +7,7 @@ const adminRoutes = require("./routes/admin");
 const questionRoutes = require("./routes/questions");
 const authMiddleware = require("./middleware/authMiddleware");
 const userRoutes = require("./routes/user");
+const roomRoutes = require("./routes/rooms");
 const methodOverride = require("method-override");
 
 require("dotenv").config();
@@ -36,5 +37,6 @@ app.use("/auth", authRoutes);
 app.use("/admin", authMiddleware.requireAuth, authMiddleware.checkAdminLevel(1), adminRoutes);
 app.use("/questions", authMiddleware.requireAuth, questionRoutes);
 app.use("/user", authMiddleware.requireAuth, userRoutes);
+app.use("/rooms", authMiddleware.requireAuth, roomRoutes);
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
