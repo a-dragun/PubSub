@@ -6,6 +6,7 @@ const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
 const questionRoutes = require("./routes/questions");
 const authMiddleware = require("./middleware/authMiddleware");
+const cacheControl = require("./middleware/cacheControl");
 const userRoutes = require("./routes/user");
 const roomRoutes = require("./routes/rooms");
 const methodOverride = require("method-override");
@@ -19,20 +20,8 @@ const PORT = process.env.PORT || 3000;
 
 const server = http.createServer(app);
 const io = socketIO(server);
+require('./socket')(io);
 app.set('io', io);
-
-io.on('connection', (socket) => {
-  console.log('User connected');
-
-  socket.on('chatMessage', (msg) => {
-    io.emit('chatMessage', msg);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
-  });
-});
-
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -42,12 +31,10 @@ app.use(session({
   resave: false, 
   saveUninitialized: false 
 }));
-app.use(methodOverride("_method"));
 
-app.use((req, res, next) => {
-  res.setHeader('Cache-Control', 'no-store');
-  next();
-});
+app.use(cacheControl);
+
+app.use(methodOverride("_method"));
 
 app.set("view engine", "ejs");
 

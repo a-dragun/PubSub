@@ -10,6 +10,9 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
   const socket = io();
+  const roomId = "<%= room._id %>";
+
+  socket.emit('joinRoom', roomId);
 
   const form = document.getElementById('chat-form');
   const input = document.getElementById('message-input');
@@ -19,7 +22,7 @@
     e.preventDefault();
     const msg = input.value.trim();
     if (msg !== '') {
-      socket.emit('chatMessage', msg);
+      socket.emit('chatMessage', { roomId, message: msg });
       input.value = '';
     }
   });
@@ -30,6 +33,7 @@
     messages.appendChild(li);
   });
 </script>
+
 
 
 <style>

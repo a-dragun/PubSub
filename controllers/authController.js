@@ -2,7 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 
 
-exports.getRegister = (req, res) => { //user koji je logiran ne smije vidjet register page cak ni kada se vraca unatrag
+exports.getRegister = (req, res) => {
   try {
     return res.render("auth/register");
   } catch (error) {
@@ -21,7 +21,7 @@ exports.postRegister = async (req, res) => {
   }
 };
 
-exports.getLogin = (req, res) => { //user koji je logiran ne smije vidjeti login page cak ni kada se vraca unatrag
+exports.getLogin = (req, res) => {
   try {
     return res.render("auth/login");
   } catch (error) {
@@ -46,9 +46,12 @@ exports.postLogin = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-  try {
-    return req.session.destroy(() => res.redirect("/"));
-  } catch (error) {
-    return res.send("Error: " + error.message);
-  }
+    req.session.destroy((err) => {
+      if (err) {
+        return res.send("Logout failed: " + err.message);
+      }
+      res.clearCookie('connect.sid');
+      return res.redirect('/');
+    });
 };
+
