@@ -28,6 +28,46 @@
     <button type="submit" id="updateAdminBtn">Update Admin Level</button>
 </form>
 
+<% if (!filteredUser.isBanned) { %>
+  <button id="showBanFormBtn">Ban User</button>
+  <form id="banForm" method="POST" action="/admin/users/<%= filteredUser._id %>/ban" style="display: none; margin-top: 10px;">
+      <strong>Ban:</strong><br>
+      <label for="banReason">Reason:</label>
+      <input type="text" name="banReason" id="banReason" required><br>
+
+      <label for="banDuration">Duration:</label>
+      <input type="date" name="banDuration" id="banDuration" required min="<%= new Date(Date.now() + 86400000).toISOString().split('T')[0] %>"><br>
+      
+
+      <button type="submit">Confirm Ban</button>
+  </form>
+<% } else { %>
+  <form method="POST" action="/admin/users/<%= filteredUser._id %>/unban">
+      <button type="submit">Unban User</button>
+  </form>
+<% } %>
+
+
+<% if (!filteredUser.isMuted) { %>
+  <button id="showMuteFormBtn">Mute User</button>
+  <form id="muteForm" method="POST" action="/admin/users/<%= filteredUser._id %>/mute" style="display: none; margin-top: 10px;">
+    <strong>Mute:</strong>  
+    <label for="muteReason">Reason:</label>
+      <input type="text" name="muteReason" id="muteReason" required><br>
+
+      <label for="muteDuration">Duration:</label>
+      <input type="date" name="muteDuration" id="muteDuration" required min="<%= new Date(Date.now() + 86400000).toISOString().split('T')[0] %>"><br>
+      
+
+      <button type="submit">Confirm</button>
+  </form>
+<% } else { %>
+  <form method="POST" action="/admin/users/<%= filteredUser._id %>/unmute">
+      <button type="submit">Unmute User</button>
+  </form>
+<% } %>
+
+
 <script>
     document.getElementById('deleteBtn').addEventListener('click', function (e) {
       const confirmed = confirm("Are you sure you want to delete this user?");
@@ -42,4 +82,21 @@
           e.preventDefault();
         }
       });
+
+
+      const showBanBtn = document.getElementById('showBanFormBtn');
+      if (showBanBtn) {
+          showBanBtn.addEventListener('click', function () {
+              const form = document.getElementById('banForm');
+              form.style.display = form.style.display === 'none' ? 'block' : 'none';
+          });
+      }
+
+      const showMuteBtn = document.getElementById('showMuteFormBtn');
+      if (showMuteBtn) {
+          showMuteBtn.addEventListener('click', function () {
+              const form = document.getElementById('muteForm');
+              form.style.display = form.style.display === 'none' ? 'block' : 'none';
+          });
+      }
 </script>

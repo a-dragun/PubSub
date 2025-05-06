@@ -127,9 +127,13 @@ exports.bulkUpdate = async (req, res) => {
 
       if (actionType === 'unmute' && user) {
         user.isMuted = false;
+        user.muteDuration = null;
+        user.muteReason = '';
         await user.save();
       } else if (actionType === 'unban' && user) {
         user.isBanned = false;
+        user.banDuration = null;
+        user.banReason = '';
         await user.save();
       }
     }
@@ -162,9 +166,9 @@ exports.getCreateRoomPage = (req, res) => {
 
 exports.createRoom = async (req, res) => {
   try {
-    const {name, type, timeToAnswer, points, categories, maxUsers, timeBetweenQuestions} = req.body;
+    const {name, type, categories, maxUsers} = req.body;
 
-    if (!name || !type || !points || !categories) {
+    if (!name || !type || !categories) {
       return res.status(400).send('All fields are required');
     }
 
@@ -176,13 +180,9 @@ exports.createRoom = async (req, res) => {
     await Room.create({
       'name': name,
       'type': type,
-      'timeToAnswer': timeToAnswer,
-      'points': points,
       'categories': selectedCategories,
-      'maxUsers': maxUsers,
-      'timeBetweenQuestions': timeBetweenQuestions
-    }
-    );
+      'maxUsers': maxUsers
+    });
     res.redirect("/admin/dashboard");
   } catch (error) {
     return res.send("Error: " + error.message);
@@ -214,6 +214,61 @@ exports.deleteRoom = async (req, res) => {
     const id = req.params.id;
     await Room.findByIdAndDelete(id);
     return res.redirect("/admin/rooms/");
+  } catch (error) {
+    return res.send("Error: " + error.message);
+  }
+}
+
+exports.banUser = async (req, res) => {
+  try {
+    const {banReason, banDuration} = req.body;
+    const id = req.params.id;
+    const user = await User.findById(id);
+    if(user.adminlevel == 2) {
+      return res.redirect("admin/users")
+    }
+    else {
+      const selectedDate = new Date(banDuration);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (selectedDate <= today) {
+        return res.send("Error: Ban duration must be a date after today.");
+      }
+      await user.updateOne({'isBanned': true, 'banReason': banReason, 'banDuration': banDuration});
+      return res.redirect("/admin/users/");
+    }
+  } catch (error) {
+    return res.send("Error: " + error.message);
+  }
+}
+
+exports.unbanUser = async (req, res) => {
+  try {
+    const id = req.params.id;
+    await User.findByIdAndUpdate(id, {'isBanned': false, 'banReason': '', 'banDuration': null});
+    return res.redirect("/admin/users/");
+  } catch (error) {
+    return res.send("Error: " + error.message);
+  }
+}
+
+exports.muteUser = async (req, res) => {
+  try {
+    const {muteReason, muteDuration} = req.body;
+    const id = req.params.id;
+    await User.findByIdAndUpdate(id, {'isMuted': true, 'muteReason': muteReason, 'muteDuration': muteDuration});
+    return res.redirect("/admin/users/");
+  } catch (error) {
+    return res.send("Error: " + error.message);
+  }
+}
+
+exports.unmuteUser = async (req, res) => {
+  try {
+    const id = req.params.id;
+    await User.findByIdAndUpdate(id, {'isMuted': false, 'muteReason': '', 'muteDuration': null});
+    return res.redirect("/admin/users/");
   } catch (error) {
     return res.send("Error: " + error.message);
   }

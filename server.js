@@ -45,9 +45,9 @@ mongoose
 
 app.use("/", indexRoutes);
 app.use("/auth", authRoutes);
-app.use("/admin", authMiddleware.requireAuth, authMiddleware.checkAdminLevel(1), adminRoutes);
-app.use("/questions", authMiddleware.requireAuth, questionRoutes);
-app.use("/user", authMiddleware.requireAuth, userRoutes);
-app.use("/rooms", authMiddleware.requireAuth, roomRoutes);
+app.use("/admin", authMiddleware.requireAuth, authMiddleware.checkBan, authMiddleware.checkAdminLevel(1), adminRoutes);
+app.use("/questions", authMiddleware.requireAuth, authMiddleware.checkBan, questionRoutes);
+app.use("/user", authMiddleware.requireAuth, authMiddleware.checkBan, userRoutes);
+app.use("/rooms", authMiddleware.requireAuth, authMiddleware.checkBan, roomRoutes);
 
 server.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
