@@ -1,24 +1,69 @@
-<form action="/user/edit?_method=PUT" method="POST">
+<form id="editForm" action="/user/edit?_method=PUT" method="POST">
     <input type="hidden" name="_method" value="PUT">
-    <input type="text" name="username" value="<%= user.name %>"><br>
-    <input type="password" name="newPassword" placeholder="New Password"><br>
-    <input type="password" name="repeatPassword" placeholder="Repeat New Password"><br>
-    <input type="text" name="profilePicture" value="<%= user.profilePicture %>">
-
+    <input type="text" id="username" name="username" pattern="^\S+$" value="<%= user.name %>"><br>
+    <button type="button" id="showPasswordFormBtn">Change password</button>
+    <div id="showPasswordForm" style="display: none;">
+      <input type="password" name="newPassword" placeholder="New Password"><br>
+      <input type="password" name="repeatPassword" placeholder="Repeat New Password"><br>
+      <span id="message"></span><br>
+    </div>
+    <span id="message"></span><br>
     <button type="submit">Submit</button>
 </form>
 
 
 <script>
-    document.getElementById('editForm').addEventListener('submit', function (e) {
-      const newPass = this.newPassword.value;
-      const repeatPass = this.repeatPassword.value;
-  
-      if (newPass || repeatPass) {
-        if (newPass !== repeatPass) {
-          e.preventDefault();
-          alert("Passwords do not match.");
-        }
+    document.getElementById('username').addEventListener('keydown', function (event) {
+      if (event.key === ' ') {
+         event.preventDefault();
       }
     });
+
+    document.getElementById('username').addEventListener('paste', function (event) {
+      const clipboard = event.clipboardData || window.clipboardData;
+      const paste = clipboard ? clipboard.getData('text') : '';
+    
+      if (paste && paste.includes(' ')) {
+        event.preventDefault();
+        alert("Username cannot contain spaces.");
+      }
+    });
+    
+    const showPasswordForm = document.getElementById('showPasswordFormBtn');
+      if (showPasswordForm) {
+          showPasswordForm.addEventListener('click', function () {
+              const form = document.getElementById('showPasswordForm');
+              form.style.display = form.style.display === 'none' ? 'block' : 'none';
+          });
+      };
+
+      document.addEventListener('DOMContentLoaded', function () {
+        const newPassInput = document.getElementsByName("newPassword")[0];
+        const repeatPassInput = document.getElementsByName("repeatPassword")[0];
+    
+        newPassInput.addEventListener('input', checkPassword);
+        repeatPassInput.addEventListener('input', checkPassword);
+      });
+    
+      function checkPassword() {
+        const password = document.getElementsByName("newPassword")[0].value;
+        const passwordRepeat = document.getElementsByName("repeatPassword")[0].value;
+        const message = document.getElementById("message");
+    
+        if (!password && !passwordRepeat) {
+          message.textContent = '';
+          return;
+        }
+    
+        if (password.length < 8) {
+          message.style.color = "orange";
+          message.textContent = "Password must be at least 8 characters.";
+        } else if (password === passwordRepeat) {
+          message.style.color = "green";
+          message.textContent = "Passwords match!";
+        } else {
+          message.style.color = "red";
+          message.textContent = "Passwords do not match!";
+        }
+      }
 </script>

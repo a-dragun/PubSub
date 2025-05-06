@@ -28,6 +28,7 @@
 <% pendingQuestions.forEach(question => { %>
   <div class="question-box" id="question-<%= question._id %>">
     <h2><a href="/admin/questions/<%= question._id %>/"><%= question.text %></a></h2>
+    <p><strong>HINT:</strong> <%= question.hint %></p>
     <% if (question.image && question.image!="") { %>
         <img src="<%= question.image %>" alt="Question image" width="250">
     <% } %>

@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+  name: { type: String, required: true, unique: true },
+  email: { type: String, required: true },
   password: { type: String, required: true },
   adminLevel: { type: Number, enum: [0, 1, 2], default: 0, required: true },
   totalScore: { type: Number, default: 0 },
@@ -22,6 +22,20 @@ const userSchema = new mongoose.Schema({
 userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     this.password = await bcrypt.hash(this.password, 10);
+  }
+  next();
+});
+
+userSchema.pre('save', function (next) {
+  if (this.name.includes(' ')) {
+      return next(new Error('Username must be a single word without spaces.'));
+  }
+  next();
+});
+
+userSchema.pre('findOneAndUpdate', function (next) {
+  if (this._update.name && this._update.name.includes(' ')) {
+      return next(new Error('Username must be a single word without spaces.'));
   }
   next();
 });

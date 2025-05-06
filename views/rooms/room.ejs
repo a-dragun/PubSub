@@ -1,5 +1,9 @@
 <h1>Chat Room: <%= room.name %></h1>
 
+<h3>Users in this room:</h3>
+<ul id="user-list">
+</ul>
+
 <ul id="messages"></ul>
 
 <form id="chat-form">
@@ -11,8 +15,20 @@
 <script>
   const socket = io();
   const roomId = "<%= room._id %>";
+  const username = "<%= user.name %>";
 
-  socket.emit('joinRoom', roomId);
+  socket.emit('joinRoom', { roomId, username });
+
+  socket.on('userListUpdated', (userList) => {
+    const userListContainer = document.getElementById('user-list');
+    userListContainer.innerHTML = '';
+
+    userList.forEach((user) => {
+      const li = document.createElement('li');
+      li.textContent = user;
+      userListContainer.appendChild(li);
+    });
+  });
 
   const form = document.getElementById('chat-form');
   const input = document.getElementById('message-input');
@@ -22,19 +38,17 @@
     e.preventDefault();
     const msg = input.value.trim();
     if (msg !== '') {
-      socket.emit('chatMessage', { roomId, message: msg });
+      socket.emit('chatMessage', { roomId, message: msg, username });
       input.value = '';
     }
   });
 
-  socket.on('chatMessage', (msg) => {
+  socket.on('chatMessage', ({ username, message }) => {
     const li = document.createElement('li');
-    li.textContent = msg;
+    li.textContent = `${username}: ${message}`;
     messages.appendChild(li);
   });
 </script>
-
-
 
 <style>
     #messages {

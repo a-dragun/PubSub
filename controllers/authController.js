@@ -31,11 +31,11 @@ exports.getLogin = (req, res) => {
 
 exports.postLogin = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = await User.findOne({email});
+    const { username, password } = req.body;
+    const user = await User.findOne({'name': username});
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.send("Invalid email or password");
+      return res.send("Invalid username or password");
     }
 
     req.session.user = { id: user._id, name: user.name, profilePicture: user.profilePicture };

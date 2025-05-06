@@ -1,18 +1,36 @@
 module.exports = function(io) {
-    io.on('connection', (socket) => {
-    console.log('User connected');
-  
-    socket.on('joinRoom', (roomId) => {
+  const roomUsers = {};
+
+  io.on('connection', (socket) => {
+    console.log('User connected', socket.id);
+
+    socket.on('joinRoom', ({ roomId, username }) => {
       socket.join(roomId);
-      console.log(`User joined room ${roomId}`);
+
+      if (!roomUsers[roomId]) {
+        roomUsers[roomId] = [];
+      }
+
+      if (!roomUsers[roomId].includes(username)) {
+        roomUsers[roomId].push(username);
+      }
+
+      io.to(roomId).emit('userListUpdated', roomUsers[roomId]);
+
+      console.log(`${username} joined room ${roomId}`);
     });
-  
-    socket.on('chatMessage', ({ roomId, message }) => {
-      io.to(roomId).emit('chatMessage', message);
+
+    socket.on('chatMessage', ({ roomId, message, username }) => {
+      io.to(roomId).emit('chatMessage', { username, message });
     });
-  
+
     socket.on('disconnect', () => {
-      console.log('User disconnected');
+      for (let roomId in roomUsers) {
+        roomUsers[roomId] = roomUsers[roomId].filter(user => user !== socket.username);
+        io.to(roomId).emit('userListUpdated', roomUsers[roomId]);
+      }
+
+      console.log('User disconnected', socket.id);
     });
   });
-}
+};
