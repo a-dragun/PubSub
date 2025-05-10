@@ -80,11 +80,17 @@ exports.updateUser = async (req, res) => {
   }
 }
 
-exports.updateQuestion = async (req, res) => {
+exports.approveQuestion = async (req, res) => {
   try {
     const id = req.params.id;
-    await Question.findByIdAndUpdate(id, {"status" : "approved"});
-
+    const question = await Question.findById(id);
+    question.status = "approved";
+    const user = await User.findById(question.authorId);
+    if(user) {
+      user.totalScore += 5;
+      await user.save();
+    }
+    await question.save();
     return res.redirect("/admin/questions");
   } catch (error) {
     return res.send("Error: " + error.message);
@@ -141,9 +147,14 @@ exports.bulkUpdate = async (req, res) => {
     for (const action of actions.questions) {
       const { id, actionType } = action;
       const question = await Question.findById(id);
+      const user = await User.findById(question.authorId);
 
       if (actionType === 'approve' && question) {
         question.status = 'approved';
+        if(user){
+          user.totalScore+= 5;
+          await user.save();
+        }
         await question.save();
       } else if (actionType === 'delete' && question) {
         await question.deleteOne();

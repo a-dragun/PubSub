@@ -6,7 +6,7 @@
       <img src="<%= question.image %>" alt="Question image" width="250">
     <% } %>
     <p>Category: <%= question.category %></p>
-    <p><strong>HINT: </strong> <%= question.hint %></p>
+    <p><strong>HINT: </strong><span style="white-space: pre; font-family: monospace;"><%= question.hint.replace(/\u00a0/g, ' ') %></span></p>
     <p>Answer 1: <%= question.answers[0] %></p>
     <p>Answer 2: <%= question.answers[1] %></p>
     <p>Answer 3: <%= question.answers[2] %></p>
@@ -23,8 +23,8 @@
       <% if (question.image && question.image!="") { %>
         <img src="<%= question.image %>" alt="Question image" width="250">
       <% } %>
-      <p>Category: <%= question.category %></p>
-      <p><strong>HINT: </strong> <%= question.hint %></p>
+      <p><strong>HINT: </strong><span style="white-space: pre; font-family: monospace;"><%= question.hint.replace(/\u00a0/g, ' ') %></span></p>
+
       <p>Answer 1: <%= question.answers[0] %></p>
       <p>Answer 2: <%= question.answers[1] %></p>
       <p>Answer 3: <%= question.answers[2] %></p>

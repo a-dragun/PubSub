@@ -12,7 +12,8 @@ const roomRoutes = require("./routes/rooms");
 const methodOverride = require("method-override");
 const http = require('http');
 const socketIO = require('socket.io');
-const scheduler = require('./jobs/scheduler');
+
+require('./jobs/scheduler');
 
 require("dotenv").config();
 

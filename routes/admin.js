@@ -20,7 +20,7 @@ router.post("/users/:id/mute", authMiddleware.checkAdminLevel(1), adminControlle
 router.post("/users/:id/unmute", authMiddleware.checkAdminLevel(1), adminController.unmuteUser);
 
 router.put("/users/:id", authMiddleware.checkAdminLevel(2), adminController.updateUser);
-router.put("/questions/:id", adminController.updateQuestion);
+router.put("/questions/:id", adminController.approveQuestion);
 
 router.delete("/users/:id", authMiddleware.checkAdminLevel(2), adminController.deleteUser);
 router.delete("/questions/:id", authMiddleware.checkAdminLevel(2), adminController.deleteQuestion);
