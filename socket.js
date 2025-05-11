@@ -157,7 +157,7 @@ async function startGame(room, io, roomTimers, roomUsers, roomTimeouts, activeQu
   const answerTimeout = setTimeout(() => {
     io.to(roomId).emit('chatMessage', {
       username: room.name,
-      message: `Answer: ${question.answers[0]}`
+      message: `Nitko nije točno odgovorio. Točan odgovor je: ${question.answers[0]}`
     });
 
     const nextQuestionTimeout = setTimeout(() => {
