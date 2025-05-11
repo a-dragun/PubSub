@@ -15,19 +15,22 @@ const questionSchema = new mongoose.Schema({
 
 questionSchema.pre('validate', function (next) {
 
-  if(this.hint == "" || this.hint == null) {
-    let answerLength = this.answers[0].length;
-    if(answerLength == 1) {this.hint = '_'}
-    else {
-      this.hint = this.answers[0][0];
-      for(i=1;i<answerLength;i++) {
-        if(this.answers[0][i] == ' ' || this.answers[0][i] == '.' || this.answers[0][i] == "'" || this.answers[0][i] == ":" || this.answers[0][i] == ",")
-          this.hint += this.answers[0][i];
-        else
-        this.hint += ' _';
+  if (this.hint == "" || this.hint == null) {
+  const answer = this.answers[0];
+
+  this.hint = answer
+    .split(/(\s+|[.,':])/g)
+    .map(part => {
+      if (/^[^\s.,':]{2,}$/.test(part)) {
+        return part[0] + ' ' + '_ '.repeat(part.length - 1).trim();
+      } else if (/^[^\s.,':]$/.test(part)) {
+        return '_';
+      } else {
+        return part;
       }
-    }
-  }
+    })
+    .join('');
+}
 
   switch (this.type) {
       case 'superfast':

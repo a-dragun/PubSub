@@ -47,7 +47,7 @@ module.exports = function(io) {
 
           io.to(roomId).emit('chatMessage', {
             username: currentQuestion.room.name,
-            message: `${username} je točno odgovorio. Točan odgovor je: ${correctAnswers[0]}!`
+            message: `${username} je točno odgovorio. Točan odgovor je: ${currentQuestion.answers[0]}!`
           });
 
           await emitUserList(roomId, io, roomUsers);
