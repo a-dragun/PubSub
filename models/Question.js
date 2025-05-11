@@ -17,12 +17,15 @@ questionSchema.pre('validate', function (next) {
 
   if(this.hint == "" || this.hint == null) {
     let answerLength = this.answers[0].length;
-    this.hint = this.answers[0][0];
-    for(i=1;i<answerLength;i++) {
-      if(this.answers[0][i] == ' ' || this.answers[0][i] == '.' || this.answers[0][i] == "'" || this.answers[0][i] == ":" || this.answers[0][i] == ",")
-        this.hint += this.answers[0][i];
-      else
-      this.hint += ' _';
+    if(answerLength == 1) {this.hint = '_'}
+    else {
+      this.hint = this.answers[0][0];
+      for(i=1;i<answerLength;i++) {
+        if(this.answers[0][i] == ' ' || this.answers[0][i] == '.' || this.answers[0][i] == "'" || this.answers[0][i] == ":" || this.answers[0][i] == ",")
+          this.hint += this.answers[0][i];
+        else
+        this.hint += ' _';
+      }
     }
   }
 

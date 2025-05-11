@@ -5,7 +5,6 @@
     <h2><a href="/rooms/<%= room._id %>"><%= room.name %></a></h2>
     <ul>
       <li><strong>Type:</strong> <%= room.type %></li>
-      <li><strong>Max Users:</strong> <%= room.maxUsers %></li>
       <li><strong>Categories:</strong> 
         <% room.categories.forEach(cat => { %>
           <span class="category"><%= cat %></span>

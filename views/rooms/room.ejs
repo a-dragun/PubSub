@@ -25,7 +25,7 @@
 
     userList.forEach((user) => {
       const li = document.createElement('li');
-      li.textContent = user;
+      li.textContent = `${user.name}: ${user.totalScore} bodova`;
       userListContainer.appendChild(li);
     });
   });
@@ -44,10 +44,11 @@
   });
 
   socket.on('chatMessage', ({ username, message }) => {
-    const li = document.createElement('li');
-    li.textContent = `${username}: ${message}`;
-    messages.appendChild(li);
-  });
+  const li = document.createElement('li');
+  li.innerHTML = `<strong>${username}:</strong> ${message}`;
+  messages.appendChild(li);
+});
+
 </script>
 
 <style>
@@ -60,6 +61,7 @@
       margin-bottom: 10px;
       padding: 10px;
       background: #f9f9f9;
+      white-space: pre;
     }
   
     #chat-form {

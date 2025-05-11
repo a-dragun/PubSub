@@ -177,7 +177,7 @@ exports.getCreateRoomPage = (req, res) => {
 
 exports.createRoom = async (req, res) => {
   try {
-    const {name, type, categories, maxUsers} = req.body;
+    const {name, type, categories} = req.body;
 
     if (!name || !type || !categories) {
       return res.status(400).send('All fields are required');
@@ -191,8 +191,7 @@ exports.createRoom = async (req, res) => {
     await Room.create({
       'name': name,
       'type': type,
-      'categories': selectedCategories,
-      'maxUsers': maxUsers
+      'categories': selectedCategories
     });
     res.redirect("/admin/dashboard");
   } catch (error) {
