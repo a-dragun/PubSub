@@ -47,7 +47,22 @@
   const li = document.createElement('li');
   li.innerHTML = `<strong>${username}:</strong> ${message}`;
   messages.appendChild(li);
+  const img = li.querySelector('img');
+  if (img) {
+    img.onload = img.onerror = () => {
+      messages.scrollTop = messages.scrollHeight;
+    };
+  } else {
+    messages.scrollTop = messages.scrollHeight;
+  }
 });
+
+socket.on('forceDisconnect', (data) => {
+  alert(`You are sanctioned by admin. Reason: ${data.reason}`);
+  socket.disconnect();
+  window.location.href = '/';
+});
+
 
 </script>
 
@@ -55,7 +70,7 @@
     #messages {
       list-style: none;
       padding: 0;
-      max-height: 250px;
+      max-height: 500px;
       overflow-y: auto;
       border: 1px solid #ddd;
       margin-bottom: 10px;

@@ -2,7 +2,9 @@ const Room = require("./models/Room");
 const Question = require("./models/Question");
 const User = require("./models/User");
 
-module.exports = function(io) {
+const userSocketMap = new Map();
+
+function setupSocketHandlers(io) {
   const roomUsers = {};
   const roomTimers = {};
   const roomTimeouts = {};
@@ -13,6 +15,10 @@ module.exports = function(io) {
 
     socket.on('joinRoom', async ({ roomId, username }) => {
       const room = await Room.findById(roomId);
+      const user = await User.findOne({name: username});
+
+      userSocketMap.set(username, {socket, isMuted: user.isMuted});
+
       socket.join(roomId);
 
       socket.username = username;
@@ -36,6 +42,8 @@ module.exports = function(io) {
     socket.on('chatMessage', async ({ roomId, message, username }) => {
       const currentQuestion = activeQuestions[roomId];
       const normalizedMessage = message.trim().toLowerCase();
+      const userSocket = userSocketMap.get(username);
+      const isMuted = userSocket ? userSocket.isMuted : false;
 
 
       if (currentQuestion && currentQuestion.answers) {
@@ -62,11 +70,18 @@ module.exports = function(io) {
           return;
         }
       }
-
-      io.to(roomId).emit('chatMessage', { username, message });
+      if(!isMuted) {
+        io.to(roomId).emit('chatMessage', { username, message });
+      }
     });
 
     socket.on('disconnect', async () => {
+      for(const [username, s] of userSocketMap.entries()) {
+        if(s == socket) {
+          userSocketMap.delete(username);
+          break;
+        }
+      }
       for (let roomId in roomUsers) {
         roomUsers[roomId] = roomUsers[roomId].filter(user => user !== socket.username);
 
@@ -155,6 +170,7 @@ async function startGame(room, io, roomTimers, roomUsers, roomTimeouts, activeQu
   }, room.hintTime * 1000);
 
   const answerTimeout = setTimeout(() => {
+    delete activeQuestions[roomId];
     io.to(roomId).emit('chatMessage', {
       username: room.name,
       message: `Nitko nije točno odgovorio. Točan odgovor je: ${question.answers[0]}`
@@ -178,3 +194,6 @@ async function startGame(room, io, roomTimers, roomUsers, roomTimeouts, activeQu
 
   roomTimers[roomId] = answerTimeout;
 }
+setupSocketHandlers.userSocketMap = userSocketMap;
+
+module.exports = setupSocketHandlers;

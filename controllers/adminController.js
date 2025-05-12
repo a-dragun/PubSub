@@ -2,6 +2,8 @@ const User = require("../models/User");
 const Question = require("../models/Question");
 const Room = require('../models/Room');
 const categories = require('../config/categories');
+const socketHandler = require("../socket");
+const userSocketMap = socketHandler.userSocketMap;
 
 exports.getAdminDashboard = async (req, res) => {
   try{
@@ -246,6 +248,14 @@ exports.banUser = async (req, res) => {
         return res.send("Error: Ban duration must be a date after today.");
       }
       await user.updateOne({'isBanned': true, 'banReason': banReason, 'banDuration': banDuration});
+      
+      const userSocket = userSocketMap.get(user.name);
+      if (userSocket && userSocket.socket) {
+        userSocket.socket.emit('forceDisconnect', { reason: banReason });
+        userSocket.socket.disconnect();
+      }
+
+
       return res.redirect("/admin/users/");
     }
   } catch (error) {
@@ -267,7 +277,16 @@ exports.muteUser = async (req, res) => {
   try {
     const {muteReason, muteDuration} = req.body;
     const id = req.params.id;
-    await User.findByIdAndUpdate(id, {'isMuted': true, 'muteReason': muteReason, 'muteDuration': muteDuration});
+    const user = await User.findById(id);
+
+    await user.updateOne({'isMuted': true, 'muteReason': muteReason, 'muteDuration': muteDuration});
+      const userSocket = userSocketMap.get(user.name);
+      if (userSocket && userSocket.socket) {
+        userSocket.isMuted = user.isMuted;
+        userSocket.socket.emit('forceDisconnect', { reason: muteReason });
+        userSocket.socket.disconnect();
+      }
+
     return res.redirect("/admin/users/");
   } catch (error) {
     return res.send("Error: " + error.message);
