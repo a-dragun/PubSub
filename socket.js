@@ -15,12 +15,11 @@ function setupSocketHandlers(io) {
 
     socket.on('joinRoom', async ({ roomId, username }) => {
       const room = await Room.findById(roomId);
-      const user = await User.findOne({name: username});
+      const user = await User.findOne({ name: username });
 
-      userSocketMap.set(username, {socket, isMuted: user.isMuted});
+      userSocketMap.set(username, { socket, isMuted: user.isMuted });
 
       socket.join(roomId);
-
       socket.username = username;
       socket.roomId = roomId;
 
@@ -41,21 +40,23 @@ function setupSocketHandlers(io) {
 
     socket.on('chatMessage', async ({ roomId, message, username }) => {
       const currentQuestion = activeQuestions[roomId];
-      const normalizedMessage = message.trim().toLowerCase();
+      const normalizedMessage = normalizeAnswer(message.trim());
       const userSocket = userSocketMap.get(username);
       const isMuted = userSocket ? userSocket.isMuted : false;
 
-
-      if (currentQuestion && currentQuestion.answers) {
-        const correctAnswers = currentQuestion.answers.map(ans => ans.toLowerCase());
+      if (currentQuestion && currentQuestion.answers && !currentQuestion.answered) {
+        const correctAnswers = currentQuestion.answers.map(ans => normalizeAnswer(ans));
 
         if (correctAnswers.includes(normalizedMessage)) {
+          currentQuestion.answered = true;
+
           const room = await Room.findById(roomId);
           await User.findOneAndUpdate({ name: username }, { $inc: { totalScore: room.points } });
 
           io.to(roomId).emit('chatMessage', {
             username: currentQuestion.room.name,
-            message: `${username} je točno odgovorio. Točan odgovor je: ${currentQuestion.answers[0]}!`
+            message: `${username} je točno odgovorio. Točan odgovor je: ${currentQuestion.answers[0]}!`,
+            correct: true
           });
 
           await emitUserList(roomId, io, roomUsers);
@@ -70,18 +71,20 @@ function setupSocketHandlers(io) {
           return;
         }
       }
-      if(!isMuted) {
+
+      if (!isMuted) {
         io.to(roomId).emit('chatMessage', { username, message });
       }
     });
 
     socket.on('disconnect', async () => {
-      for(const [username, s] of userSocketMap.entries()) {
-        if(s == socket) {
+      for (const [username, s] of userSocketMap.entries()) {
+        if (s === socket) {
           userSocketMap.delete(username);
           break;
         }
       }
+
       for (let roomId in roomUsers) {
         roomUsers[roomId] = roomUsers[roomId].filter(user => user !== socket.username);
 
@@ -97,13 +100,15 @@ function setupSocketHandlers(io) {
       console.log('User disconnected', socket.id);
     });
   });
-};
+}
 
 async function emitUserList(roomId, io, roomUsers) {
-  const users = await User.find({ name: { $in: roomUsers[roomId] } }, 'name totalScore');
+  const users = await User.find({ name: { $in: roomUsers[roomId] } }, 'name totalScore profilePicture adminLevel');
   const formattedUsers = users.map(user => ({
     name: user.name,
-    totalScore: user.totalScore
+    totalScore: user.totalScore,
+    profilePicture: user.profilePicture,
+    adminLevel: user.adminLevel,
   }));
   io.to(roomId).emit('userListUpdated', formattedUsers);
 }
@@ -134,31 +139,34 @@ async function startGame(room, io, roomTimers, roomUsers, roomTimeouts, activeQu
   if (roomTimers[roomId]) return;
 
   const [question] = await Question.aggregate([
-  {
-    $match: {
-      category: { $in: room.categories },
-      status: 'approved'
-    }
-  },
-  { $sample: { size: 1 } }
-]);
-  if(!question) {return;}
+    {
+      $match: {
+        category: { $in: room.categories },
+        status: 'approved'
+      }
+    },
+    { $sample: { size: 1 } }
+  ]);
+
+  if (!question) return;
+
   activeQuestions[roomId] = {
     ...question,
-    room
+    room,
+    answered: false
   };
 
   io.to(roomId).emit('chatMessage', {
     username: room.name,
-    message: question.text,
+    message: `${question.category.toUpperCase()} : ${question.text}`,
   });
 
   if (question.image) {
-  io.to(roomId).emit('chatMessage', {
-    username: room.name,
-    message: `<img src="${question.image}" alt="question image" style="max-width: 100%; max-height: 300px;">`
-  });
-}
+    io.to(roomId).emit('chatMessage', {
+      username: room.name,
+      message: `<img src="${question.image}" alt="question image" style="max-width: 100%; max-height: 300px;">`
+    });
+  }
 
   const hintTimeout = setTimeout(() => {
     if (question.hint) {
@@ -170,11 +178,14 @@ async function startGame(room, io, roomTimers, roomUsers, roomTimeouts, activeQu
   }, room.hintTime * 1000);
 
   const answerTimeout = setTimeout(() => {
+    if (!activeQuestions[roomId]?.answered) {
+      io.to(roomId).emit('chatMessage', {
+        username: room.name,
+        message: `Nitko nije točno odgovorio. Točan odgovor je: ${question.answers[0]}`
+      });
+    }
+
     delete activeQuestions[roomId];
-    io.to(roomId).emit('chatMessage', {
-      username: room.name,
-      message: `Nitko nije točno odgovorio. Točan odgovor je: ${question.answers[0]}`
-    });
 
     const nextQuestionTimeout = setTimeout(() => {
       clearRoomTimeouts(roomId, roomTimers, roomTimeouts);
@@ -194,6 +205,17 @@ async function startGame(room, io, roomTimers, roomUsers, roomTimeouts, activeQu
 
   roomTimers[roomId] = answerTimeout;
 }
+
+function normalizeAnswer(answer) {
+  return answer
+    .toLowerCase()
+    .replace(/š/g, 's')
+    .replace(/đ/g, 'd')
+    .replace(/[čć]/g, 'c')
+    .replace(/ž/g, 'z');
+}
+
+
 setupSocketHandlers.userSocketMap = userSocketMap;
 
 module.exports = setupSocketHandlers;

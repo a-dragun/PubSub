@@ -1,26 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Create question</title>
+  <meta charset="UTF-8" />
+  <title>Stvori pitanje</title>
+  <link rel="stylesheet" href="/create_question.css">
 </head>
 <body>
-    <h1>Create a question!</h1>
-    <form method="POST" action="/questions/">
-        <input type="text" name="text" placeholder="text" required><br>
-        <input type="text" name="answer1" placeholder="Answer1" required><br>
-        <input type="text" name="answer2" placeholder="Answer2"><br>
-        <input type="text" name="answer3" placeholder="Answer3"><br>
-        <input type="text" name="answer4" placeholder="Answer4"><br>
-        <label for="category">Choose a category:</label><br>
-        <select name="category" id="category" required>
-            <% categories.forEach(category => { %>
-                <option value="<%= category %>"><%= category %></option>
-            <% }); %>
-        </select>
-        <br>
-        <input type="text" name="hint" placeholder="Hint"><br>
-        <input type="text" name="image" placeholder="Image URL"<br>
-        <button type="submit">Submit a question</button>
-    </form>
+
+  <form method="POST" action="/questions/">
+    <h1>Stvori novo pitanje!</h1>
+      <p>Pitanje mora biti jasno napisano i bez pogrešaka u tipkanju.<br>
+      Odgovor na pitanje mora biti točan i neovisan o vremenu u kojem se odgovara.<br>
+      Potrebno je obratiti pozornost da se na neka pitanja može odgovoriti na više načina.<br><br>Za svako odobreno pitanje, nagrađeni ste s <strong>5 bodova</strong>.<br>
+      <strong>Hvala što doprinosite PubSub-u.</strong></p>
+
+    <input type="text" name="text" placeholder="Text" required />
+
+    <input type="text" name="answer1" placeholder="Odgovor 1 (obavezno)" required />
+    <input type="text" name="answer2" placeholder="Odgovor 2" />
+    <input type="text" name="answer3" placeholder="Odgovor 3" />
+    <input type="text" name="answer4" placeholder="Odgovor 4" />
+
+    <label for="category">Odaberi kategoriju:</label>
+    <select name="category" id="category" required>
+      <% categories.forEach(category => { %>
+        <option value="<%= category %>"><%= category %></option>
+      <% }); %>
+    </select>
+
+    <input type="text" name="hint" placeholder="Hint (opcionalno)" />
+    <input type="text" name="image" placeholder="URL slike (opcionalno)" />
+
+    <button type="submit">Pošalji</button>
+  </form>
 </body>
 </html>

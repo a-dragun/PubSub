@@ -1,137 +1,234 @@
-<h2><a href="/admin/users/">All users</a></h2>
-<h2><a href="/admin/questions/">All questions</a></h2>
-<h2><a href="/admin/rooms/new">Create new room</a></h2>
-<h2><a href="/admin/rooms/">All Rooms</a></h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/admin/dashboard.css">
+</head>
+<body>
+    <div class="section">
+        <h1>Admin Dashboard</h1>
+        <div class="links-grid">
+            <a href="/admin/users/" class="link-card"><h2>Popis svih korisnika</h2></a>
+            <a href="/admin/questions/" class="link-card"><h2>Popis svih pitanja</h2></a>
+            <a href="/admin/rooms/new" class="link-card"><h2>Stvori novu sobu</h2></a>
+            <a href="/admin/rooms/" class="link-card"><h2>Popis svih soba</h2></a>
+        </div>
+    </div>
 
-<h1>Muted users</h1>
-<% mutedUsers.forEach(user => { %>
-  <div class="user-box" id="user-<%= user._id %>">
-    <h2><a href="/admin/users/<%= user._id %>/"><%= user.name %></a></h2>
-    <p>isActive: <%= user.isActive %></p>
-    <p>Mute reason: <%= user.muteReason %></p>
-    <p>Mute duration: <%= user.muteDuration %></p>
-    <button class="user-action-btn" data-id="<%= user._id %>" data-action="unmute">Unmute</button>
-  </div>
-<% }); %>
+    <div class="section">
+        <h1>Utišani korisnici</h1>
+        <% if (mutedUsers.length === 0) { %>
+            <p class="no-items">Nema utišanih korisnika.</p>
+        <% } else { %>
+            <% mutedUsers.slice((mutedPage - 1) * 10, mutedPage * 10).forEach(user => { %>
+                <div class="user-box" id="user-<%= user._id %>">
+                    <h2><%= user.name %></h2>
+                    <p>Mute reason: <%= user.muteReason %></p>
+                    <p>Mute duration: <%= user.muteDuration %></p>
+                    <button class="user-action-btn" data-id="<%= user._id %>" data-action="unmute">Unmute</button>
+                </div>
+            <% }); %>
+            <div class="pagination">
+                <% if (mutedPage > 1) { %>
+                    <a href="?mutedPage=<%= mutedPage - 1 %>&bannedPage=<%= bannedPage %>&pendingPage=<%= pendingPage %>">Prethodno</a>
+                <% } %>
+                <% for (let i = 1; i <= totalMutedPages; i++) { %>
+                    <a href="?mutedPage=<%= i %>&bannedPage=<%= bannedPage %>&pendingPage=<%= pendingPage %>" <%= i === mutedPage ? 'class="active"' : '' %>><%= i %></a>
+                <% } %>
+                <% if (mutedPage < totalMutedPages) { %>
+                    <a href="?mutedPage=<%= mutedPage + 1 %>&bannedPage=<%= bannedPage %>&pendingPage=<%= pendingPage %>">Dalje</a>
+                <% } %>
+            </div>
+        <% } %>
+    </div>
 
-<h1>Banned users</h1>
-<% bannedUsers.forEach(user => { %>
-  <div class="user-box" id="user-<%= user._id %>">
-    <h2><a href="/admin/users/<%= user._id %>/"><%= user.name %></a></h2>
-    <p>Ban reason: <%= user.banReason %></p>
-    <p>Ban duration: <%= user.banDuration %></p>
-    <button class="user-action-btn" data-id="<%= user._id %>" data-action="unban">Unban</button>
-  </div>
-<% }); %>
+    <div class="section">
+        <h1>Bannani korisnici</h1>
+        <% if (bannedUsers.length === 0) { %>
+            <p class="no-items">Nema bannanih korisnika.</p>
+        <% } else { %>
+            <% bannedUsers.slice((bannedPage - 1) * 10, bannedPage * 10).forEach(user => { %>
+                <div class="user-box" id="user-<%= user._id %>">
+                    <h2><%= user.name %></h2>
+                    <p>Ban reason: <%= user.banReason %></p>
+                    <p>Ban duration: <%= user.banDuration %></p>
+                    <button class="user-action-btn" data-id="<%= user._id %>" data-action="unban">Unban</button>
+                </div>
+            <% }); %>
+            <div class="pagination">
+                <% if (bannedPage > 1) { %>
+                    <a href="?mutedPage="<%= mutedPage %>&bannedPage=<%= bannedPage - 1 %>&pendingPage=<%= pendingPage %>">Prethodno</a>
+                <% } %>
+                <% for (let i = 1; i <= totalBannedPages; i++) { %>
+                    <a href="?mutedPage=<%= mutedPage %>&bannedPage=<%= i %>&pendingPage=<%= pendingPage %>" <%= i === bannedPage ? 'class="active"' : '' %>><%= i %></a>
+                <% } %>
+                <% if (bannedPage < totalBannedPages) { %>
+                    <a href="?mutedPage=<%= mutedPage %>&bannedPage=<%= bannedPage + 1 %>&pendingPage=<%= pendingPage %>">Dalje</a>
+                <% } %>
+            </div>
+        <% } %>
+    </div>
 
-<h1>Pending questions</h1>
-<% pendingQuestions.forEach(question => { %>
-  <div class="question-box" id="question-<%= question._id %>">
-    <h2><a href="/admin/questions/<%= question._id %>/"><%= question.text %></a></h2>
-    <p><strong>HINT: </strong><span style="white-space: pre; font-family: monospace;"><%= question.hint.replace(/\u00a0/g, ' ') %></span></p>
-    <% if (question.image && question.image!="") { %>
-        <img src="<%= question.image %>" alt="Question image" width="250">
-    <% } %>
-    <p>Category: <%= question.category %></p>
-    <p>Answer 1: <%= question.answers[0] %></p>
-    <p>Answer 2: <%= question.answers[1] %></p>
-    <p>Answer 3: <%= question.answers[2] %></p>
-    <p>Answer 4: <%= question.answers[3] %></p>
-    <p>Status: <%= question.status %></p>
-    <button class="question-action-btn" data-id="<%= question._id %>" data-action="approve">Approve</button>
-    <button class="question-action-btn" data-id="<%= question._id %>" data-action="delete">Delete</button>
-  </div>
-<% }); %>
+    <div class="section">
+        <h1>Neprovjerena pitanja</h1>
+        <% if (pendingQuestions.length === 0) { %>
+            <p class="no-items">Nema neprovjerenih pitanja.</p>
+        <% } else { %>
+            <% pendingQuestions.slice((pendingPage - 1) * 10, pendingPage * 10).forEach(question => { %>
+                <div class="question-box" id="question-<%= question._id %>">
+                    <h2><%= question.text %></h2>
+                    <p><strong>HINT: </strong><span style="white-space: pre; font-family: monospace;"><%= question.hint.replace(/\u00a0/g, ' ') %></span></p>
+                    <% if (question.image && question.image !== "") { %>
+                        <img src="<%= question.image %>" alt="Question image">
+                    <% } %>
+                    <p><strong>Category:</strong> <%= question.category %></p>
+                    <p><strong>Answer 1:</strong> <%= question.answers[0] %></p>
+                    <p><strong>Answer 2:</strong> <%= question.answers[1] %></p>
+                    <p><strong>Answer 3:</strong> <%= question.answers[2] %></p>
+                    <p><strong>Answer 4:</strong> <%= question.answers[3] %></p>
+                    <p><strong>Status:</strong> <%= question.status.toUpperCase() %></p>
+                    <button class="question-action-btn" data-id="<%= question._id %>" data-action="approve">Odobri</button>
+                    <button class="question-action-btn delete-btn" data-id="<%= question._id %>" data-action="delete">Obriši</button>
+                </div>
+            <% }); %>
+            <div class="pagination">
+                <% if (pendingPage > 1) { %>
+                    <a href="?mutedPage=<%= mutedPage %>&bannedPage=<%= bannedPage %>&pendingPage=<%= pendingPage - 1 %>">Prethodno</a>
+                <% } %>
+                <% for (let i = 1; i <= totalPendingPages; i++) { %>
+                    <a href="?mutedPage=<%= mutedPage %>&bannedPage=<%= bannedPage %>&pendingPage=<%= i %>" <%= i === pendingPage ? 'class="active"' : '' %>><%= i %></a>
+                <% } %>
+                <% if (pendingPage < totalPendingPages) { %>
+                    <a href="?mutedPage=<%= mutedPage %>&bannedPage=<%= bannedPage %>&pendingPage=<%= pendingPage + 1 %>">Dalje</a>
+                <% } %>
+            </div>
+        <% } %>
+    </div>
 
-<button id="submit-all-changes" onclick="submitBulkChanges()">Submit All Changes</button>
+    <button id="submit-all-changes" onclick="submitBulkChanges()">Spremi sve promjene</button>
 
+    <script>
+        const actions = {
+            users: [],
+            questions: []
+        };
 
-<script>
-    const actions = {
-      users: [],
-      questions: []
-    };
-  
-    function updateSubmitButtonVisibility() {
-      const btn = document.getElementById('submit-all-changes');
-      if (actions.users.length === 0 && actions.questions.length === 0) {
-        btn.style.display = 'none';
-      } else {
-        btn.style.display = 'inline-block';
-      }
-    }
-  
-    document.querySelectorAll('.user-action-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = btn.dataset.id;
-        const action = btn.dataset.action;
-        const box = document.getElementById(`user-${id}`);
-        const existingIndex = actions.users.findIndex(a => a.id === id);
-        const alreadySelected = btn.classList.contains('selected');
-        box.querySelectorAll('.user-action-btn').forEach(b => b.classList.remove('selected'));
-  
-        if (alreadySelected) {
-          if (existingIndex !== -1) actions.users.splice(existingIndex, 1);
-        } else {
-          btn.classList.add('selected');
-          if (existingIndex !== -1) actions.users.splice(existingIndex, 1);
-          actions.users.push({ id, actionType: action });
+        function updateSubmitButtonVisibility() {
+            const btn = document.getElementById('submit-all-changes');
+            if (actions.users.length === 0 && actions.questions.length === 0) {
+                btn.style.display = 'none';
+            } else {
+                btn.style.display = 'block';
+            }
         }
-  
-        updateSubmitButtonVisibility();
-      });
-    });
-  
-    document.querySelectorAll('.question-action-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = btn.dataset.id;
-        const action = btn.dataset.action;
-        const box = document.getElementById(`question-${id}`);
-        const existingIndex = actions.questions.findIndex(a => a.id === id);
-  
-        const alreadySelected = btn.classList.contains('selected');
-        box.querySelectorAll('.question-action-btn').forEach(b => b.classList.remove('selected'));
-  
-        if (alreadySelected) {
-          if (existingIndex !== -1) actions.questions.splice(existingIndex, 1);
-        } else {
-          btn.classList.add('selected');
-          if (existingIndex !== -1) actions.questions.splice(existingIndex, 1);
-          actions.questions.push({ id, actionType: action });
-        }
-  
-        updateSubmitButtonVisibility();
-      });
-    });
-    function submitBulkChanges() {
-      if (actions.users.length === 0 && actions.questions.length === 0) {
-        alert("No changes selected.");
-        return;
-      }
-  
-      fetch("/admin/bulk_update", {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ actions })
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          location.reload();
-        } else {
-          alert("Error: " + data.message);
-        }
-      });
-    }
-    window.onload = () => {
-      updateSubmitButtonVisibility();
-    };
-  </script>
-  
 
-<style>
-.selected {
-    background-color: #d0f0d0;
-    border: 2px solid #0a0;
-}
-</style>
+        document.querySelectorAll('.user-action-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                const action = btn.dataset.action;
+                const box = document.getElementById(`user-${id}`);
+                const existingIndex = actions.users.findIndex(a => a.id === id);
+                const alreadySelected = btn.classList.contains('selected');
+                box.querySelectorAll('.user-action-btn').forEach(b => b.classList.remove('selected'));
+
+                if (alreadySelected) {
+                    if (existingIndex !== -1) actions.users.splice(existingIndex, 1);
+                } else {
+                    btn.classList.add('selected');
+                    if (existingIndex !== -1) actions.users.splice(existingIndex, 1);
+                    actions.users.push({ id, actionType: action });
+                }
+
+                updateSubmitButtonVisibility();
+            });
+        });
+
+        document.querySelectorAll('.question-action-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                const action = btn.dataset.action;
+                const box = document.getElementById(`question-${id}`);
+                const existingIndex = actions.questions.findIndex(a => a.id === id);
+                const alreadySelected = btn.classList.contains('selected');
+                box.querySelectorAll('.question-action-btn').forEach(b => b.classList.remove('selected'));
+
+                if (alreadySelected) {
+                    if (existingIndex !== -1) actions.questions.splice(existingIndex, 1);
+                } else {
+                    btn.classList.add('selected');
+                    if (existingIndex !== -1) actions.questions.splice(existingIndex, 1);
+                    actions.questions.push({ id, actionType: action });
+                }
+
+                updateSubmitButtonVisibility();
+            });
+        });
+
+        function submitBulkChanges() {
+            if (actions.users.length === 0 && actions.questions.length === 0) {
+                alert("No changes selected.");
+                return;
+            }
+
+            fetch("/admin/bulk_update", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ actions })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert("Error: " + data.message);
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const getQueryParam = (name) => {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(name);
+            };
+            const mutedPage = parseInt(getQueryParam('mutedPage')) || 1;
+            const mutedLinks = document.querySelectorAll('.pagination a[href*="mutedPage"]');
+            mutedLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                const match = href.match(/mutedPage=(\d+)/);
+                if (match && parseInt(match[1]) === mutedPage) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+
+            const bannedPage = parseInt(getQueryParam('bannedPage')) || 1;
+            const bannedLinks = document.querySelectorAll('.pagination a[href*="bannedPage"]');
+            bannedLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                const match = href.match(/bannedPage=(\d+)/);
+                if (match && parseInt(match[1]) === bannedPage) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+
+            const pendingPage = parseInt(getQueryParam('pendingPage')) || 1;
+            const pendingLinks = document.querySelectorAll('.pagination a[href*="pendingPage"]');
+            pendingLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                const match = href.match(/pendingPage=(\d+)/);
+                if (match && parseInt(match[1]) === pendingPage) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+
+            updateSubmitButtonVisibility();
+        });
+    </script>
+</body>
+</html>

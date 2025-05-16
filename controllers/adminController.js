@@ -6,39 +6,163 @@ const socketHandler = require("../socket");
 const userSocketMap = socketHandler.userSocketMap;
 
 exports.getAdminDashboard = async (req, res) => {
-  try{
-      let dbUsers = await User.find().lean();
-      let users = dbUsers.map(({ password, ...user }) => user);
-      let questions = await Question.find().lean();
-      let pendingQuestions = [...(questions.filter(q => q.status == 'pending'))];
-      let mutedUsers = [...(users.filter(u => u.isMuted == true))];
-      let bannedUsers = [...(users.filter(u => u.isBanned == true))];
-      return res.render("admin/admin_dashboard", {mutedUsers, bannedUsers, pendingQuestions});
-  } catch (error) {
-    return res.send("Error: " + error.message);
-  }
-}
-
-exports.getUsers = async(req, res) => {
   try {
+    const mutedPage = parseInt(req.query.mutedPage) || 1;
+    const bannedPage = parseInt(req.query.bannedPage) || 1;
+    const pendingPage = parseInt(req.query.pendingPage) || 1;
+    const itemsPerPage = 10;
     let dbUsers = await User.find().lean();
     let users = dbUsers.map(({ password, ...user }) => user);
-    return res.render("admin/users/index", {users});
-  } catch (error) {
-    return res.send("Error: " + error.message);
-  }
-}
 
-exports.getQuestions = async(req, res) => {
-  try {
     let questions = await Question.find().lean();
-    let approvedQuestions = [...(questions.filter(q => q.status == 'approved'))];
-    let pendingQuestions = [...(questions.filter(q => q.status == 'pending'))];
-    return res.render("admin/questions/index", {approvedQuestions, pendingQuestions});
+
+    let mutedUsers = users.filter(u => u.isMuted === true);
+    let bannedUsers = users.filter(u => u.isBanned === true);
+    let pendingQuestions = questions.filter(q => q.status === 'pending');
+
+    const totalMutedPages = Math.ceil(mutedUsers.length / itemsPerPage);
+    const totalBannedPages = Math.ceil(bannedUsers.length / itemsPerPage);
+    const totalPendingPages = Math.ceil(pendingQuestions.length / itemsPerPage);
+
+    return res.render("admin/admin_dashboard", {
+      mutedUsers,
+      bannedUsers,
+      pendingQuestions,
+      mutedPage,
+      bannedPage,
+      pendingPage,
+      totalMutedPages,
+      totalBannedPages,
+      totalPendingPages
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("Error: " + error.message);
+  }
+};
+
+exports.getUsers = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 9;
+    const skip = (page - 1) * limit;
+    const search = req.query.search ? req.query.search.trim() : '';
+    const filter = req.query.filter || '';
+    const sort = req.query.sort || 'name-asc';
+
+    let query = {};
+    
+    if (search) {
+      query.name = { $regex: search, $options: 'i' };
+    }
+
+    if (filter === 'banned') {
+      query.isBanned = true;
+    } else if (filter === 'muted') {
+      query.isMuted = true;
+    } else if (filter === 'active') {
+      query.isBanned = false;
+      query.isMuted = false;
+    }
+
+    let sortOption = {};
+    switch (sort) {
+      case 'name-asc':
+        sortOption.name = 1;
+        break;
+      case 'totalScore-desc':
+        sortOption.totalScore = -1;
+        break;
+      case 'questionsApproved-desc':
+        sortOption.questionsApproved = -1;
+        break;
+      case 'adminLevel-desc':
+        sortOption.adminLevel = -1;
+        break;
+      default:
+        sortOption.name = 1;
+    }
+
+    const totalUsers = await User.countDocuments(query);
+    const dbUsers = await User.find(query)
+      .sort(sortOption)
+      .skip(skip)
+      .limit(limit)
+      .lean();
+    const users = dbUsers.map(({ password, ...user }) => user);
+
+    const totalPages = Math.ceil(totalUsers / limit);
+
+    return res.render("admin/users/index", {
+      users,
+      currentPage: page,
+      totalPages,
+      limit,
+      search,
+      filter,
+      sort,
+    });
   } catch (error) {
     return res.send("Error: " + error.message);
   }
-}
+};
+
+exports.getQuestions = async (req, res) => {
+  try {
+    const questionsPerPage = 12;
+    const pendingPage = parseInt(req.query.pendingPage) || 1;
+    const approvedPage = parseInt(req.query.approvedPage) || 1;
+    const search = req.query.search ? req.query.search.trim() : '';
+    const filter = req.query.filter || '';
+
+    let pendingQuery = { status: 'pending' };
+    if (search) {
+      pendingQuery.text = { $regex: search, $options: 'i' };
+    }
+    if (filter) {
+      pendingQuery.category = filter;
+    }
+
+    let approvedQuery = { status: 'approved' };
+    if (search) {
+      approvedQuery.text = { $regex: search, $options: 'i' };
+    }
+    if (filter) {
+      approvedQuery.category = filter;
+    }
+
+    const pendingQuestions = await Question.find(pendingQuery)
+      .skip((pendingPage - 1) * questionsPerPage)
+      .limit(questionsPerPage)
+      .exec();
+    const totalPendingQuestions = await Question.countDocuments(pendingQuery);
+    const totalPendingPages = Math.ceil(totalPendingQuestions / questionsPerPage);
+
+    const approvedQuestions = await Question.find(approvedQuery)
+      .skip((approvedPage - 1) * questionsPerPage)
+      .limit(questionsPerPage)
+      .exec();
+    const totalApprovedQuestions = await Question.countDocuments(approvedQuery);
+    const totalApprovedPages = Math.ceil(totalApprovedQuestions / questionsPerPage);
+
+    res.render('admin/questions/index', {
+      pendingQuestions,
+      approvedQuestions,
+      pendingPage,
+      approvedPage,
+      totalPendingPages,
+      totalApprovedPages,
+      questionsPerPage,
+      search,
+      filter,
+      categories
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+};
+
 
 exports.getUser = async(req, res) => {
   try {
@@ -90,6 +214,7 @@ exports.approveQuestion = async (req, res) => {
     const user = await User.findById(question.authorId);
     if(user) {
       user.totalScore += 5;
+      user.questionsApproved += 1;
       await user.save();
     }
     await question.save();

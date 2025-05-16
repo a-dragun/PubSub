@@ -1,0 +1,73 @@
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: linear-gradient(-45deg, #B0D9E9, #EAD7BB, #a2d2ee, #F4EAE0);
+      background-size: 400% 400%;
+      animation: gradient 15s ease infinite;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+      box-sizing: border-box;
+    }
+
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    h1 {
+      text-align: center;
+      color: #4C5B66;
+      margin: 1.5rem 0;
+      font-size: 1.25rem;
+    }
+
+    .question-box {
+      background-color: #ffffff99;
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .question-box p {
+      color: #4C5B66;
+      margin: 0.5rem 0;
+      font-size: 1rem;
+    }
+
+    .question-box img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin: 0.5rem 0;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    button {
+      padding: 0.9rem 1.2rem;
+      background-color: #c25d62;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #F4EAE0;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #d68c90;
+    }

@@ -1,94 +1,71 @@
-<h1>Create a Room</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stvori sobu</title>
+    <link rel="stylesheet" href="/admin/rooms_create.css">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Stvori sobu</h1>
 
-<form action="/admin/rooms" method="POST">
-    <div>
-        <label for="name">Room Name:</label>
-        <input type="text" id="name" name="name" required>
+        <form action="/admin/rooms" method="POST">
+            <div>
+                <label for="name">Naziv sobe:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div>
+                <label for="type">Tip sobe:</label>
+                <select id="type" name="type" required>
+                    <option value="superfast">Superfast</option>
+                    <option value="fast">Fast</option>
+                    <option value="slow">Slow</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="categories">Kategorije:</label>
+                <div id="categories">
+                    <% categories.forEach(category => { %>
+                        <button type="button" class="category-button" data-category="<%= category %>"><%= category %></button>
+                    <% }); %>
+                </div>
+                <input type="hidden" name="categories" id="selectedCategories" required>
+            </div>
+
+            <button type="submit" id="createRoomButton" disabled>Stvori sobu</button>
+        </form>
     </div>
 
-    <div>
-        <label for="type">Room Type:</label>
-        <select id="type" name="type" required>
-            <option value="superfast">Superfast</option>
-            <option value="fast">Fast</option>
-            <option value="slow">Slow</option>
-        </select>
-    </div>
+    <script>
+        const categoryButtons = document.querySelectorAll('.category-button');
+        const selectedCategoriesInput = document.getElementById('selectedCategories');
+        const createRoomButton = document.getElementById('createRoomButton');
+        let selectedCategories = [];
 
-    <div>
-        <label for="categories">Categories (select at least one):</label>
-        <div id="categories">
-            <% categories.forEach(category => { %>
-                <button type="button" class="category-button" data-category="<%= category %>"><%= category %></button>
-            <% }); %>
-        </div>
-        <input type="hidden" name="categories" id="selectedCategories" required>
-    </div>
-
-    <button type="submit" id="createRoomButton" disabled>Create Room</button>
-</form>
-
-<script>
-    const numberInputs = document.querySelectorAll('input[type="number"]');
-  
-    numberInputs.forEach(input => {
-      input.addEventListener('keydown', (e) => {
-        if (["e", "E", "+", "-"].includes(e.key)) {
-          e.preventDefault();
+        function checkIfCategoriesSelected() {
+            createRoomButton.disabled = selectedCategories.length === 0;
         }
-      });
-    });
-    
-    const categoryButtons = document.querySelectorAll('.category-button');
-    const selectedCategoriesInput = document.getElementById('selectedCategories');
-    const createRoomButton = document.getElementById('createRoomButton');
-    let selectedCategories = [];
 
-    function checkIfCategoriesSelected() {
-        if (selectedCategories.length > 0) {
-            createRoomButton.disabled = false;
-        } else {
-            createRoomButton.disabled = true;
-        }
-    }
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const category = button.getAttribute('data-category');
 
-    categoryButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const category = button.getAttribute('data-category');
+                if (selectedCategories.includes(category)) {
+                    selectedCategories = selectedCategories.filter(cat => cat !== category);
+                    button.classList.remove('selected');
+                } else {
+                    selectedCategories.push(category);
+                    button.classList.add('selected');
+                }
 
-            if (selectedCategories.includes(category)) {
-                selectedCategories = selectedCategories.filter(cat => cat !== category);
-                button.classList.remove('selected');
-            } else {
-                selectedCategories.push(category);
-                button.classList.add('selected');
-            }
-
-            selectedCategoriesInput.value = JSON.stringify(selectedCategories);
-
-            checkIfCategoriesSelected();
+                selectedCategoriesInput.value = JSON.stringify(selectedCategories);
+                checkIfCategoriesSelected();
+            });
         });
-    });
 
-    checkIfCategoriesSelected();
-</script>
-
-<style>
-    .category-button {
-        padding: 10px;
-        margin: 5px;
-        border: 1px solid #ddd;
-        background-color: #f9f9f9;
-        cursor: pointer;
-        display: inline-block;
-    }
-
-    .category-button.selected {
-        background-color: #4CAF50;
-        color: white;
-    }
-
-    .category-button:hover {
-        background-color: #ddd;
-    }
-</style>
+        checkIfCategoriesSelected();
+    </script>
+</body>
+</html>

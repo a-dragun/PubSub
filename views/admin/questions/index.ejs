@@ -1,36 +1,144 @@
-<h1>Pending Questions</h1>
-<% pendingQuestions.forEach(question => { %>
-  <div class="question-box">
-    <h2> <a href="/admin/questions/<%= question._id %>/"><%= question.text %></a></h2>
-    <% if (question.image && question.image!="") { %>
-      <img src="<%= question.image %>" alt="Question image" width="250">
-    <% } %>
-    <p>Category: <%= question.category %></p>
-    <p><strong>HINT: </strong><span style="white-space: pre; font-family: monospace;"><%= question.hint.replace(/\u00a0/g, ' ') %></span></p>
-    <p>Answer 1: <%= question.answers[0] %></p>
-    <p>Answer 2: <%= question.answers[1] %></p>
-    <p>Answer 3: <%= question.answers[2] %></p>
-    <p>Answer 4: <%= question.answers[3] %></p>
-    <p>Status: <%= question.status %></p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Popis pitanja</title>
+  <link rel="stylesheet" href="/admin/questions.css">
+</head>
+<body>
+  <div class="search-filter-container">
+    <input type="text" id="searchInput" placeholder="Pretraži po tekstu..." value="<%= search || '' %>">
+    <select id="filterSelect">
+      <option value="" <%= !filter ? 'selected' : '' %>>Sve kategorije</option>
+      <% (categories || []).forEach(category => { %>
+        <option value="<%= category %>" <%= filter === category ? 'selected' : '' %>><%= category %></option>
+
+      <% }); %>
+    </select>
   </div>
-  <br>
-<% }); %>
 
-<h1>Approved questions</h1>
-<% approvedQuestions.forEach(question => { %>
-    <div class="question-box">
-      <h2> <a href="/admin/questions/<%= question._id %>/"><%= question.text %></a></h2>
-      <% if (question.image && question.image!="") { %>
-        <img src="<%= question.image %>" alt="Question image" width="250">
-      <% } %>
-      <p><strong>HINT: </strong><span style="white-space: pre; font-family: monospace;"><%= question.hint.replace(/\u00a0/g, ' ') %></span></p>
-
-      <p>Answer 1: <%= question.answers[0] %></p>
-      <p>Answer 2: <%= question.answers[1] %></p>
-      <p>Answer 3: <%= question.answers[2] %></p>
-      <p>Answer 4: <%= question.answers[3] %></p>
-      <p>Status: <%= question.status %></p>
+  <h1>Neprovjerena pitanja</h1>
+  <% if (pendingQuestions.length === 0) { %>
+    <p class="no-questions">Nema neprovjerenih pitanja.</p>
+  <% } else { %>
+    <div class="pending-questions-grid">
+      <% pendingQuestions.forEach(question => { %>
+        <a href="/admin/questions/<%= question._id %>/" class="question-box">
+          <h2><%= question.text %></h2>
+          <% if (question.image && question.image !== "") { %>
+            <img src="<%= question.image %>" alt="Question image">
+          <% } %>
+          <p><strong>Kategorija:</strong> <%= question.category %></p>
+          <p><strong>HINT: </strong><span style="white-space: pre; font-family: monospace;"><%= question.hint.replace(/\u00a0/g, ' ') %></span></p>
+          <p><strong>Odgovor 1:</strong> <%= question.answers[0] %></p>
+          <p><strong>Odgovor 2:</strong> <%= question.answers[1] %></p>
+          <p><strong>Odgovor 3:</strong> <%= question.answers[2] %></p>
+          <p><strong>Odgovor 4:</strong> <%= question.answers[3] %></p>
+          <p><strong>Status:</strong> <%= question.status.toUpperCase() %></p>
+        </a>
+      <% }); %>
     </div>
-    <br>
-  <% }); %>
 
+    <div class="pagination">
+      <% if (pendingPage > 1) { %>
+        <a href="?pendingPage=<%= pendingPage - 1 %>&approvedPage=<%= approvedPage %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= filter ? '&filter=' + encodeURIComponent(filter) : '' %>">Prethodno</a>
+      <% } %>
+      <% for (let i = 1; i <= totalPendingPages; i++) { %>
+        <a href="?pendingPage=<%= i %>&approvedPage=<%= approvedPage %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= filter ? '&filter=' + encodeURIComponent(filter) : '' %>" <%= i === pendingPage ? 'class="active"' : '' %>><%= i %></a>
+      <% } %>
+      <% if (pendingPage < totalPendingPages) { %>
+        <a href="?pendingPage=<%= pendingPage + 1 %>&approvedPage=<%= approvedPage %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= filter ? '&filter=' + encodeURIComponent(filter) : '' %>">Dalje</a>
+      <% } %>
+    </div>
+  <% } %>
+
+  <h1>Odobrena pitanja</h1>
+  <% if (approvedQuestions.length === 0) { %>
+    <p class="no-questions">Nema odobrenih pitanja.</p>
+  <% } else { %>
+    <div class="approved-questions-grid">
+      <% approvedQuestions.forEach(question => { %>
+        <a href="/admin/questions/<%= question._id %>/" class="question-card">
+          <h2><%= question.text %></h2>
+        </a>
+      <% }); %>
+    </div>
+
+    <div class="pagination">
+      <% if (approvedPage > 1) { %>
+        <a href="?pendingPage=<%= pendingPage %>&approvedPage=<%= approvedPage - 1 %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= filter ? '&filter=' + encodeURIComponent(filter) : '' %>">Prethodno</a>
+      <% } %>
+      <% for (let i = 1; i <= totalApprovedPages; i++) { %>
+        <a href="?pendingPage=<%= pendingPage %>&approvedPage=<%= i %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= filter ? '&filter=' + encodeURIComponent(filter) : '' %>" <%= i === approvedPage ? 'class="active"' : '' %>><%= i %></a>
+      <% } %>
+      <% if (approvedPage < totalApprovedPages) { %>
+        <a href="?pendingPage=<%= pendingPage %>&approvedPage=<%= approvedPage + 1 %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= filter ? '&filter=' + encodeURIComponent(filter) : '' %>">Dalje</a>
+      <% } %>
+    </div>
+  <% } %>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('searchInput');
+      const filterSelect = document.getElementById('filterSelect');
+
+      const buildUrl = () => {
+        const params = new URLSearchParams(window.location.search);
+        params.set('pendingPage', '1');
+        params.set('approvedPage', '1');
+        if (searchInput.value.trim()) {
+          params.set('search', searchInput.value.trim());
+        } else {
+          params.delete('search');
+        }
+        if (filterSelect.value) {
+          params.set('filter', filterSelect.value);
+        } else {
+          params.delete('filter');
+        }
+        return '?' + params.toString();
+      };
+
+      searchInput.addEventListener('input', () => {
+        clearTimeout(searchInput.debounce);
+        searchInput.debounce = setTimeout(() => {
+          window.location.href = buildUrl();
+        }, 500);
+      });
+
+      filterSelect.addEventListener('change', () => {
+        window.location.href = buildUrl();
+      });
+
+      const getQueryParam = (name) => {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+      };
+
+      const pendingPage = parseInt(getQueryParam('pendingPage')) || 1;
+      const pendingLinks = document.querySelectorAll('.pagination a[href*="pendingPage"]');
+      pendingLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        const match = href.match(/pendingPage=(\d+)/);
+        if (match && parseInt(match[1]) === pendingPage) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+
+      const approvedPage = parseInt(getQueryParam('approvedPage')) || 1;
+      const approvedLinks = document.querySelectorAll('.pagination a[href*="approvedPage"]');
+      approvedLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        const match = href.match(/approvedPage=(\d+)/);
+        if (match && parseInt(match[1]) === approvedPage) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

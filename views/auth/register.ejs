@@ -1,53 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Register</title>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-          const input = document.getElementById('username');
-      
-          input.addEventListener('keydown', function(event) {
-            if (event.key === ' ') {
-              event.preventDefault();
-            }
-          });
-      
-          input.addEventListener('paste', function(event) {
-            const paste = (event.clipboardData || window.clipboardData).getData('text');
-            if (paste.includes(' ')) {
-              event.preventDefault();
-            }
-          });
-        });
-      
-        function checkPassword() {
-          const password = document.getElementsByName("password")[0].value;
-          const passwordRepeat = document.getElementsByName("password_repeat")[0].value;
-          const message = document.getElementById("message");
-      
-          if (password.length < 8) {
-            message.style.color = "orange";
-            message.textContent = "Password must be at least 8 characters.";
-          } else if (password === passwordRepeat) {
-            message.style.color = "green";
-            message.textContent = "Passwords match!";
-          } else {
-            message.style.color = "red";
-            message.textContent = "Passwords do not match!";
-          }
+  <meta charset="UTF-8" />
+  <title>Registracija</title>
+  <link rel="stylesheet" href="/auth/register.css">
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const input = document.getElementById('username');
+
+      input.addEventListener('keydown', function(event) {
+        if (event.key === ' ') {
+          event.preventDefault();
         }
-      </script>
-      
+      });
+
+      input.addEventListener('paste', function(event) {
+        const paste = (event.clipboardData || window.clipboardData).getData('text');
+        if (paste.includes(' ')) {
+          event.preventDefault();
+        }
+      });
+    });
+
+    function checkPassword() {
+      const password = document.getElementsByName("password")[0].value;
+      const passwordRepeat = document.getElementsByName("password_repeat")[0].value;
+      const message = document.getElementById("message");
+
+      if (password.length < 8) {
+        message.style.color = "orange";
+        message.textContent = "Zaporka mora imati minimalno 8 znakova";
+      } else if (password === passwordRepeat) {
+        message.style.color = "green";
+        message.textContent = "Zaporke se podudaraju!";
+      } else {
+        message.style.color = "red";
+        message.textContent = "Zaporke se ne podudaraju!";
+      }
+    }
+  </script>
 </head>
 <body>
-    <h1>Register</h1>
-    <form oninput="checkPassword()" method="POST" action="/auth/register">
-        <input type="text" id="username" name="name" placeholder="Name" required><br>
-        <input type="email" name="email" placeholder="Email" required><br>
-        <input type="password" name="password" placeholder="Password" required><br>
-        <input type="password" name="password_repeat" placeholder="Repeat Password" required><br>
-        <span id="message"></span><br>
-        <button type="submit">Register</button>
-    </form>
+  <form oninput="checkPassword()" method="POST" action="/auth/register">
+    <h1>Registracija</h1>
+    <input type="text" id="username" name="name" placeholder="Korisničko ime" required />
+    <input type="email" name="email" placeholder="E-mail" required />
+    <input type="password" name="password" placeholder="Zaporka" required />
+    <input type="password" name="password_repeat" placeholder="Ponovi zaporku" required />
+    <span id="message"></span>
+    <button type="submit">Registriraj se</button>
+  </form>
 </body>
 </html>

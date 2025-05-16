@@ -1,69 +1,81 @@
-<form id="editForm" action="/user/edit?_method=PUT" method="POST">
-    <input type="hidden" name="_method" value="PUT">
-    <input type="text" id="username" name="username" pattern="^\S+$" value="<%= user.name %>"><br>
-    <button type="button" id="showPasswordFormBtn">Change password</button>
-    <div id="showPasswordForm" style="display: none;">
-      <input type="password" name="newPassword" placeholder="New Password"><br>
-      <input type="password" name="repeatPassword" placeholder="Repeat New Password"><br>
-      <span id="message"></span><br>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Uredi profil</title>
+  <link rel="stylesheet" href="/user/edit.css">
+</head>
+<body>
+  <form id="editForm" action="/user/edit?_method=PUT" method="POST" oninput="checkPassword()">
+    <input type="hidden" name="_method" value="PUT" />
+    <h2>Uredi profil</h2>
+    <input type="text" id="username" name="username" pattern="^\S+$" value="<%= user.name %>" placeholder="Korisničko ime" required />
+    <span id="togglePassword" onclick="togglePasswordForm()">Promijeni zaporku</span>
+    <div id="passwordForm" style="display: none;">
+      <input type="password" name="newPassword" placeholder="Nova zaporka" />
+      <input type="password" name="repeatPassword" placeholder="Ponovi novu zaporku" />
     </div>
-    <span id="message"></span><br>
-    <button type="submit">Submit</button>
-</form>
+    <span id="message"></span>
+    <button type="submit">Spremi promjene</button>
+  </form>
 
-
-<script>
-    document.getElementById('username').addEventListener('keydown', function (event) {
-      if (event.key === ' ') {
-         event.preventDefault();
-      }
-    });
-
-    document.getElementById('username').addEventListener('paste', function (event) {
-      const clipboard = event.clipboardData || window.clipboardData;
-      const paste = clipboard ? clipboard.getData('text') : '';
-    
-      if (paste && paste.includes(' ')) {
-        event.preventDefault();
-        alert("Username cannot contain spaces.");
-      }
-    });
-    
-    const showPasswordForm = document.getElementById('showPasswordFormBtn');
-      if (showPasswordForm) {
-          showPasswordForm.addEventListener('click', function () {
-              const form = document.getElementById('showPasswordForm');
-              form.style.display = form.style.display === 'none' ? 'block' : 'none';
-          });
-      };
-
-      document.addEventListener('DOMContentLoaded', function () {
-        const newPassInput = document.getElementsByName("newPassword")[0];
-        const repeatPassInput = document.getElementsByName("repeatPassword")[0];
-    
-        newPassInput.addEventListener('input', checkPassword);
-        repeatPassInput.addEventListener('input', checkPassword);
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const usernameInput = document.getElementById('username');
+      
+      usernameInput.addEventListener('keydown', function(event) {
+        if (event.key === ' ') {
+          event.preventDefault();
+        }
       });
-    
-      function checkPassword() {
-        const password = document.getElementsByName("newPassword")[0].value;
-        const passwordRepeat = document.getElementsByName("repeatPassword")[0].value;
-        const message = document.getElementById("message");
-    
-        if (!password && !passwordRepeat) {
-          message.textContent = '';
-          return;
+
+      usernameInput.addEventListener('paste', function(event) {
+        const paste = (event.clipboardData || window.clipboardData).getData('text');
+        if (paste.includes(' ')) {
+          event.preventDefault();
         }
-    
-        if (password.length < 8) {
-          message.style.color = "orange";
-          message.textContent = "Password must be at least 8 characters.";
-        } else if (password === passwordRepeat) {
-          message.style.color = "green";
-          message.textContent = "Passwords match!";
-        } else {
-          message.style.color = "red";
-          message.textContent = "Passwords do not match!";
-        }
+      });
+    });
+
+    function togglePasswordForm() {
+      const form = document.getElementById('passwordForm');
+      const newPasswordInput = document.getElementsByName('newPassword')[0];
+      const repeatPasswordInput = document.getElementsByName('repeatPassword')[0];
+      const message = document.getElementById('message');
+
+      if (form.style.display === 'none') {
+        form.style.display = 'block';
+      clearance
+      } else {
+        form.style.display = 'none';
+        newPasswordInput.value = '';
+        repeatPasswordInput.value = '';
+        message.textContent = '';
       }
-</script>
+    }
+
+    function checkPassword() {
+      const passwordForm = document.getElementById('passwordForm');
+      const password = document.getElementsByName("newPassword")[0].value;
+      const passwordRepeat = document.getElementsByName("repeatPassword")[0].value;
+      const message = document.getElementById("message");
+
+      if (passwordForm.style.display === 'none' || (!password && !passwordRepeat)) {
+        message.textContent = '';
+        return;
+      }
+
+      if (password.length < 8) {
+        message.style.color = "orange";
+        message.textContent = "Zaporka mora imati minimalno 8 znakova";
+      } else if (password === passwordRepeat) {
+        message.style.color = "green";
+        message.textContent = "Zaporke se podudaraju!";
+      } else {
+        message.style.color = "red";
+        message.textContent = "Zaporke se ne podudaraju!";
+      }
+    }
+  </script>
+</body>
+</html>

@@ -19,17 +19,17 @@ questionSchema.pre('validate', function (next) {
   const answer = this.answers[0];
 
   this.hint = answer
-    .split(/(\s+|[.,':])/g)
+    .split(/(\s+|[.,':-])/g)
     .map(part => {
-      if (/^[^\s.,':]{2,}$/.test(part)) {
+      if (/^[^\s.,':-]{2,}$/.test(part)) {
         return part[0] + ' ' + '_ '.repeat(part.length - 1).trim();
-      } else if (/^[^\s.,':]$/.test(part)) {
-        return '_';
+      } else if (/^[^\s.,':-]$/.test(part)) {
+        return ' _ ';
       } else {
         return part;
       }
     })
-    .join('');
+    .join(' ');
 }
 
   switch (this.type) {

@@ -1,40 +1,56 @@
-<h1><%= question.text %></h2>
-  <p><strong>HINT: </strong><span style="white-space: pre; font-family: monospace;"><%= question.hint.replace(/\u00a0/g, ' ') %></span></p>
-<% if (question.image && question.image!="") { %>
-  <img src="<%= question.image %>" alt="Question image" width="250">
-<% } %>
-<p>Category: <%= question.category %></p>
-<p>Answer 1: <%= question.answers[0] %></p>
-<p>Answer 2: <%= question.answers[1] %></p>
-<p>Answer 3: <%= question.answers[2] %></p>
-<p>Answer 4: <%= question.answers[3] %></p>
-<p>Status: <%= question.status %></p>
-<p>Created at: <%= question.createdAt %> by <%= username %></p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Detalji pitanja</title>
+  <link rel="stylesheet" href="/admin/question.css">
+</head>
+<body>
+  <div class="question-box">
+    <h1><%= question.text %></h1>
+    <p><strong>HINT: </strong><span style="white-space: pre; font-family: monospace;"><%= question.hint.replace(/\u00a0/g, ' ') %></span></p>
+    <% if (question.image && question.image !== "") { %>
+      <img src="<%= question.image %>" alt="Question image">
+    <% } %>
+    <p><strong>Kategorija:</strong> <%= question.category %></p>
+    <p><strong>Odgovor 1:</strong> <%= question.answers[0] %></p>
+    <p><strong>Odgovor 2:</strong> <%= question.answers[1] %></p>
+    <p><strong>Odgovor 3:</strong> <%= question.answers[2] %></p>
+    <p><strong>Odgovor 4:</strong> <%= question.answers[3] %></p>
+    <p><strong>Status:</strong> <%= question.status %></p>
+    <p><strong>Stvoreno:</strong> <%= question.createdAt.toLocaleDateString('hr-HR') %> by <strong><%= username %></strong></p>
 
-<form method="POST" action="/admin/questions/<%= question.id %>?_method=DELETE">
-    <input type="hidden" name="_method" value="DELETE">
-    <button type="submit" id="deleteBtn">Delete Question</button>
-</form>
+    <div class="button-group">
+      <form method="POST" action="/admin/questions/<%= question.id %>?_method=DELETE">
+        <input type="hidden" name="_method" value="DELETE">
+        <button type="submit" id="deleteBtn">Obriši pitanje</button>
+      </form>
 
-<% if (question.status != 'approved') { %>
-    <form method="POST" action="/admin/questions/<%= question.id %>?_method=PUT">
-        <input type="hidden" name="_method" value="PUT">
-        <button type="submit" id="approveBtn">Approve</button>
-    </form>
-<% } %>
+      <% if (question.status !== 'approved') { %>
+        <form method="POST" action="/admin/questions/<%= question.id %>?_method=PUT">
+          <input type="hidden" name="_method" value="PUT">
+          <button type="submit" id="approveBtn">Odobri</button>
+        </form>
+      <% } %>
+    </div>
+  </div>
 
-<script>
+  <script>
     document.getElementById('deleteBtn').addEventListener('click', function (e) {
-      const confirmed = confirm("Are you sure you want to delete this question?");
+      const confirmed = confirm("Jesi li siguran da želiš obrisati ovo pitanje?");
       if (!confirmed) {
         e.preventDefault();
       }
     });
 
-    document.getElementById('approveBtn').addEventListener('click', function (e) {
-        const confirmed = confirm("Are you sure you want to approve this question?");
+    <% if (question.status !== 'approved') { %>
+      document.getElementById('approveBtn').addEventListener('click', function (e) {
+        const confirmed = confirm("Jesi li siguran da želiš odobriti ovo pitanje?");
         if (!confirmed) {
           e.preventDefault();
         }
       });
-</script>
+    <% } %>
+  </script>
+</body>
+</html>

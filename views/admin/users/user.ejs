@@ -1,102 +1,95 @@
-<h1><%= filteredUser.name %></h1>
-<p>isActive: <%= filteredUser.isActive %></p>
-<p>Created at: <%= filteredUser.createdAt %></p>
-<p>Admin level: <%= filteredUser.adminLevel %></p>
-<p>Total score: <%= filteredUser.totalScore %></p>
-<p>Questions approved: <%= filteredUser.questionsApproved %></p>
-<% if (filteredUser.isBanned) { %>
-    <p>Ban reason: <%= filteredUser.banReason %></p>
-    <p>Ban duration: <%= filteredUser.banDuration %></p>
-<% } else if (filteredUser.isMuted) {  %>
-    <p>Mute reason: <%= filteredUser.muteReason %></p>
-    <p>Mute duration: <%= filteredUser.muteDuration %></p>
-<% } %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Detalji korisnika</title>
+  <link rel="stylesheet" href="/admin/user.css">
+</head>
+<body>
+  <div class="user-container">
+    <!-- User profile image -->
+    <img class="profile-picture" src="<%= filteredUser.profilePicture %>" alt="Profilna slika korisnika" />
 
-<form method="POST" action="<%= filteredUser.id %>?_method=DELETE">
-    <input type="hidden" name="_method" value="DELETE">
-    <button type="submit" id="deleteBtn">Delete user</button>
-</form>
-<form action="<%= filteredUser.id %>?_method=PUT" method="POST">
-    <input type="hidden" name="_method" value="PUT">
-    <label for="adminLevel">New Admin Level:</label>
-    <select name="adminLevel" id="adminLevel">
+    <h1><%= filteredUser.name %></h1>
+    <p><strong>Stvoren:</strong> <%= new Date(filteredUser.createdAt).toLocaleDateString('hr-HR') %></p>
+    <p><strong>Admin level:</strong> <%= filteredUser.adminLevel %></p>
+    <p><strong>Ukupni bodovi:</strong> <%= filteredUser.totalScore %></p>
+    <p><strong>Prihvaćena pitanja:</strong> <%= filteredUser.questionsApproved %></p>
+
+    <% if (filteredUser.isBanned) { %>
+      <p class="banned"><strong>Razlog bana:</strong> <%= filteredUser.banReason %></p>
+      <p class="banned"><strong>Trajanje bana:</strong> <%= filteredUser.banDuration %></p>
+    <% } else if (filteredUser.isMuted) { %>
+      <p class="muted"><strong>Razlog utišavanja:</strong> <%= filteredUser.muteReason %></p>
+      <p class="muted"><strong>Trajanje utišavanja:</strong> <%= filteredUser.muteDuration %></p>
+    <% } %>
+
+    <form action="/admin/users/<%= filteredUser._id %>?_method=PUT" method="POST">
+      <input type="hidden" name="_method" value="PUT">
+      <label for="adminLevel">Novi admin level:</label>
+      <select name="adminLevel" id="adminLevel">
         <option value="0" <%= filteredUser.adminLevel === 0 ? "selected" : "" %>>Level 0</option>
         <option value="1" <%= filteredUser.adminLevel === 1 ? "selected" : "" %>>Level 1</option>
         <option value="2" <%= filteredUser.adminLevel === 2 ? "selected" : "" %>>Level 2</option>
-    </select>
-    
-    <button type="submit" id="updateAdminBtn">Update Admin Level</button>
-</form>
+      </select>
+      <button type="submit" id="updateAdminBtn">Ažuriraj admin level</button>
+    </form>
 
-<% if (!filteredUser.isBanned) { %>
-  <button id="showBanFormBtn">Ban User</button>
-  <form id="banForm" method="POST" action="/admin/users/<%= filteredUser._id %>/ban" style="display: none; margin-top: 10px;">
-      <strong>Ban:</strong><br>
-      <label for="banReason">Reason:</label>
-      <input type="text" name="banReason" id="banReason" required><br>
+    <% if (!filteredUser.isBanned) { %>
+      <span id="showBanFormBtn" class="toggle-link" onclick="toggleForm('banForm')">Ban</span>
+      <form id="banForm" class="form-section" method="POST" action="/admin/users/<%= filteredUser._id %>/ban" style="display: none;">
+        <label for="banReason">Razlog:</label>
+        <input type="text" name="banReason" id="banReason" required>
+        <label for="banDuration">Trajanje:</label>
+        <input type="date" name="banDuration" id="banDuration" required min="<%= new Date(Date.now() + 86400000).toISOString().split('T')[0] %>">
+        <button type="submit">Ban</button>
+      </form>
+    <% } else { %>
+      <form class="unban-form" method="POST" action="/admin/users/<%= filteredUser._id %>/unban">
+        <button type="submit" class="unban-btn">Unban</button>
+      </form>
+    <% } %>
 
-      <label for="banDuration">Duration:</label>
-      <input type="date" name="banDuration" id="banDuration" required min="<%= new Date(Date.now() + 86400000).toISOString().split('T')[0] %>"><br>
-      
+    <% if (!filteredUser.isMuted) { %>
+      <span id="showMuteFormBtn" class="toggle-link" onclick="toggleForm('muteForm')">Mute</span>
+      <form id="muteForm" class="form-section" method="POST" action="/admin/users/<%= filteredUser._id %>/mute" style="display: none;">
+        <label for="muteReason">Razlog:</label>
+        <input type="text" name="muteReason" id="muteReason" required>
+        <label for="muteDuration">Trajanje:</label>
+        <input type="date" name="muteDuration" id="muteDuration" required min="<%= new Date(Date.now() + 86400000).toISOString().split('T')[0] %>">
+        <button type="submit">Mute</button>
+      </form>
+    <% } else { %>
+      <form class="unmute-form" method="POST" action="/admin/users/<%= filteredUser._id %>/unmute">
+        <button type="submit" class="unmute-btn">Unmute</button>
+      </form>
+    <% } %>
 
-      <button type="submit">Confirm Ban</button>
-  </form>
-<% } else { %>
-  <form method="POST" action="/admin/users/<%= filteredUser._id %>/unban">
-      <button type="submit">Unban User</button>
-  </form>
-<% } %>
+    <form method="POST" action="/admin/users/<%= filteredUser._id %>?_method=DELETE">
+      <input type="hidden" name="_method" value="DELETE">
+      <button type="submit" id="deleteBtn" class="delete-btn">Izbriši korisnika</button>
+    </form>
+  </div>
 
+  <script>
+    function toggleForm(formId) {
+      const form = document.getElementById(formId);
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
 
-<% if (!filteredUser.isMuted) { %>
-  <button id="showMuteFormBtn">Mute User</button>
-  <form id="muteForm" method="POST" action="/admin/users/<%= filteredUser._id %>/mute" style="display: none; margin-top: 10px;">
-    <strong>Mute:</strong>  
-    <label for="muteReason">Reason:</label>
-      <input type="text" name="muteReason" id="muteReason" required><br>
-
-      <label for="muteDuration">Duration:</label>
-      <input type="date" name="muteDuration" id="muteDuration" required min="<%= new Date(Date.now() + 86400000).toISOString().split('T')[0] %>"><br>
-      
-
-      <button type="submit">Confirm</button>
-  </form>
-<% } else { %>
-  <form method="POST" action="/admin/users/<%= filteredUser._id %>/unmute">
-      <button type="submit">Unmute User</button>
-  </form>
-<% } %>
-
-
-<script>
     document.getElementById('deleteBtn').addEventListener('click', function (e) {
-      const confirmed = confirm("Are you sure you want to delete this user?");
+      const confirmed = confirm("Jeste li sigurni da želite izbrisati ovog korisnika?");
       if (!confirmed) {
         e.preventDefault();
       }
     });
 
     document.getElementById('updateAdminBtn').addEventListener('click', function (e) {
-        const confirmed = confirm(`Are you sure you want to change admin level of this user?`);
-        if (!confirmed) {
-          e.preventDefault();
-        }
-      });
-
-
-      const showBanBtn = document.getElementById('showBanFormBtn');
-      if (showBanBtn) {
-          showBanBtn.addEventListener('click', function () {
-              const form = document.getElementById('banForm');
-              form.style.display = form.style.display === 'none' ? 'block' : 'none';
-          });
+      const confirmed = confirm("Jeste li sigurni da želite promijeniti admin level ovog korisnika?");
+      if (!confirmed) {
+        e.preventDefault();
       }
-
-      const showMuteBtn = document.getElementById('showMuteFormBtn');
-      if (showMuteBtn) {
-          showMuteBtn.addEventListener('click', function () {
-              const form = document.getElementById('muteForm');
-              form.style.display = form.style.display === 'none' ? 'block' : 'none';
-          });
-      }
-</script>
+    });
+  </script>
+</body>
+</html>

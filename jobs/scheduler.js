@@ -1,7 +1,7 @@
 const cron = require('node-cron');
 const User = require('../models/User');
 
-cron.schedule('0 0 * * *', async () => {
+cron.schedule('45 21 * * *', async () => {
   const now = new Date();
   try {
     await User.updateMany(

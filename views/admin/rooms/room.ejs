@@ -1,61 +1,37 @@
-<div class="room-box">
-  <h1><%= room.name %></h1>
-  <ul>
-    <li><strong>Type:</strong> <%= room.type %></li>
-    <li><strong>Time to Answer:</strong> <%= room.timeToAnswer %> seconds</li>
-    <li><strong>Time Between Questions:</strong> <%= room.timeBetweenQuestions %> seconds</li>
-    <li><strong>Points per Correct Answer:</strong> <%= room.points %></li>
-    <li><strong>Created At:</strong> <%= room.createdAt.toLocaleString() %></li>
-    <li><strong>Categories:</strong>
-      <% room.categories.forEach(cat => { %>
-        <span class="category"><%= cat %></span>
-      <% }); %>
-    </li>
-  </ul>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= room.name %> - Detalji</title>
+  <link rel="stylesheet" href="/admin/room.css">
+</head>
+<body>
 
-  <form id="deleteForm" action="/admin/rooms/<%= room._id %>?_method=DELETE" method="POST">
-    <button type="submit" onclick="return confirmDelete()">Delete Room</button>
-  </form>
-</div>
+  <div class="room-box">
+    <h1><%= room.name %></h1>
+    <ul>
+      <li><strong>Tip sobe:</strong> <%= room.type %></li>
+      <li><strong>Vrijeme za odgovor:</strong> <%= room.timeToAnswer %> sekundi</li>
+      <li><strong>Vrijeme između pitanja:</strong> <%= room.timeBetweenQuestions %> sekundi</li>
+      <li><strong>Bodova po točnom odgovoru:</strong> <%= room.points %></li>
+      <li><strong>Stvoreno:</strong> <%= room.createdAt.toLocaleDateString('hr-HR') %></li>
+      <li><strong>Kategorije:</strong>
+        <% room.categories.forEach(cat => { %>
+          <span class="category"><%= cat %></span>
+        <% }); %>
+      </li>
+    </ul>
 
-<script>
-  function confirmDelete() {
-    return confirm("Are you sure you want to delete this room? This action cannot be undone.");
-  }
-</script>
+    <form id="deleteForm" action="/admin/rooms/<%= room._id %>?_method=DELETE" method="POST">
+      <button type="submit" onclick="return confirmDelete()">Obriši sobu</button>
+    </form>
+  </div>
 
-<style>
-  .room-box {
-    background: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-  }
+  <script>
+    function confirmDelete() {
+      return confirm("Jesi li siguran da želiš obrisati sobu? Akcija nije reverzibilna.");
+    }
+  </script>
 
-  ul {
-    list-style: none;
-    padding-left: 0;
-  }
-
-  .category {
-    display: inline-block;
-    background-color: #eee;
-    padding: 4px 8px;
-    margin: 4px 4px 0 0;
-    border-radius: 4px;
-  }
-
-  button {
-    background-color: #c0392b;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-top: 20px;
-  }
-
-  button:hover {
-    background-color: #e74c3c;
-  }
-</style>
+</body>
+</html>

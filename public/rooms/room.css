@@ -1,0 +1,166 @@
+:root {
+    --bg: #B0D9E9;
+    --accent: #748CAB;
+    --light: #ffffffcc;
+    --text: #4C5B66;
+    --beige: #EAD7BB;
+    --correct: #d68c90;
+    --system: #D6D1E0;
+}
+
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+header {
+    padding: 1rem;
+    background-color: var(--light);
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.chat-container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.chat-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+#messages {
+    list-style: none;
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+#messages li {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 6px;
+}
+
+.message-system {
+    background-color: var(--system);
+    font-style: italic;
+    color: #333;
+}
+
+.message-correct {
+    position: relative;
+    border-left: 4px solid var(--correct);
+}
+
+.message-correct::before {
+    content: "\2713 Točan odgovor!";
+    color: white;
+    background: var(--correct);
+    padding: 2px 6px;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    position: absolute;
+    top: -10px;
+    left: 10px;
+}
+
+#chat-form {
+    display: flex;
+    gap: 0.5rem;
+}
+
+#message-input {
+    flex: 1;
+    padding: 0.8rem;
+    border-radius: 8px;
+    border: 1px solid var(--accent);
+    font-size: 1rem;
+}
+
+#chat-form button {
+    background-color: var(--beige);
+    border: none;
+    border-radius: 8px;
+    padding: 0.8rem 1.2rem;
+    font-weight: bold;
+    color: var(--text);
+    cursor: pointer;
+}
+
+.drawer-toggle {
+    position: absolute;
+    right: 0;
+    top: 1rem;
+    background-color: var(--beige);
+    border: none;
+    border-radius: 8px 0 0 8px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--text);
+    z-index: 10;
+}
+
+.user-drawer {
+    width: 300px;
+    background-color: var(--light);
+    padding: 1rem;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+    overflow-y: auto;
+    transition: all 0.3s ease-in-out;
+}
+
+.user-drawer.closed {
+    display: none;
+}
+
+.user-card {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    justify-content: space-between;
+}
+
+.user-card-left {
+    display: flex;
+    align-items: center;
+}
+
+.user-card img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-info .admin {
+    font-size: 0.8rem;
+    color: red;
+    font-weight: bold;
+}

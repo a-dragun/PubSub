@@ -1,16 +1,114 @@
-<h1>All users</h1>
-<% users.forEach(user => { %>
-  <div class="user-box">
-    <h2><a href="/admin/users/<%= user._id %>"><%= user.name %></a></h2>
-    <p>isActive: <%= user.isActive %></p>
-    <p>Admin level: <%= user.adminLevel %></p>
-    <% if (user.isBanned) { %>
-        <p>Ban reason: <%= user.banReason %></p>
-        <p>Ban duration: <%= user.banDuration %></p>
-    <% } else if (user.isMuted) {  %>
-        <p>Mute reason: <%= user.muteReason %></p>
-        <p>Mute duration: <%= user.muteDuration %></p>
-    <% } %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Popis korisnika</title>
+  <link rel="stylesheet" href="/admin/users.css">
+</head>
+<body>
+  <div class="search-filter-container">
+    <input type="text" id="searchInput" placeholder="Pretraži po imenu..." value="<%= search || '' %>">
+    <select id="filterSelect">
+      <option value="" <%= !filter ? 'selected' : '' %>>Svi korisnici</option>
+      <option value="banned" <%= filter === 'banned' ? 'selected' : '' %>>Bannani</option>
+      <option value="muted" <%= filter === 'muted' ? 'selected' : '' %>>Utišani</option>
+      <option value="active" <%= filter === 'active' ? 'selected' : '' %>>Aktivni</option>
+    </select>
+    <select id="sortSelect">
+      <option value="name-asc" <%= sort === 'name-asc' ? 'selected' : '' %>>Ime (A-Z)</option>
+      <option value="totalScore-desc" <%= sort === 'totalScore-desc' ? 'selected' : '' %>>Bodovi (Visoki-Niski)</option>
+      <option value="questionsApproved-desc" <%= sort === 'questionsApproved-desc' ? 'selected' : '' %>>Prihvaćena pitanja (Visoki-Niski)</option>
+      <option value="adminLevel-desc" <%= sort === 'adminLevel-desc' ? 'selected' : '' %>>Admin level (Visoki-Niski)</option>
+    </select>
   </div>
-  <br>
-<% }); %>
+
+  <h1>Svi korisnici</h1>
+  <% if (users.length === 0) { %>
+    <p class="no-users">Nema korisnika.</p>
+  <% } else { %>
+    <div class="users-grid">
+      <% users.forEach(user => { %>
+        <a href="/admin/users/<%= user._id %>" style="text-decoration: none;">
+          <div class="user-box">
+            <img src="<%= user.profilePicture %>" alt="Profilna slika" class="profile-picture">
+            <h2><%= user.name %></h2>
+            <p><strong>Admin level:</strong> <%= user.adminLevel %></p>
+            <p><strong>Ukupni bodovi:</strong> <%= user.totalScore %></p>
+            <p><strong>Prihvaćena pitanja:</strong> <%= user.questionsApproved %></p>
+            <% if (user.isBanned) { %>
+              <p class="banned"><strong>Razlog bana:</strong> <%= user.banReason %></p>
+              <p class="banned"><strong>Trajanje bana:</strong> <%= user.banDuration %></p>
+            <% } else if (user.isMuted) { %>
+              <p class="muted"><strong>Razlog utišavanja:</strong> <%= user.muteReason %></p>
+              <p class="muted"><strong>Trajanje utišavanja:</strong> <%= user.muteDuration %></p>
+            <% } %>
+          </div>
+        </a>
+      <% }); %>
+    </div>
+
+    <div class="pagination">
+      <% if (currentPage > 1) { %>
+        <a href="?page=<%= currentPage - 1 %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= filter ? '&filter=' + filter : '' %><%= sort ? '&sort=' + sort : '' %>">Prethodno</a>
+      <% } %>
+
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <a href="?page=<%= i %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= filter ? '&filter=' + filter : '' %><%= sort ? '&sort=' + sort : '' %>" <%= i === currentPage ? 'class="active"' : '' %>><%= i %></a>
+      <% } %>
+
+      <% if (currentPage < totalPages) { %>
+        <a href="?page=<%= currentPage + 1 %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= filter ? '&filter=' + filter : '' %><%= sort ? '&sort=' + sort : '' %>">Dalje</a>
+      <% } %>
+    </div>
+  <% } %>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('searchInput');
+      const filterSelect = document.getElementById('filterSelect');
+      const sortSelect = document.getElementById('sortSelect');
+
+      const buildUrl = () => {
+        const params = new URLSearchParams();
+        params.set('page', '1');
+        if (searchInput.value.trim()) params.set('search', searchInput.value.trim());
+        if (filterSelect.value) params.set('filter', filterSelect.value);
+        if (sortSelect.value) params.set('sort', sortSelect.value);
+        return '?' + params.toString();
+      };
+
+      searchInput.addEventListener('input', () => {
+        clearTimeout(searchInput.debounce);
+        searchInput.debounce = setTimeout(() => {
+          window.location.href = buildUrl();
+        }, 500);
+      });
+
+      filterSelect.addEventListener('change', () => {
+        window.location.href = buildUrl();
+      });
+
+      sortSelect.addEventListener('change', () => {
+        window.location.href = buildUrl();
+      });
+
+      const getQueryParam = (name) => {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+      };
+
+      const currentPage = parseInt(getQueryParam('page')) || 1;
+      const pageLinks = document.querySelectorAll('.pagination a[href*="page="]');
+      pageLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        const match = href.match(/page=(\d+)/);
+        if (match && parseInt(match[1]) === currentPage) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

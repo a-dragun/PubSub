@@ -1,38 +1,26 @@
-<h1>All Rooms</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Popis soba</title>
+    <link rel="stylesheet" href="/rooms/rooms.css">
+</head>
+<body>
+    <h1>Popis soba</h1>
 
-<% rooms.forEach(room => { %>
-  <div class="room-box">
-    <h2><a href="/rooms/<%= room._id %>"><%= room.name %></a></h2>
-    <ul>
-      <li><strong>Type:</strong> <%= room.type %></li>
-      <li><strong>Categories:</strong> 
-        <% room.categories.forEach(cat => { %>
-          <span class="category"><%= cat %></span>
+    <div class="grid-container">
+        <% rooms.forEach(room => { %>
+            <a href="/rooms/<%= room._id %>" class="room-box">
+                <h2><%= room.name %></h2>
+                <ul>
+                    <li><strong>Tip sobe:</strong> <%= room.type %></li>
+                    <li><strong>Kategorije:</strong>
+                        <% room.categories.forEach(cat => { %>
+                            <span class="category"><%= cat %></span>
+                        <% }); %>
+                    </li>
+                </ul>
+            </a>
         <% }); %>
-      </li>
-    </ul>
-  </div>
-  <hr>
-<% }); %>
-
-<style>
-  .room-box {
-    background: #f4f4f4;
-    padding: 15px;
-    border-radius: 8px;
-  }
-
-  .category {
-    display: inline-block;
-    background-color: #d9edf7;
-    padding: 4px 8px;
-    margin-right: 5px;
-    border-radius: 4px;
-    font-size: 0.9em;
-  }
-
-  ul {
-    list-style: none;
-    padding-left: 0;
-  }
-</style>
+    </div>
+</body>
+</html>

@@ -9,7 +9,8 @@ exports.getHome = async (req, res) => {
         user = {
           id: dbUser._id,
           name: dbUser.name,
-          adminLevel: dbUser.adminLevel
+          adminLevel: dbUser.adminLevel,
+          profilePicture: dbUser.profilePicture
         };
         
       }

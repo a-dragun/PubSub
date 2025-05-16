@@ -1,25 +1,36 @@
-<img src="<%= user.profilePicture %>" alt="Profile Picture" width="150">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Moj profil</title>
+  <link rel="stylesheet" href="/user/profile.css">
+</head>
+<body>
+  <div class="profile-container">
+    <h2>Moj profil</h2>
+    <img src="<%= user.profilePicture %>" alt="Profile Picture" class="profile-picture">
+    <p><strong>Korisničko ime:</strong> <%= user.name %></p>
+    <p><strong>E-mail adresa:</strong> <%= user.email %></p>
+    <p><strong>Bodovi:</strong> <%= user.totalScore %></p>
+    <p><strong>Stvoren:</strong> <%= user.createdAt.toLocaleDateString() %></p>
+    <p><strong>Admin razina:</strong> Level <%= user.adminLevel %></p>
+    <a href="/user/edit" class="edit-link">Uredi profil</a>
+    <form method="POST" action="/user/?_method=DELETE">
+      <input type="hidden" name="_method" value="DELETE">
+      <button type="submit" id="deleteBtn">Izbriši račun</button>
+    </form>
+  </div>
 
-<p>Tvoj username je: <%= user.name %></p>
-<p>Tvoja email adresa je: <%= user.email %></p>
-<p>Trenutno imas: <%= user.totalScore %> bodova</p>
-<p>Tvoj admin level je: <%= user.adminLevel %></p>
-
-<a href="/user/edit">Edit profile</a>
-
-<form method="POST" action="/user/?_method=DELETE">
-    <input type="hidden" name="_method" value="DELETE">
-    <button type="submit" id="deleteBtn">Delete account</button>
-</form>
-
-<script>
+  <script>
     document.getElementById('deleteBtn').addEventListener('click', function (e) {
-      const confirmed = confirm("Are you sure you want to delete your account?");
+      const confirmed = confirm("Jeste li sigurni da želite izbrisati svoj račun?");
       if (confirmed) {
-        alert("Account deleted.");
+        alert("Račun izbrisan.");
       } else {
         e.preventDefault();
-        alert("Deletion canceled.");
+        alert("Brisanje otkazano.");
       }
     });
-</script>
+  </script>
+</body>
+</html>
