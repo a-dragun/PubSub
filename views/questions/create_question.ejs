@@ -6,8 +6,8 @@
   <link rel="stylesheet" href="/create_question.css">
 </head>
 <body>
-
-  <form method="POST" action="/questions/">
+<%- include('../partials/header') %>
+  <form method="POST" action="/questions/" class="create-question-form">
     <h1>Stvori novo pitanje!</h1>
       <p>Pitanje mora biti jasno napisano i bez pogrešaka u tipkanju.<br>
       Odgovor na pitanje mora biti točan i neovisan o vremenu u kojem se odgovara.<br>

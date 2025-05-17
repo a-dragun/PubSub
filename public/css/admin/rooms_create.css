@@ -94,7 +94,7 @@ select {
     color: var(--text);
 }
 
-button[type="submit"] {
+.submit-button[type="submit"] {
     display: block;
     margin: 2rem auto 0;
     padding: 0.75rem 2rem;
@@ -108,11 +108,11 @@ button[type="submit"] {
     transition: background 0.3s ease;
 }
 
-button[type="submit"]:hover {
+.submit-button[type="submit"]:hover {
     background: #dec6a5;
 }
 
-button[type="submit"]:disabled {
+.submit-button[type="submit"]:disabled {
     background: #ccc;
     cursor: not-allowed;
 }

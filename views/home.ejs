@@ -5,31 +5,7 @@
     <link rel="stylesheet" href="home.css">
 </head>
 <body>
-    <nav class="navbar" id="navbar">
-        <% if (user) { %>
-            <div class="user-profile">
-                <a href="/user/profile">
-                    <img src="<%= user.profilePicture || '/default-profile.png' %>" alt="Profile Picture">
-                </a>
-                <a href="/user/profile"><%= user.name %></a>
-            </div>
-            <div class="center-links">
-                <% if (user.adminLevel > 0) { %>
-                    <a href="/admin/dashboard">Admin Dashboard</a>
-                <% } %>
-                <a href="/questions/new">Stvori pitanje</a>
-                <a href="/rooms">Igraj!</a>
-            </div>
-            <form action="/auth/logout" method="POST">
-                <button type="submit">Odjava</button>
-            </form>
-        <% } else { %>
-            <div class="center-links">
-                <a href="/auth/login">Prijava</a>
-                <a href="/auth/register">Registracija</a>
-            </div>
-        <% } %>
-    </nav>
+    <%- include('partials/header') %>
 
     <div class="content">
         <h1>Dobrodošli na PubSub!</h1>
@@ -40,21 +16,5 @@
             <a href="auth/register">Registracija</a>
         <% } %>
     </div>
-
-    <script>
-        const navbar = document.getElementById('navbar');
-        let timeout;
-
-        document.addEventListener('mousemove', (e) => {
-            clearTimeout(timeout);
-            if (e.clientY < 100) {
-                navbar.classList.add('show');
-            } else {
-                timeout = setTimeout(() => {
-                    navbar.classList.remove('show');
-                }, 300);
-            }
-        });
-    </script>
 </body>
 </html>

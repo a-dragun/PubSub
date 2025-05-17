@@ -27,7 +27,7 @@ app.set('io', io);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static("public"));
+app.use(express.static("public/css"));
 app.use(session({ 
   secret: process.env.SESSION_SECRET, 
   resave: false, 
@@ -39,6 +39,11 @@ app.use(cacheControl);
 app.use(methodOverride("_method"));
 
 app.set("view engine", "ejs");
+app.use((req, res, next) => {
+  if(req.session && req.session.user)
+    res.locals.user = req.session.user;
+  next();
+});
 
 mongoose
   .connect(process.env.MONGO_URI)

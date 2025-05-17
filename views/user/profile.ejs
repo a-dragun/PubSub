@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="/user/profile.css">
 </head>
 <body>
+  <%- include('../partials/header') %>
   <div class="profile-container">
     <h2>Moj profil</h2>
     <img src="<%= user.profilePicture %>" alt="Profile Picture" class="profile-picture">
@@ -15,7 +16,7 @@
     <p><strong>Stvoren:</strong> <%= user.createdAt.toLocaleDateString() %></p>
     <p><strong>Admin razina:</strong> Level <%= user.adminLevel %></p>
     <a href="/user/edit" class="edit-link">Uredi profil</a>
-    <form method="POST" action="/user/?_method=DELETE">
+    <form method="POST" action="/user/?_method=DELETE" class="edit-form">
       <input type="hidden" name="_method" value="DELETE">
       <button type="submit" id="deleteBtn">Izbriši račun</button>
     </form>

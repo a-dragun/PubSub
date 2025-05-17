@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/admin/rooms_create.css">
 </head>
 <body>
+    <%- include('../../partials/header') %>
     <div class="form-container">
         <h1>Stvori sobu</h1>
 
@@ -34,7 +35,7 @@
                 <input type="hidden" name="categories" id="selectedCategories" required>
             </div>
 
-            <button type="submit" id="createRoomButton" disabled>Stvori sobu</button>
+            <button class="submit-button" type="submit" id="createRoomButton" disabled>Stvori sobu</button>
         </form>
     </div>
 

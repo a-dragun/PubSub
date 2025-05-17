@@ -41,7 +41,8 @@
   </script>
 </head>
 <body>
-  <form oninput="checkPassword()" method="POST" action="/auth/register">
+  <%- include('../partials/header') %>
+  <form oninput="checkPassword()" method="POST" action="/auth/register" class="register-form">
     <h1>Registracija</h1>
     <input type="text" id="username" name="name" placeholder="Korisničko ime" required />
     <input type="email" name="email" placeholder="E-mail" required />

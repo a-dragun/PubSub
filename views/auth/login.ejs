@@ -6,7 +6,8 @@
   <link rel="stylesheet" href="/auth/login.css">
 </head>
 <body>
-  <form method="POST" action="/auth/login">
+  <%- include('../partials/header') %>
+  <form method="POST" action="/auth/login" class="login-form">
     <h1>Prijava</h1>
     <input type="text" name="username" placeholder="Korisničko ime" required />
     <input type="password" name="password" placeholder="Zaporka" required />

@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="/admin/users.css">
 </head>
 <body>
+  <%- include('../../partials/header') %>
   <div class="search-filter-container">
     <input type="text" id="searchInput" placeholder="Pretraži po imenu..." value="<%= search || '' %>">
     <select id="filterSelect">

@@ -38,7 +38,7 @@ exports.postLogin = async (req, res) => {
       return res.send("Invalid username or password");
     }
 
-    req.session.user = { id: user._id, name: user.name, profilePicture: user.profilePicture };
+    req.session.user = { id: user._id, name: user.name, profilePicture: user.profilePicture, adminLevel: user.adminLevel };
     return res.redirect("/");
   } catch (error) {
     return res.send("Error: " + error.message);

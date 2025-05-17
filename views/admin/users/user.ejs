@@ -6,8 +6,8 @@
   <link rel="stylesheet" href="/admin/user.css">
 </head>
 <body>
+  <%- include('../../partials/header') %>
   <div class="user-container">
-    <!-- User profile image -->
     <img class="profile-picture" src="<%= filteredUser.profilePicture %>" alt="Profilna slika korisnika" />
 
     <h1><%= filteredUser.name %></h1>
@@ -24,7 +24,7 @@
       <p class="muted"><strong>Trajanje utišavanja:</strong> <%= filteredUser.muteDuration %></p>
     <% } %>
 
-    <form action="/admin/users/<%= filteredUser._id %>?_method=PUT" method="POST">
+    <form action="/admin/users/<%= filteredUser._id %>?_method=PUT" method="POST" class="admin-user-form">
       <input type="hidden" name="_method" value="PUT">
       <label for="adminLevel">Novi admin level:</label>
       <select name="adminLevel" id="adminLevel">

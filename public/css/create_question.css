@@ -6,19 +6,27 @@ body {
     animation: gradient 15s ease infinite;
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
+    padding: 2rem;
+    box-sizing: border-box;
+    min-height: 100vh;
 }
+
 
 @keyframes gradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+0% {
+    background-position: 0% 50%;
+}
+50% {
+    background-position: 100% 50%;
+}
+100% {
+    background-position: 0% 50%;
+}
 }
 
-form {
+.create-question-form {
     width: 90%;
-    max-width: 500px;
+    max-width: 600px;
     background-color: #ffffff99;
     padding: 2rem;
     border-radius: 16px;
@@ -28,53 +36,40 @@ form {
     gap: 1rem;
 }
 
-h2 {
-    text-align: center;
-    color: #4C5B66;
-    margin: 0;
-}
-
-input {
+input, select {
     padding: 0.9rem;
     font-size: 1rem;
     border: 1px solid #748CAB;
     border-radius: 8px;
-    width: 100%;
-    box-sizing: border-box;
 }
 
-#togglePassword {
+select {
+    background-color: white;
     color: #4C5B66;
-    text-decoration: underline;
-    cursor: pointer;
-    font-size: 1rem;
-    text-align: center;
-    transition: color 0.3s;
 }
 
-#togglePassword:hover {
-    color: #748CAB;
-}
-
-#message {
-    font-size: 0.9rem;
-    font-weight: bold;
-    min-height: 1.2em;
-    text-align: center;
-}
-
-button[type="submit"] {
+button {
     padding: 1rem;
     background-color: #EAD7BB;
     border: none;
     border-radius: 8px;
     font-size: 1rem;
     font-weight: bold;
-    cursor: pointer;
     color: #4C5B66;
+    cursor: pointer;
     transition: background-color 0.3s;
 }
 
-button[type="submit"]:hover {
+button:hover {
     background-color: #dec6a5;
+}
+
+h1 {
+    text-align: center;
+    color: #4C5B66;
+}
+
+label {
+    font-weight: bold;
+    color: #4C5B66;
 }

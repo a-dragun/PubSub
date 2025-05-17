@@ -6,7 +6,8 @@
   <link rel="stylesheet" href="/user/edit.css">
 </head>
 <body>
-  <form id="editForm" action="/user/edit?_method=PUT" method="POST" oninput="checkPassword()">
+  <%- include('../partials/header') %>
+  <form id="editForm" action="/user/edit?_method=PUT" method="POST" oninput="checkPassword()" class="edit-user-form">
     <input type="hidden" name="_method" value="PUT" />
     <h2>Uredi profil</h2>
     <input type="text" id="username" name="username" pattern="^\S+$" value="<%= user.name %>" placeholder="Korisničko ime" required />

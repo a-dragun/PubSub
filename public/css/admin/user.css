@@ -65,7 +65,7 @@ p.muted {
     font-weight: bold;
 }
 
-form {
+.admin-user-form {
     width: 100%;
     display: flex;
     flex-direction: column;

@@ -72,7 +72,7 @@ a.edit-link:hover {
     color: #4C5B66;
 }
 
-form {
+.edit-form {
     width: 100%;
     display: flex;
     justify-content: center;

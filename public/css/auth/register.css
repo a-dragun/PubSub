@@ -3,14 +3,12 @@ body {
     font-family: sans-serif;
     background: linear-gradient(-45deg, #B0D9E9, #EAD7BB, #a2d2ee, #F4EAE0);
     background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
+animation: gradient 15s ease infinite;
     display: flex;
     justify-content: center;
-    padding: 2rem;
-    box-sizing: border-box;
-    min-height: 100vh;
+    align-items: center;
+    height: 100vh;
 }
-
 
 @keyframes gradient {
 0% {
@@ -24,9 +22,9 @@ body {
 }
 }
 
-form {
+.register-form {
     width: 90%;
-    max-width: 600px;
+    max-width: 500px;
     background-color: #ffffff99;
     padding: 2rem;
     border-radius: 16px;
@@ -36,16 +34,16 @@ form {
     gap: 1rem;
 }
 
-input, select {
+input {
     padding: 0.9rem;
     font-size: 1rem;
     border: 1px solid #748CAB;
     border-radius: 8px;
 }
 
-select {
-    background-color: white;
-    color: #4C5B66;
+#message {
+    font-size: 0.9rem;
+    font-weight: bold;
 }
 
 button {
@@ -55,8 +53,8 @@ button {
     border-radius: 8px;
     font-size: 1rem;
     font-weight: bold;
-    color: #4C5B66;
     cursor: pointer;
+    color: #4C5B66;
     transition: background-color 0.3s;
 }
 
@@ -66,10 +64,5 @@ button:hover {
 
 h1 {
     text-align: center;
-    color: #4C5B66;
-}
-
-label {
-    font-weight: bold;
     color: #4C5B66;
 }
