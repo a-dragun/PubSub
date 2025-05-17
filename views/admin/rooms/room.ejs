@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title><%= room.name %> - Detalji</title>
-  <link rel="stylesheet" href="/admin/room.css">
+  <link rel="stylesheet" href="/css/admin/room.css">
+  <script src="/js/admin/room.js" defer></script>
 </head>
 <body>
   <%- include('../../partials/header') %>
@@ -26,12 +27,6 @@
       <button type="submit" onclick="return confirmDelete()">Obriši sobu</button>
     </form>
   </div>
-
-  <script>
-    function confirmDelete() {
-      return confirm("Jesi li siguran da želiš obrisati sobu? Akcija nije reverzibilna.");
-    }
-  </script>
 
 </body>
 </html>

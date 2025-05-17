@@ -1,98 +1,97 @@
 <head>
-    <style>
-:root {
-    --bg: #B0D9E9;
-    --accent: #748CAB;
-    --light: #ffffffcc;
-    --text: #4C5B66;
-    --beige: #EAD7BB;
-    --danger: #d68c90;
-}
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: var(--light);
-    backdrop-filter: blur(10px);
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transform: translateY(-100%);
-    transition: transform 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-}
+<style>
+    :root {
+        --bg: #B0D9E9;
+        --accent: #748CAB;
+        --light: #ffffffcc;
+        --text: #4C5B66;
+        --beige: #EAD7BB;
+        --danger: #d68c90;
+    }
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: var(--light);
+        backdrop-filter: blur(10px);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transform: translateY(-100%);
+        transition: transform 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
 
-.navbar.show {
-    transform: translateY(0);
-}
+    .navbar.show {
+        transform: translateY(0);
+    }
 
-.navbar a, .navbar form button {
-    color: var(--text);
-    text-decoration: none;
-    font-size: 1rem;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    transition: background 0.2s ease, color 0.2s ease;
-}
+    .navbar a, .navbar form button {
+        color: var(--text);
+        text-decoration: none;
+        font-size: 1rem;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        transition: background 0.2s ease, color 0.2s ease;
+    }
 
-.navbar a:hover{
-    background: var(--accent);
+    .navbar a:hover{
+        background: var(--accent);
+        color: var(--light);
+    }
+
+    .navbar form button {
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .navbar form button:hover {
+    background: var(--danger);
     color: var(--light);
-}
-
-.navbar form button {
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-.navbar form button:hover {
-background: var(--danger);
-color: var(--light);
-}
+    }
 
 
-.navbar .user-profile {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
+    .navbar .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
 
-.navbar .user-profile img {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--accent);
-}
+    .navbar .user-profile img {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--accent);
+    }
 
-.navbar .user-profile a {
-    padding: 0;
-}
+    .navbar .user-profile a {
+        padding: 0;
+    }
 
-.navbar .user-profile a:hover {
-    background: none;
-    color: var(--accent);
-}
+    .navbar .user-profile a:hover {
+        background: none;
+        color: var(--accent);
+    }
 
-.navbar .center-links {
-    display: flex;
-    gap: 2rem;
-    justify-content: center;
-    flex: 1;
-}
+    .navbar .center-links {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        flex: 1;
+    }
 
-.right-section {
-    display: flex;
-    align-items: center;
-}
-
-
-    </style>
+    .right-section {
+        display: flex;
+        align-items: center;
+    }
+</style>
+<script src="/js/header.js" defer></script>
 </head>
 <body>
     <nav class="navbar" id="navbar">
@@ -112,34 +111,16 @@ color: var(--light);
                 <% } %>
             </div>
             <div class="right-section">
-  <form action="/auth/logout" method="POST" class="navbar-logout">
-    <button type="submit">Odjava</button>
-  </form>
-</div>
-
-
-        <% } else { %>
-            <div class="center-links">
-                <a href="/">Početna stranica</a>
-                <a href="/auth/login">Prijava</a>
-                <a href="/auth/register">Registracija</a>
+                <form action="/auth/logout" method="POST" class="navbar-logout">
+                    <button type="submit">Odjava</button>
+                </form>
             </div>
-        <% } %>
+                <% } else { %>
+                    <div class="center-links">
+                        <a href="/">Početna stranica</a>
+                        <a href="/auth/login">Prijava</a>
+                        <a href="/auth/register">Registracija</a>
+                    </div>
+                <% } %>
     </nav>
-
-    <script>
-        const navbar = document.getElementById('navbar');
-        let timeout;
-
-        document.addEventListener('mousemove', (e) => {
-            clearTimeout(timeout);
-            if (e.clientY < 100) {
-                navbar.classList.add('show');
-            } else {
-                timeout = setTimeout(() => {
-                    navbar.classList.remove('show');
-                }, 300);
-            }
-        });
-    </script>
 </body>

@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>Detalji pitanja</title>
-  <link rel="stylesheet" href="/admin/question.css">
+  <link rel="stylesheet" href="/css/admin/question.css">
+  <script src="/js/admin/question.js" defer></script>
 </head>
 <body>
   <%- include('../../partials/header') %>
@@ -35,23 +36,5 @@
       <% } %>
     </div>
   </div>
-
-  <script>
-    document.getElementById('deleteBtn').addEventListener('click', function (e) {
-      const confirmed = confirm("Jesi li siguran da želiš obrisati ovo pitanje?");
-      if (!confirmed) {
-        e.preventDefault();
-      }
-    });
-
-    <% if (question.status !== 'approved') { %>
-      document.getElementById('approveBtn').addEventListener('click', function (e) {
-        const confirmed = confirm("Jesi li siguran da želiš odobriti ovo pitanje?");
-        if (!confirmed) {
-          e.preventDefault();
-        }
-      });
-    <% } %>
-  </script>
 </body>
 </html>

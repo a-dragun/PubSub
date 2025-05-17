@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Stvori sobu</title>
-    <link rel="stylesheet" href="/admin/rooms_create.css">
+    <link rel="stylesheet" href="/css/admin/rooms_create.css">
+    <script src="/js/admin/rooms_create.js" defer></script>
 </head>
 <body>
     <%- include('../../partials/header') %>
@@ -38,35 +39,5 @@
             <button class="submit-button" type="submit" id="createRoomButton" disabled>Stvori sobu</button>
         </form>
     </div>
-
-    <script>
-        const categoryButtons = document.querySelectorAll('.category-button');
-        const selectedCategoriesInput = document.getElementById('selectedCategories');
-        const createRoomButton = document.getElementById('createRoomButton');
-        let selectedCategories = [];
-
-        function checkIfCategoriesSelected() {
-            createRoomButton.disabled = selectedCategories.length === 0;
-        }
-
-        categoryButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const category = button.getAttribute('data-category');
-
-                if (selectedCategories.includes(category)) {
-                    selectedCategories = selectedCategories.filter(cat => cat !== category);
-                    button.classList.remove('selected');
-                } else {
-                    selectedCategories.push(category);
-                    button.classList.add('selected');
-                }
-
-                selectedCategoriesInput.value = JSON.stringify(selectedCategories);
-                checkIfCategoriesSelected();
-            });
-        });
-
-        checkIfCategoriesSelected();
-    </script>
 </body>
 </html>

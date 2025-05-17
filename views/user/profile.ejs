@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>Moj profil</title>
-  <link rel="stylesheet" href="/user/profile.css">
+  <link rel="stylesheet" href="/css/user/profile.css">
+  <script src="/js/user/profile.js" defer></script>
 </head>
 <body>
   <%- include('../partials/header') %>
@@ -21,17 +22,5 @@
       <button type="submit" id="deleteBtn">Izbriši račun</button>
     </form>
   </div>
-
-  <script>
-    document.getElementById('deleteBtn').addEventListener('click', function (e) {
-      const confirmed = confirm("Jeste li sigurni da želite izbrisati svoj račun?");
-      if (confirmed) {
-        alert("Račun izbrisan.");
-      } else {
-        e.preventDefault();
-        alert("Brisanje otkazano.");
-      }
-    });
-  </script>
 </body>
 </html>

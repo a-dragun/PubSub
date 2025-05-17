@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>Detalji korisnika</title>
-  <link rel="stylesheet" href="/admin/user.css">
+  <link rel="stylesheet" href="/css/admin/user.css">
+  <script src="/js/admin/user.js" defer></script>
 </head>
 <body>
   <%- include('../../partials/header') %>
@@ -70,26 +71,5 @@
       <button type="submit" id="deleteBtn" class="delete-btn">Izbriši korisnika</button>
     </form>
   </div>
-
-  <script>
-    function toggleForm(formId) {
-      const form = document.getElementById(formId);
-      form.style.display = form.style.display === 'none' ? 'block' : 'none';
-    }
-
-    document.getElementById('deleteBtn').addEventListener('click', function (e) {
-      const confirmed = confirm("Jeste li sigurni da želite izbrisati ovog korisnika?");
-      if (!confirmed) {
-        e.preventDefault();
-      }
-    });
-
-    document.getElementById('updateAdminBtn').addEventListener('click', function (e) {
-      const confirmed = confirm("Jeste li sigurni da želite promijeniti admin level ovog korisnika?");
-      if (!confirmed) {
-        e.preventDefault();
-      }
-    });
-  </script>
 </body>
 </html>

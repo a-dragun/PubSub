@@ -27,7 +27,7 @@ app.set('io', io);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static("public/css"));
+app.use(express.static("public"));
 app.use(session({ 
   secret: process.env.SESSION_SECRET, 
   resave: false, 
