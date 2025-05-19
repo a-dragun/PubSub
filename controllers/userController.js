@@ -73,8 +73,7 @@ exports.editUser = async (req, res) => {
 }
 
     if (newPassword) {
-      const hashedPassword = await bcrypt.hash(newPassword, 12);
-      user.password = hashedPassword;
+      user.password = newPassword;
     }
     await user.save();
 
