@@ -12,10 +12,11 @@
     <input type="hidden" name="_method" value="PUT" />
     <h2>Uredi profil</h2>
     <input type="text" id="username" name="username" pattern="^\S+$" value="<%= user.name %>" placeholder="Korisničko ime" required />
+    <input type="text" id="profilePicture" name="profilePicture" placeholder="Profile picture URL" />
     <span id="togglePassword" onclick="togglePasswordForm()">Promijeni zaporku</span>
     <div id="passwordForm" style="display: none;">
-      <input type="password" name="newPassword" placeholder="Nova zaporka" />
-      <input type="password" name="repeatPassword" placeholder="Ponovi novu zaporku" />
+      <input type="password" name="newPassword" placeholder="Nova zaporka" autocomplete="off"/>
+      <input type="password" name="repeatPassword" placeholder="Ponovi novu zaporku" autocomplete="off" />
     </div>
     <span id="message"></span>
     <button type="submit">Spremi promjene</button>

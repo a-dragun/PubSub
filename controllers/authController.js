@@ -12,15 +12,23 @@ exports.getRegister = (req, res) => {
 
 exports.postRegister = async (req, res) => {
   try {
-    const { name, email, password, profile_picture } = req.body;
-    if(name.length > 15) {
-      res.send("Too long username. Max 15 characters");
-    }
-    else {
-      const user = await User.create({ name, email, password, profilePicture: profile_picture });
-      req.session.user = { id: user._id, name: user.name, profile_picture };
+      const { name, email, password, password_repeat } = req.body;
+      if (!name || !email || !password || !password_repeat) {
+        return res.send("All fields required.");
+      }
+      if (name.length > 15 || name.includes(' ')) {
+        return res.send("Username cannot contain more than 15 characters and has to be one word.");
+      }
+      if (password.length < 8) {
+        return res.send("Password must contain at least 8 characters.");
+      }
+      if (password !== password_repeat) {
+        return res.send("Passwords do not match.");
+      }
+      const user = await User.create({ name, email, password });
+      req.session.user = { id: user._id, name: user.name, profile_picture: user.profilePicture };
       return res.redirect("/");
-    }
+      
   } catch (error) {
     return res.send("Error: " + error.message);
   }

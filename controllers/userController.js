@@ -41,28 +41,40 @@ exports.editUser = async (req, res) => {
       if (newPassword !== repeatPassword) {
         return res.send("Passwords do not match.");
       }
+      if (!newPassword || newPassword.length < 8) {
+        return res.send("Password must have at least 8 characters.");
+      }
     }
+
+    if (username && (username.length > 15 || username.includes(' '))) {
+        return res.send("Username cannot contain more than 15 characters and has to be one word.");
+      }
+    
     
     const user = await User.findById(userId);
+
     if(userSocketMap){
         const userSocket = userSocketMap.get(user.name);
         if (userSocket && userSocket.socket) {
           userSocket.socket.emit('forceDisconnect', { reason: "Uređen račun" });
         }
       }
-    if(username && username.length <= 15) {
+    if(username) {
       user.name = username;
     }
-    else {
-      res.send("Invalid username");
-    }
     
-    if(profilePicture) {
+    if (profilePicture) {
+      const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+      const isValid = allowedExtensions.some(ext => profilePicture.toLowerCase().endsWith(ext));
+      if (!isValid) {
+        return res.send("Profile picture must be an image (jpg, png, gif, webp).");
+      }
       user.profilePicture = profilePicture;
-    }
+}
 
     if (newPassword) {
-      user.password = newPassword;
+      const hashedPassword = await bcrypt.hash(newPassword, 12);
+      user.password = hashedPassword;
     }
     await user.save();
 

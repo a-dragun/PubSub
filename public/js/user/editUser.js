@@ -1,22 +1,38 @@
 document.addEventListener('DOMContentLoaded', function () {
   const usernameInput = document.getElementById('username');
-
-  usernameInput.addEventListener('input', function() {
+  const form = document.getElementById('editForm');
+  const passwordForm = document.getElementById('passwordForm');
+  const newPasswordInput = document.getElementsByName('newPassword')[0];
+  const repeatPasswordInput = document.getElementsByName('repeatPassword')[0];
+  usernameInput.addEventListener('input', function () {
     if (usernameInput.value.length > 15) {
       usernameInput.value = usernameInput.value.substring(0, 15);
     }
   });
-  
-  usernameInput.addEventListener('keydown', function(event) {
+
+  usernameInput.addEventListener('keydown', function (event) {
     if (event.key === ' ') {
       event.preventDefault();
     }
   });
 
-  usernameInput.addEventListener('paste', function(event) {
+  usernameInput.addEventListener('paste', function (event) {
     const paste = (event.clipboardData || window.clipboardData).getData('text');
     if (paste.includes(' ')) {
       event.preventDefault();
+    }
+  });
+  form.addEventListener('submit', function () {
+    const passwordVisible = passwordForm.style.display !== 'none';
+    const newPassword = newPasswordInput.value.trim();
+    const repeatPassword = repeatPasswordInput.value.trim();
+
+    if (!passwordVisible || (!newPassword && !repeatPassword)) {
+      newPasswordInput.disabled = true;
+      repeatPasswordInput.disabled = true;
+    } else {
+      newPasswordInput.disabled = false;
+      repeatPasswordInput.disabled = false;
     }
   });
 });
@@ -29,7 +45,6 @@ function togglePasswordForm() {
 
   if (form.style.display === 'none') {
     form.style.display = 'block';
-  clearance
   } else {
     form.style.display = 'none';
     newPasswordInput.value = '';
