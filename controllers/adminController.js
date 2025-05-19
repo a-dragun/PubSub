@@ -44,7 +44,7 @@ exports.getAdminDashboard = async (req, res) => {
 exports.getUsers = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limit = 9;
+    const limit = 20;
     const skip = (page - 1) * limit;
     const search = req.query.search ? req.query.search.trim() : '';
     const filter = req.query.filter || '';
@@ -109,7 +109,7 @@ exports.getUsers = async (req, res) => {
 
 exports.getQuestions = async (req, res) => {
   try {
-    const questionsPerPage = 12;
+    const questionsPerPage = 20;
     const pendingPage = parseInt(req.query.pendingPage) || 1;
     const approvedPage = parseInt(req.query.approvedPage) || 1;
     const search = req.query.search ? req.query.search.trim() : '';
