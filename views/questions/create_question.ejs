@@ -10,16 +10,17 @@
   <form method="POST" action="/questions/" class="create-question-form">
     <h1>Stvori novo pitanje!</h1>
       <p>Pitanje mora biti jasno napisano i bez pogrešaka u tipkanju.<br>
-      Odgovor na pitanje mora biti točan i neovisan o vremenu u kojem se odgovara.<br>
+      Svi odgovori na pitanja moraju biti točni i neovisni o vremenu u kojem se odgovaraju.<br>
+      Ako postoji samo jedan točan odgovor, nije potrebno ispuniti sva polja. Dovoljno je ispuniti samo prvo, obavezno polje.<br>
       Potrebno je obratiti pozornost da se na neka pitanja može odgovoriti na više načina.<br><br>Za svako odobreno pitanje, nagrađeni ste s <strong>5 bodova</strong>.<br>
       <strong>Hvala što doprinosite PubSub-u.</strong></p>
 
     <input type="text" name="text" placeholder="Text" required />
 
-    <input type="text" name="answer1" placeholder="Odgovor 1 (obavezno)" required />
-    <input type="text" name="answer2" placeholder="Odgovor 2" />
-    <input type="text" name="answer3" placeholder="Odgovor 3" />
-    <input type="text" name="answer4" placeholder="Odgovor 4" />
+    <input type="text" name="answer1" placeholder="Točan odgovor 1 (obavezno)" required />
+    <input type="text" name="answer2" placeholder="Točan odgovor 2" />
+    <input type="text" name="answer3" placeholder="Točan odgovor 3" />
+    <input type="text" name="answer4" placeholder="Točan odgovor 4" />
 
     <label for="category">Odaberi kategoriju:</label>
     <select name="category" id="category" required>
