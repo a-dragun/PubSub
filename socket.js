@@ -232,19 +232,8 @@ function setupSocketHandlers(io) {
       .replace(/[čć]/g, 'c')
       .replace(/ž/g, 'z');
   }
-
-  function isQuestionActive(questionId) {
-    for (const roomId in activeQuestions) {
-      if (activeQuestions[roomId] && activeQuestions[roomId]._id.toString() === questionId.toString()) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   setupSocketHandlers.userSocketMap = userSocketMap;
   setupSocketHandlers.ejectAllUsersFromRoom = ejectAllUsersFromRoom;
-  setupSocketHandlers.isQuestionActive = isQuestionActive;
 
   return io;
 }
