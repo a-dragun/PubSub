@@ -48,8 +48,11 @@ exports.editUser = async (req, res) => {
         userSocket.socket.emit('forceDisconnect', { reason: "Uređen račun" });
         userSocket.socket.disconnect();
       }
-    if(username) {
+    if(username && username.length <= 15) {
       user.name = username;
+    }
+    else {
+      res.send("Invalid username");
     }
     
     if(profilePicture) {

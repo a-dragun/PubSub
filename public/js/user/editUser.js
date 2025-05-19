@@ -1,5 +1,11 @@
 document.addEventListener('DOMContentLoaded', function () {
   const usernameInput = document.getElementById('username');
+
+  usernameInput.addEventListener('input', function() {
+    if (usernameInput.value.length > 15) {
+      usernameInput.value = usernameInput.value.substring(0, 15);
+    }
+  });
   
   usernameInput.addEventListener('keydown', function(event) {
     if (event.key === ' ') {

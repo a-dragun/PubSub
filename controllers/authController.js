@@ -13,9 +13,14 @@ exports.getRegister = (req, res) => {
 exports.postRegister = async (req, res) => {
   try {
     const { name, email, password, profile_picture } = req.body;
-    const user = await User.create({ name, email, password, profilePicture: profile_picture });
-    req.session.user = { id: user._id, name: user.name, profile_picture };
-    return res.redirect("/");
+    if(name.length > 15) {
+      res.send("Too long username. Max 15 characters");
+    }
+    else {
+      const user = await User.create({ name, email, password, profilePicture: profile_picture });
+      req.session.user = { id: user._id, name: user.name, profile_picture };
+      return res.redirect("/");
+    }
   } catch (error) {
     return res.send("Error: " + error.message);
   }
