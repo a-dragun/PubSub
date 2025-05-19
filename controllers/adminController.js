@@ -167,9 +167,14 @@ exports.getQuestions = async (req, res) => {
 exports.getUser = async(req, res) => {
   try {
     let userId = req.params.id;
-    let dbUser = await User.findById(userId).lean();
-    const { password, ...filteredUser } = dbUser;
-    return res.render("admin/users/user", {filteredUser});
+    if(userId){
+      let dbUser = await User.findById(userId).lean();
+      const { password, ...filteredUser } = dbUser;
+      return res.render("admin/users/user", {filteredUser});
+    }
+    else {
+      res.send("User id does not exist");
+    }
   } catch (error) {
     return res.send("Error: " + error.message);
   }

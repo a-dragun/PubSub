@@ -63,10 +63,6 @@ ul li {
     font-size: 0.9rem;
 }
 
-.category:hover {
-    background-color: var(--text);
-}
-
 form#deleteForm {
     display: flex;
     justify-content: center;

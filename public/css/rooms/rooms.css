@@ -84,10 +84,6 @@ h1 {
     transition: background 0.2s ease;
 }
 
-.category:hover {
-    background-color: var(--text);
-}
-
 hr {
     display: none;
 }
