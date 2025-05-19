@@ -1,11 +1,17 @@
 const User = require("../models/User");
+const socketHandler	= require("../socket");
+const userSocketMap = socketHandler.userSocketMap;
 
 exports.deleteUser = async (req, res) => {
   try {
     const user = req.session.user;
-    const id = req.session.user.id;
-    if(user.id == id){
-        await User.findByIdAndDelete(id);
+    if(user && user.id){
+      const userSocket = userSocketMap.get(user.name);
+      if (userSocket && userSocket.socket) {
+        userSocket.socket.emit('forceDisconnect', { reason: "Obrisan račun" });
+        userSocket.socket.disconnect();
+      }
+        await User.findByIdAndDelete(user.id);
         req.session.destroy(() => res.redirect("/"));
     }
   } catch (error) {
@@ -35,8 +41,13 @@ exports.editUser = async (req, res) => {
         return res.send("Passwords do not match.");
       }
     }
-
+    
     const user = await User.findById(userId);
+    const userSocket = userSocketMap.get(user.name);
+      if (userSocket && userSocket.socket) {
+        userSocket.socket.emit('forceDisconnect', { reason: "Uređen račun" });
+        userSocket.socket.disconnect();
+      }
     if(username) {
       user.name = username;
     }
@@ -48,7 +59,6 @@ exports.editUser = async (req, res) => {
     if (newPassword) {
       user.password = newPassword;
     }
-
     await user.save();
 
     return res.redirect("/user/profile/");

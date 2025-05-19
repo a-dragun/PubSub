@@ -242,6 +242,11 @@ exports.deleteUser = async (req, res) => {
       return res.redirect(`/admin/users/${id}`);
     }
     else {
+      const userSocket = userSocketMap.get(user.name);
+      if (userSocket && userSocket.socket) {
+        userSocket.socket.emit('forceDisconnect', { reason: "Obrisan račun" });
+        userSocket.socket.disconnect();
+      }
       await user.deleteOne();
       return res.redirect("/admin/users/");
     }
@@ -349,6 +354,7 @@ exports.getRoom = async(req, res) => {
 exports.deleteRoom = async (req, res) => {
   try {
     const id = req.params.id;
+    socketHandler.ejectAllUsersFromRoom(id, "Obrisana soba");
     await Room.findByIdAndDelete(id);
     return res.redirect("/admin/rooms/");
   } catch (error) {
@@ -361,7 +367,7 @@ exports.banUser = async (req, res) => {
     const {banReason, banDuration} = req.body;
     const id = req.params.id;
     const user = await User.findById(id);
-    if(user.adminlevel == 2) {
+    if(user.adminLevel == 2) {
       return res.redirect("admin/users")
     }
     else {

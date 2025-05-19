@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   socket.on('forceDisconnect', (data) => {
-    alert(`Izbačen si iz sobe od strane admina. Razlog: ${data.reason}`);
+    alert(`Izbačen si iz sobe! Razlog: ${data.reason}`);
     socket.disconnect();
     window.location.href = '/';
   });

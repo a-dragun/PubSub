@@ -98,7 +98,8 @@
         <% if (locals.user) { %>
             <div class="user-profile">
                 <a href="/user/profile">
-                    <img src="<%= user.profilePicture || '/default-profile.png' %>" alt="Profile Picture">
+                    <img src="<%= locals.user.profilePicture || 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg' %>" 
+                         alt="Profile Picture">
                 </a>
                 <a href="/user/profile"><%= locals.user.name %></a>
             </div>

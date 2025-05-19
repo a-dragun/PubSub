@@ -3,7 +3,7 @@ const User = require("../models/User");
 
 exports.getRoomsPage = async (req, res) => {
   try {
-    rooms = await Room.find().lean();
+    const rooms = await Room.find().lean();
     return res.render("rooms/index", {rooms});
   } catch (error) {
     return res.send("Error: " + error.message);
@@ -12,8 +12,8 @@ exports.getRoomsPage = async (req, res) => {
 
 exports.getRoomPage = async (req, res) => {
     try {
-      roomId = req.params.id;
-      room = await Room.findById(roomId);
+      const roomId = req.params.id;
+      const room = await Room.findById(roomId);
       let userId = req.session.user.id;
       let dbUser = await User.findById(userId).lean();
       const { password, ...user } = dbUser;

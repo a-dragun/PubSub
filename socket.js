@@ -79,7 +79,7 @@ function setupSocketHandlers(io) {
 
     socket.on('disconnect', async () => {
       for (const [username, s] of userSocketMap.entries()) {
-        if (s === socket) {
+        if (s.socket === socket) {
           userSocketMap.delete(username);
           break;
         }
@@ -100,122 +100,153 @@ function setupSocketHandlers(io) {
       console.log('User disconnected', socket.id);
     });
   });
-}
 
-async function emitUserList(roomId, io, roomUsers) {
-  const users = await User.find({ name: { $in: roomUsers[roomId] } }, 'name totalScore profilePicture adminLevel');
-  const formattedUsers = users.map(user => ({
-    name: user.name,
-    totalScore: user.totalScore,
-    profilePicture: user.profilePicture,
-    adminLevel: user.adminLevel,
-  }));
-  io.to(roomId).emit('userListUpdated', formattedUsers);
-}
+  function ejectAllUsersFromRoom(roomId, reason = "Svi su korisnici izbačeni.") {
+    if (!roomUsers[roomId] || roomUsers[roomId].length === 0) {
+      return;
+    }
 
-function clearRoomTimeouts(roomId, roomTimers, roomTimeouts) {
-  if (roomTimers[roomId]) {
-    clearTimeout(roomTimers[roomId]);
-    delete roomTimers[roomId];
-  }
-
-  if (roomTimeouts[roomId]) {
-    const { hintTimeout, answerTimeout, nextQuestionTimeout } = roomTimeouts[roomId];
-    clearTimeout(hintTimeout);
-    clearTimeout(answerTimeout);
-    clearTimeout(nextQuestionTimeout);
-    delete roomTimeouts[roomId];
-  }
-}
-
-async function startGame(room, io, roomTimers, roomUsers, roomTimeouts, activeQuestions) {
-  const roomId = room.id;
-
-  if (roomUsers[roomId].length === 0) {
-    clearRoomTimeouts(roomId, roomTimers, roomTimeouts);
-    return;
-  }
-
-  if (roomTimers[roomId]) return;
-
-  const [question] = await Question.aggregate([
-    {
-      $match: {
-        category: { $in: room.categories },
-        status: 'approved'
+    roomUsers[roomId].forEach(username => {
+      const userSocket = userSocketMap.get(username);
+      if (userSocket && userSocket.socket) {
+        userSocket.socket.emit('forceDisconnect', { reason });
+        userSocketMap.delete(username);
       }
-    },
-    { $sample: { size: 1 } }
-  ]);
+    });
 
-  if (!question) return;
+    roomUsers[roomId] = [];
+    clearRoomTimeouts(roomId, roomTimers, roomTimeouts);
+    delete activeQuestions[roomId];
+    emitUserList(roomId, io, roomUsers);
+  }
 
-  activeQuestions[roomId] = {
-    ...question,
-    room,
-    answered: false
-  };
+  async function emitUserList(roomId, io, roomUsers) {
+    const users = await User.find({ name: { $in: roomUsers[roomId] } }, 'name totalScore profilePicture adminLevel');
+    const formattedUsers = users.map(user => ({
+      name: user.name,
+      totalScore: user.totalScore,
+      profilePicture: user.profilePicture,
+      adminLevel: user.adminLevel,
+    }));
+    io.to(roomId).emit('userListUpdated', formattedUsers);
+  }
 
-  io.to(roomId).emit('chatMessage', {
-    username: room.name,
-    message: `${question.category.toUpperCase()} : ${question.text}`,
-  });
+  function clearRoomTimeouts(roomId, roomTimers, roomTimeouts) {
+    if (roomTimers[roomId]) {
+      clearTimeout(roomTimers[roomId]);
+      delete roomTimers[roomId];
+    }
 
-  if (question.image) {
+    if (roomTimeouts[roomId]) {
+      const { hintTimeout, answerTimeout, nextQuestionTimeout } = roomTimeouts[roomId];
+      clearTimeout(hintTimeout);
+      clearTimeout(answerTimeout);
+      clearTimeout(nextQuestionTimeout);
+      delete roomTimeouts[roomId];
+    }
+  }
+
+  async function startGame(room, io, roomTimers, roomUsers, roomTimeouts, activeQuestions) {
+    const roomId = room.id;
+
+    if (roomUsers[roomId].length === 0) {
+      clearRoomTimeouts(roomId, roomTimers, roomTimeouts);
+      return;
+    }
+
+    if (roomTimers[roomId]) return;
+
+    const [question] = await Question.aggregate([
+      {
+        $match: {
+          category: { $in: room.categories },
+          status: 'approved'
+        }
+      },
+      { $sample: { size: 1 } }
+    ]);
+
+    if (!question) return;
+
+    activeQuestions[roomId] = {
+      ...question,
+      room,
+      answered: false
+    };
+
     io.to(roomId).emit('chatMessage', {
       username: room.name,
-      message: `<img src="${question.image}" alt="question image" style="max-width: 100%; max-height: 300px;">`
+      message: `${question.category.toUpperCase()} : ${question.text}`,
     });
+
+    if (question.image) {
+      io.to(roomId).emit('chatMessage', {
+        username: room.name,
+        message: `<img src="${question.image}" alt="question image" style="max-width: 100%; max-height: 300px;">`
+      });
+    }
+
+    const hintTimeout = setTimeout(() => {
+      if (question.hint) {
+        io.to(roomId).emit('chatMessage', {
+          username: room.name,
+          message: `Hint: ${question.hint}`
+        });
+      }
+    }, room.hintTime * 1000);
+
+    const answerTimeout = setTimeout(() => {
+      if (!activeQuestions[roomId]?.answered) {
+        io.to(roomId).emit('chatMessage', {
+          username: room.name,
+          message: `Nitko nije točno odgovorio. Točan odgovor je: ${question.answers[0]}`
+        });
+      }
+
+      delete activeQuestions[roomId];
+
+      const nextQuestionTimeout = setTimeout(() => {
+        clearRoomTimeouts(roomId, roomTimers, roomTimeouts);
+        delete activeQuestions[roomId];
+        startGame(room, io, roomTimers, roomUsers, roomTimeouts, activeQuestions);
+      }, room.timeBetweenQuestions * 1000);
+
+      roomTimeouts[roomId].nextQuestionTimeout = nextQuestionTimeout;
+      roomTimers[roomId] = nextQuestionTimeout;
+    }, room.timeToAnswer * 1000);
+
+    roomTimeouts[roomId] = {
+      hintTimeout,
+      answerTimeout,
+      nextQuestionTimeout: null
+    };
+
+    roomTimers[roomId] = answerTimeout;
   }
 
-  const hintTimeout = setTimeout(() => {
-    if (question.hint) {
-      io.to(roomId).emit('chatMessage', {
-        username: room.name,
-        message: `Hint: ${question.hint}`
-      });
+  function normalizeAnswer(answer) {
+    return answer
+      .toLowerCase()
+      .replace(/š/g, 's')
+      .replace(/đ/g, 'd')
+      .replace(/[čć]/g, 'c')
+      .replace(/ž/g, 'z');
+  }
+
+  function isQuestionActive(questionId) {
+    for (const roomId in activeQuestions) {
+      if (activeQuestions[roomId] && activeQuestions[roomId]._id.toString() === questionId.toString()) {
+        return true;
+      }
     }
-  }, room.hintTime * 1000);
+    return false;
+  }
 
-  const answerTimeout = setTimeout(() => {
-    if (!activeQuestions[roomId]?.answered) {
-      io.to(roomId).emit('chatMessage', {
-        username: room.name,
-        message: `Nitko nije točno odgovorio. Točan odgovor je: ${question.answers[0]}`
-      });
-    }
+  setupSocketHandlers.userSocketMap = userSocketMap;
+  setupSocketHandlers.ejectAllUsersFromRoom = ejectAllUsersFromRoom;
+  setupSocketHandlers.isQuestionActive = isQuestionActive;
 
-    delete activeQuestions[roomId];
-
-    const nextQuestionTimeout = setTimeout(() => {
-      clearRoomTimeouts(roomId, roomTimers, roomTimeouts);
-      delete activeQuestions[roomId];
-      startGame(room, io, roomTimers, roomUsers, roomTimeouts, activeQuestions);
-    }, room.timeBetweenQuestions * 1000);
-
-    roomTimeouts[roomId].nextQuestionTimeout = nextQuestionTimeout;
-    roomTimers[roomId] = nextQuestionTimeout;
-  }, room.timeToAnswer * 1000);
-
-  roomTimeouts[roomId] = {
-    hintTimeout,
-    answerTimeout,
-    nextQuestionTimeout: null
-  };
-
-  roomTimers[roomId] = answerTimeout;
+  return io;
 }
-
-function normalizeAnswer(answer) {
-  return answer
-    .toLowerCase()
-    .replace(/š/g, 's')
-    .replace(/đ/g, 'd')
-    .replace(/[čć]/g, 'c')
-    .replace(/ž/g, 'z');
-}
-
-
-setupSocketHandlers.userSocketMap = userSocketMap;
 
 module.exports = setupSocketHandlers;
