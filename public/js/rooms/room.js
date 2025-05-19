@@ -1,3 +1,20 @@
+const userColors = new Map();
+const colorPalette = [
+  '#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
+  '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe',
+  '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000',
+  '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080'
+];
+
+function getColorForUser(username) {
+  if (!userColors.has(username)) {
+    const index = userColors.size % colorPalette.length;
+    userColors.set(username, colorPalette[index]);
+  }
+  return userColors.get(username);
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
   const roomId = document.body.dataset.roomId;
   const username = document.body.dataset.username;
@@ -53,9 +70,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isCorrect) li.classList.add('message-correct');
 
     if (isImageURL(message)) {
-      li.innerHTML = `<strong>${sender}:</strong><br><img src="${message}" style="max-width: 100%; border-radius: 8px;" />`;
+      li.innerHTML = `<strong style="color: ${color};">${sender}:</strong><br><img src="${message}" style="max-width: 100%; border-radius: 8px;" />`;
     } else {
-      li.innerHTML = `<strong>${sender}:</strong> ${message}`;
+      const color = getColorForUser(sender);
+      li.innerHTML = `<strong style="color: ${color};">${sender}:</strong> ${message}`;
     }
 
     messages.appendChild(li);

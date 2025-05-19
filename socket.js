@@ -3,9 +3,13 @@ const Question = require("./models/Question");
 const User = require("./models/User");
 
 const userSocketMap = new Map();
+const roomUsers = {};
+
+function isRoomEmpty(roomId) {
+  return !roomUsers[roomId] || roomUsers[roomId].length === 0;
+}
 
 function setupSocketHandlers(io) {
-  const roomUsers = {};
   const roomTimers = {};
   const roomTimeouts = {};
   const activeQuestions = {};
@@ -100,25 +104,6 @@ function setupSocketHandlers(io) {
       console.log('User disconnected', socket.id);
     });
   });
-
-  function ejectAllUsersFromRoom(roomId, reason = "Svi su korisnici izbačeni.") {
-    if (!roomUsers[roomId] || roomUsers[roomId].length === 0) {
-      return;
-    }
-
-    roomUsers[roomId].forEach(username => {
-      const userSocket = userSocketMap.get(username);
-      if (userSocket && userSocket.socket) {
-        userSocket.socket.emit('forceDisconnect', { reason });
-        userSocketMap.delete(username);
-      }
-    });
-
-    roomUsers[roomId] = [];
-    clearRoomTimeouts(roomId, roomTimers, roomTimeouts);
-    delete activeQuestions[roomId];
-    emitUserList(roomId, io, roomUsers);
-  }
 
   async function emitUserList(roomId, io, roomUsers) {
     const users = await User.find({ name: { $in: roomUsers[roomId] } }, 'name totalScore profilePicture adminLevel');
@@ -232,10 +217,9 @@ function setupSocketHandlers(io) {
       .replace(/[čć]/g, 'c')
       .replace(/ž/g, 'z');
   }
-  setupSocketHandlers.userSocketMap = userSocketMap;
-  setupSocketHandlers.ejectAllUsersFromRoom = ejectAllUsersFromRoom;
+  //setupSocketHandlers.userSocketMap = userSocketMap;
 
   return io;
 }
 
-module.exports = setupSocketHandlers;
+module.exports = {setupSocketHandlers, userSocketMap, isRoomEmpty};

@@ -6,10 +6,11 @@ exports.deleteUser = async (req, res) => {
   try {
     const user = req.session.user;
     if(user && user.id){
-      const userSocket = userSocketMap.get(user.name);
-      if (userSocket && userSocket.socket) {
-        userSocket.socket.emit('forceDisconnect', { reason: "Obrisan račun" });
-        userSocket.socket.disconnect();
+      if(userSocketMap){
+        const userSocket = userSocketMap.get(user.name);
+        if (userSocket && userSocket.socket) {
+          userSocket.socket.emit('forceDisconnect', { reason: "Obrisan račun" });
+        }
       }
         await User.findByIdAndDelete(user.id);
         req.session.destroy(() => res.redirect("/"));
@@ -43,10 +44,11 @@ exports.editUser = async (req, res) => {
     }
     
     const user = await User.findById(userId);
-    const userSocket = userSocketMap.get(user.name);
-      if (userSocket && userSocket.socket) {
-        userSocket.socket.emit('forceDisconnect', { reason: "Uređen račun" });
-        userSocket.socket.disconnect();
+    if(userSocketMap){
+        const userSocket = userSocketMap.get(user.name);
+        if (userSocket && userSocket.socket) {
+          userSocket.socket.emit('forceDisconnect', { reason: "Uređen račun" });
+        }
       }
     if(username && username.length <= 15) {
       user.name = username;

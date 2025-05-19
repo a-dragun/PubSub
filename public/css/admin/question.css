@@ -57,7 +57,7 @@
       align-items: center;
     }
     
-    button {
+    .danger-button {
       padding: 0.9rem 1.2rem;
       background-color: #c25d62;
       border: none;
@@ -69,6 +69,22 @@
       transition: background-color 0.3s;
     }
 
-    button:hover {
+    .danger-button:hover {
       background-color: #d68c90;
+    }
+
+    .approve-button {
+      padding: 0.9rem 1.2rem;
+      background-color: #dec6a5;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #F4EAE0;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .approve-button:hover {
+      background-color: #EAD7BB;
     }

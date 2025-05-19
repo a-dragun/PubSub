@@ -247,11 +247,12 @@ exports.deleteUser = async (req, res) => {
       return res.redirect(`/admin/users/${id}`);
     }
     else {
+      if(userSocketMap){
       const userSocket = userSocketMap.get(user.name);
       if (userSocket && userSocket.socket) {
         userSocket.socket.emit('forceDisconnect', { reason: "Obrisan račun" });
-        userSocket.socket.disconnect();
       }
+    }
       await user.deleteOne();
       return res.redirect("/admin/users/");
     }
@@ -359,9 +360,13 @@ exports.getRoom = async(req, res) => {
 exports.deleteRoom = async (req, res) => {
   try {
     const id = req.params.id;
-    socketHandler.ejectAllUsersFromRoom(id, "Obrisana soba");
-    await Room.findByIdAndDelete(id);
-    return res.redirect("/admin/rooms/");
+    if(!socketHandler.isRoomEmpty(id)) {
+      res.send("Soba nije prazna i ne može se obrisati!");
+    }
+    else {
+      await Room.findByIdAndDelete(id);
+      return res.redirect("/admin/rooms/");
+    }
   } catch (error) {
     return res.send("Error: " + error.message);
   }
@@ -385,10 +390,11 @@ exports.banUser = async (req, res) => {
       }
       await user.updateOne({'isBanned': true, 'banReason': banReason, 'banDuration': banDuration});
       
-      const userSocket = userSocketMap.get(user.name);
-      if (userSocket && userSocket.socket) {
-        userSocket.socket.emit('forceDisconnect', { reason: banReason });
-        userSocket.socket.disconnect();
+      if(userSocketMap){
+        const userSocket = userSocketMap.get(user.name);
+        if (userSocket && userSocket.socket) {
+          userSocket.socket.emit('forceDisconnect', { reason: banReason });
+        }
       }
 
 
@@ -416,12 +422,12 @@ exports.muteUser = async (req, res) => {
     const user = await User.findById(id);
 
     await user.updateOne({'isMuted': true, 'muteReason': muteReason, 'muteDuration': muteDuration});
+    if(userSocketMap){
       const userSocket = userSocketMap.get(user.name);
       if (userSocket && userSocket.socket) {
-        userSocket.isMuted = user.isMuted;
         userSocket.socket.emit('forceDisconnect', { reason: muteReason });
-        userSocket.socket.disconnect();
       }
+    }
 
     return res.redirect("/admin/users/");
   } catch (error) {

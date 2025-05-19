@@ -14,10 +14,15 @@ exports.getRoomPage = async (req, res) => {
     try {
       const roomId = req.params.id;
       const room = await Room.findById(roomId);
-      let userId = req.session.user.id;
-      let dbUser = await User.findById(userId).lean();
-      const { password, ...user } = dbUser;
-      return res.render("rooms/room", {room, user});
+      if(!room) {
+        res.send("Soba ne postoji!");
+      }
+      else {
+        let userId = req.session.user.id;
+        let dbUser = await User.findById(userId).lean();
+        const { password, ...user } = dbUser;
+        return res.render("rooms/room", {room, user});
+      }
     } catch (error) {
       return res.send("Error: " + error.message);
     }

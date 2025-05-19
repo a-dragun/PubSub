@@ -22,7 +22,8 @@ const PORT = process.env.PORT || 3000;
 
 const server = http.createServer(app);
 const io = socketIO(server);
-require('./socket')(io);
+const { setupSocketHandlers } = require('./socket');
+setupSocketHandlers(io);
 app.set('io', io);
 
 app.use(express.urlencoded({ extended: true }));

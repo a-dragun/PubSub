@@ -25,13 +25,13 @@
     <div class="button-group">
       <form method="POST" action="/admin/questions/<%= question.id %>?_method=DELETE">
         <input type="hidden" name="_method" value="DELETE">
-        <button type="submit" id="deleteBtn">Obriši pitanje</button>
+        <button type="submit" id="deleteBtn" class="danger-button">Obriši pitanje</button>
       </form>
 
       <% if (question.status !== 'approved') { %>
         <form method="POST" action="/admin/questions/<%= question.id %>?_method=PUT">
           <input type="hidden" name="_method" value="PUT">
-          <button type="submit" id="approveBtn">Odobri</button>
+          <button type="submit" id="approveBtn" class="approve-button">Odobri</button>
         </form>
       <% } %>
     </div>
