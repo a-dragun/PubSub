@@ -30,10 +30,9 @@ function blockAuthenticatedUser(req, res, next) {
 async function checkBan(req, res, next) {
   const user = await User.findById(req.session.user.id);
 
-  if (!user || user.isBanned) {
+  if (user && user.isBanned) {
     return res.status(403).send(`Access denied. You are banned until ${user.banDuration}.\nBan reason: ${user.banReason}`);
   }
-
   next();
 };
 
