@@ -76,6 +76,11 @@ exports.editUser = async (req, res) => {
       user.password = newPassword;
     }
     await user.save();
+    req.session.user.name = user.name;
+    req.session.user.profilePicture = user.profilePicture;
+    res.locals.user.profilePicture = user.profilePicture;
+    res.locals.user.name = user.name;
+
 
     return res.redirect("/user/profile/");
   } catch (error) {
