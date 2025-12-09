@@ -78,6 +78,10 @@ function setupSocketHandlers(io) {
 
       if (!isMuted) {
         io.to(roomId).emit('chatMessage', { username, message });
+        userSocket.isMuted = true;
+        setTimeout(function(){
+          userSocket.isMuted = false;
+        }, 1500)
       }
     });
 
