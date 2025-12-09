@@ -65,9 +65,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const li = document.createElement('li');
     const isSystem = sender === document.querySelector('header').textContent;
     const isCorrect = correct === true;
+    const focusModeSwitch = document.getElementById('focus-mode-switch');
 
     if (isSystem) li.classList.add('message-system');
     if (isCorrect) li.classList.add('message-correct');
+
+    if(focusModeSwitch.checked && !isSystem) {
+      return;
+    }
 
     if (isImageURL(message)) {
       li.innerHTML = `<strong style="color: ${color};">${sender}:</strong><br><img src="${message}" style="max-width: 100%; border-radius: 8px;" />`;
