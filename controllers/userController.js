@@ -99,3 +99,14 @@ exports.getEditUserPage = async (req, res) => {
       return res.send("Error: " + error.message);
   }
 }
+
+exports.getUserPage = async (req, res) => {
+  try {
+    let userId = req.params.id;
+    let user = await User.findById(userId).lean();
+    return res.render("user/getUserPage", {user});
+
+  } catch (error) {
+    return res.send("Error: " + error.message)
+  }
+}

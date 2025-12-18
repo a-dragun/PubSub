@@ -28,19 +28,24 @@ document.addEventListener('DOMContentLoaded', () => {
     userListContainer.innerHTML = '';
 
     userList.forEach((user) => {
-      const div = document.createElement('div');
-      div.className = 'user-card';
-      div.innerHTML = `
-        <div class="user-card-left">
-          <img src="${user.profilePicture}" alt="pfp" />
-          <div class="user-info">
-            <strong>${user.name}</strong>
-            ${user.adminLevel > 1 ? '<span class="admin">Admin</span>' : ''}
+      const a = document.createElement('a');
+      a.href = `/user/${user.id}`;
+      a.className = 'user-card-link';
+
+      a.innerHTML = `
+        <div class="user-card">
+          <div class="user-card-left">
+            <img src="${user.profilePicture}" alt="pfp" />
+            <div class="user-info">
+              <strong>${user.name}</strong>
+              ${user.adminLevel > 1 ? '<span class="admin">Admin</span>' : ''}
+            </div>
           </div>
+          <div><strong>${user.totalScore} bodova</strong></div>
         </div>
-        <div><strong>${user.totalScore} bodova</strong></div>
       `;
-      userListContainer.appendChild(div);
+
+      userListContainer.appendChild(a);
     });
   });
 

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= user.name %></title>
+  <link rel="stylesheet" href="/css/user/profile.css">
+  <script src="/js/user/profile.js" defer></script>
+</head>
+<body>
+  <%- include('../partials/header') %>
+  <div class="profile-container">
+    <h2><%= user.name %></h2>
+    <img src="<%= user.profilePicture %>" alt="Profile Picture" class="profile-picture">
+    <p><strong>Korisničko ime:</strong> <%= user.name %></p>
+    <p><strong>E-mail adresa:</strong> <%= user.email %></p>
+    <p><strong>Bodovi:</strong> <%= user.totalScore %></p>
+    <p><strong>Stvoren:</strong> <%= user.createdAt.toLocaleDateString() %></p>
+    <p><strong>Admin razina:</strong> Level <%= user.adminLevel %></p>
+  </div>
+</body>
+</html>

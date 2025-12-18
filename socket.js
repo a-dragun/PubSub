@@ -110,12 +110,13 @@ function setupSocketHandlers(io) {
   });
 
   async function emitUserList(roomId, io, roomUsers) {
-    const users = await User.find({ name: { $in: roomUsers[roomId] } }, 'name totalScore profilePicture adminLevel');
+    const users = await User.find({ name: { $in: roomUsers[roomId] } }, 'name totalScore profilePicture adminLevel id');
     const formattedUsers = users.map(user => ({
       name: user.name,
       totalScore: user.totalScore,
       profilePicture: user.profilePicture,
       adminLevel: user.adminLevel,
+      id: user.id
     }));
     io.to(roomId).emit('userListUpdated', formattedUsers);
   }

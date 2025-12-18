@@ -8,4 +8,6 @@ router.get("/profile", userController.getProfile);
 router.get("/edit", userController.getEditUserPage);
 router.put("/edit", userController.editUser);
 
+router.get("/:id", userController.getUserPage);
+
 module.exports = router;

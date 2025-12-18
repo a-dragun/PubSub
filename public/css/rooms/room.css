@@ -142,6 +142,17 @@ header {
     justify-content: space-between;
 }
 
+.user-card:hover {
+    background-color: var(--beige);
+    transition: all 0.3s ease-in-out;
+}
+
+.user-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
 .user-card-left {
     display: flex;
     align-items: center;
