@@ -21,7 +21,7 @@ function setupSocketHandlers(io) {
       const user = await User.findOne({ name: username });
 
       io.to(roomId).emit('chatMessage', {
-            username: room.name,
+            username: 'System',
             message: `Korisnik ${user.name} se pridružio sobi!`
       });
 
@@ -63,7 +63,7 @@ function setupSocketHandlers(io) {
 
           io.to(roomId).emit('chatMessage', {
             username: currentQuestion.room.name,
-            message: `${username} je točno odgovorio. Točan odgovor je: ${currentQuestion.answers[0]}!`,
+            message: `Točan odgovor je: <strong>${currentQuestion.answers[0]}</strong>!\n<strong>${username}</strong> je točno odgovorio ["${message}"] i zaradio <strong>${room.points} bodova</strong>!`,
             correct: true
           });
 
