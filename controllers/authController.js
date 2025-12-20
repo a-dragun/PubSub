@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const { isYesterday } = require("date-fns");
+const {isToday} = require("date-fns");
 
 exports.getRegister = (req, res) => {
   try {
@@ -52,10 +53,11 @@ exports.postLogin = async (req, res) => {
       return res.send("Invalid username or password");
     }
     const loggedInYesterday = isYesterday(user.lastLoginAt);
+    const loggedInToday = isToday(user.lastLoginAt);
     if(loggedInYesterday) {
       user.activityStreak+=1;
     }
-    else {
+    else if (!loggedInToday && !loggedInYesterday){
       user.activityStreak = 1;
     }
     user.lastLoginAt = Date.now();

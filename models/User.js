@@ -43,8 +43,6 @@ userSchema.pre("save", async function (next) {
     100 * (s === 50) +
     1000 * (s === 365);
 
-    console.log(streakBonus(this.activityStreak));
-
   this.totalScore += streakBonus(this.activityStreak);
   }
   next();
