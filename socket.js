@@ -16,10 +16,14 @@ function setupSocketHandlers(io) {
 
   io.on('connection', (socket) => {
     console.log('User connected', socket.id);
-
     socket.on('joinRoom', async ({ roomId, username }) => {
       const room = await Room.findById(roomId);
       const user = await User.findOne({ name: username });
+
+      io.to(roomId).emit('chatMessage', {
+            username: room.name,
+            message: `Korisnik ${user.name} se pridružio sobi!`
+      });
 
       userSocketMap.set(username, { socket, isMuted: user.isMuted });
 
@@ -89,6 +93,11 @@ function setupSocketHandlers(io) {
       for (const [username, s] of userSocketMap.entries()) {
         if (s.socket === socket) {
           userSocketMap.delete(username);
+          const room = await Room.findById(socket.roomId);
+          io.to(socket.roomId).emit('chatMessage', {
+            username: room.name,
+            message: `Korisnik ${username} je napustio sobu!`
+          });
           break;
         }
       }

@@ -218,7 +218,7 @@ header {
 }
 
 .switch-input:checked + .switch-toggle {
-  background: var(--correct)
+  background: var(--accent)
 }
 
 .switch-input:checked + .switch-toggle:after {
