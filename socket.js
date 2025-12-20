@@ -21,7 +21,7 @@ function setupSocketHandlers(io) {
       const user = await User.findOne({ name: username });
 
       io.to(roomId).emit('chatMessage', {
-            username: 'System',
+            username: room.name,
             message: `Korisnik ${user.name} se pridružio sobi!`
       });
 

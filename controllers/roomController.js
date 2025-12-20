@@ -21,6 +21,9 @@ exports.getRoomPage = async (req, res) => {
         let userId = req.session.user.id;
         let dbUser = await User.findById(userId).lean();
         const { password, ...user } = dbUser;
+        if(room.name === user.name) {
+          res.send("Ne možete pristupiti ovoj sobi!");
+        }
         return res.render("rooms/room", {room, user});
       }
     } catch (error) {
