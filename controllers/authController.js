@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
-
+const { isYesterday } = require("date-fns");
 
 exports.getRegister = (req, res) => {
   try {
@@ -25,7 +25,8 @@ exports.postRegister = async (req, res) => {
       if (password !== password_repeat) {
         return res.send("Passwords do not match.");
       }
-      const user = await User.create({ name, email, password });
+      const user = await User.create({ name: name, email: email, password: password, lastLoginAt: Date.now(), activityStreak: 1 });
+      await user.save();
       req.session.user = { id: user._id, name: user.name, profile_picture: user.profilePicture };
       return res.redirect("/");
       
@@ -50,7 +51,15 @@ exports.postLogin = async (req, res) => {
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.send("Invalid username or password");
     }
-
+    const loggedInYesterday = isYesterday(user.lastLoginAt);
+    if(loggedInYesterday) {
+      user.activityStreak+=1;
+    }
+    else {
+      user.activityStreak = 1;
+    }
+    user.lastLoginAt = Date.now();
+    await user.save();
     req.session.user = { id: user._id, name: user.name, profilePicture: user.profilePicture, adminLevel: user.adminLevel };
     return res.redirect("/");
   } catch (error) {
