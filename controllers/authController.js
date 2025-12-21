@@ -2,6 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const { isYesterday } = require("date-fns");
 const {isToday} = require("date-fns");
+const { streakBonus, getDaysToNextBonus } = require('../helpers/streak');
 
 exports.getRegister = (req, res) => {
   try {
@@ -26,9 +27,20 @@ exports.postRegister = async (req, res) => {
       if (password !== password_repeat) {
         return res.send("Passwords do not match.");
       }
+      let showStreakModal = true;
+    
       const user = await User.create({ name: name, email: email, password: password, lastLoginAt: Date.now(), activityStreak: 1 });
       await user.save();
-      req.session.user = { id: user._id, name: user.name, profile_picture: user.profilePicture };
+
+    const currentStreak = user.activityStreak;
+    const todayBonus = streakBonus(user.activityStreak);
+    let nextBonusDays = [];
+    if (currentStreak % 7 !== 0) nextBonusDays.push(7 - (currentStreak % 7));
+    if (currentStreak < 50) nextBonusDays.push(50 - currentStreak);
+    if (currentStreak < 365) nextBonusDays.push(365 - currentStreak);
+    const daysToNextBonus = getDaysToNextBonus(user.activityStreak);
+
+      req.session.user = { id: user._id, name: user.name, profile_picture: user.profilePicture, showStreakModal: showStreakModal, todayBonus: todayBonus, daysToNextBonus: daysToNextBonus };
       return res.redirect("/");
       
   } catch (error) {
@@ -47,22 +59,45 @@ exports.getLogin = (req, res) => {
 exports.postLogin = async (req, res) => {
   try {
     const { username, password } = req.body;
-    const user = await User.findOne({'name': username});
+    const user = await User.findOne({ name: username });
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.send("Invalid username or password");
     }
+
     const loggedInYesterday = isYesterday(user.lastLoginAt);
     const loggedInToday = isToday(user.lastLoginAt);
-    if(loggedInYesterday) {
-      user.activityStreak+=1;
-    }
-    else if (!loggedInToday && !loggedInYesterday){
+    let showStreakModal = false;
+
+    if (loggedInYesterday) {
+      user.activityStreak += 1;
+      showStreakModal = true;
+    } else if (!loggedInToday && !loggedInYesterday) {
       user.activityStreak = 1;
+      showStreakModal = true;
     }
+
     user.lastLoginAt = Date.now();
     await user.save();
-    req.session.user = { id: user._id, name: user.name, profilePicture: user.profilePicture, adminLevel: user.adminLevel };
+
+    const currentStreak = user.activityStreak;
+    const todayBonus = streakBonus(user.activityStreak);
+    let nextBonusDays = [];
+    if (currentStreak % 7 !== 0) nextBonusDays.push(7 - (currentStreak % 7));
+    if (currentStreak < 50) nextBonusDays.push(50 - currentStreak);
+    if (currentStreak < 365) nextBonusDays.push(365 - currentStreak);
+    const daysToNextBonus = getDaysToNextBonus(user.activityStreak);
+
+    req.session.user = {
+      id: user._id,
+      name: user.name,
+      profilePicture: user.profilePicture,
+      adminLevel: user.adminLevel,
+      showStreakModal: showStreakModal,
+      todayBonus: todayBonus,
+      daysToNextBonus: daysToNextBonus
+    };
+
     return res.redirect("/");
   } catch (error) {
     return res.send("Error: " + error.message);

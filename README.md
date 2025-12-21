@@ -46,9 +46,9 @@ Dostupno na linku: https://pubsub-51xj.onrender.com/
 | TM-03    | The system must support team vs. team game modes.                                                | Teams                  | IDLE   |
 | TM-04    | The system must provide a monthly team leaderboard.                                              | Teams                  | IDLE   |
 | TM-05    | The system must allow awarding monthly rewards to top-performing teams.                          | Teams                  | IDLE   |
-| ST-01    | The system must track user streaks based on continuous daily activity.                           | User Activity          | IDLE   |
-| ST-02    | The system must reward users with streak bonuses, XP, or badges.                                 | User Activity          | IDLE   |
-| ST-03    | The system must break a streak if a user is inactive for a full day.                             | User Activity          | IDLE   |
+| ST-01    | The system must track user streaks based on continuous daily activity.                           | User Activity          | DONE   |
+| ST-02    | The system must reward users with streak bonuses, XP, or badges.                                 | User Activity          | DONE   |
+| ST-03    | The system must break a streak if a user is inactive for a full day.                             | User Activity          | DONE   |
 | RP-01    | The system must allow users to report inappropriate questions.                                   | Reporting              | IDLE   |
 | RP-02    | The system must allow users to report other users for inappropriate behavior.                    | Reporting              | IDLE   |
 | RP-03    | The system should automatically detect and flag inappropriate chat messages using content filtering. | Reporting              | IDLE   |

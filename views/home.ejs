@@ -16,5 +16,9 @@
             <a href="auth/register">Registracija</a>
         <% } %>
     </div>
+    <% if (streakData) { %>
+        <%- include("partials/streak-modal", streakData) %>
+    <% } %>
+
 </body>
 </html>

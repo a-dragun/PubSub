@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const { streakBonus } = require('../helpers/streak');
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true },
@@ -37,12 +38,6 @@ userSchema.pre('save', function (next) {
 
 userSchema.pre("save", async function (next) {
   if (this.isModified("activityStreak")) {
-    const streakBonus = s =>
-    5  * (s >= 1) +
-    15 * (s >= 1 && s % 7 === 0) +
-    100 * (s === 50) +
-    1000 * (s === 365);
-
   this.totalScore += streakBonus(this.activityStreak);
   }
   next();
