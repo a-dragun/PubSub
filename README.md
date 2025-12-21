@@ -1,3 +1,75 @@
 # PubSub
 
 Dostupno na linku: https://pubsub-51xj.onrender.com/
+
+# Requirements
+
+| ID     | REQUIREMENT                                                                                     | GROUP                  |
+|--------|-------------------------------------------------------------------------------------------------|------------------------|
+| ~~UM-01~~  | ~~The system must allow users to register using email and password.~~                            | ~~User Management~~        |
+| ~~UM-02~~  | ~~The system must allow users to log in and log out.~~                                           | ~~User Management~~        |
+| ~~UM-03~~  | ~~The system must allow users to view and edit their profile.~~                                 | ~~User Management~~        |
+| ~~UM-04~~  | ~~The system must allow users to delete their account.~~                                         | ~~User Management~~        |
+| ~~UM-05~~  | ~~The system must allow users to view other users’ basic information such as name, total score, and profile picture.~~ | ~~User Management~~        |
+| ~~RM-01~~  | ~~The system must provide real-time chat functionality within rooms.~~                           | ~~Room Management~~        |
+| ~~RM-02~~  | ~~The system must allow users to join and leave rooms.~~                                          | ~~Room Management~~        |
+| ~~RM-03~~  | ~~The system must automatically and randomly select quiz questions from the database in every non-empty room.~~ | ~~Room Management~~        |
+| ~~RM-04~~  | ~~The system should include a countdown timer for each question. If no answer is submitted within the predefined time period, the system must provide a hint.~~ | ~~Room Management~~        |
+| ~~RM-05~~  | ~~The system must allow users to submit answers to quiz questions.~~                              | ~~Room Management~~        |
+| ~~RM-06~~  | ~~The system must award points to users who answer correctly.~~                                   | ~~Room Management~~        |
+| ~~RM-07~~  | ~~The system must update and display users’ scores in real-time in the room.~~                    | ~~Room Management~~        |
+| ~~RM-08~~  | ~~The system must allow users to browse available rooms.~~                                        | ~~Room Management~~        |
+| ~~RM-09~~  | ~~The system must allow admins to create and delete rooms.~~                                      | ~~Room Management~~        |
+| ~~QM-01~~  | ~~The system must allow users to create questions with text and optionally images. It is mandatory to add categories for each question.~~ | ~~Question Management~~    |
+| ~~QM-02~~  | ~~The system must allow admins to review, approve, or reject user-submitted questions.~~         | ~~Question Management~~    |
+| ~~QM-03~~  | ~~The system must allow admins to provide hints and correct answers for questions.~~             | ~~Question Management~~    |
+| ~~AC-01~~  | ~~The system must allow different admin levels to control content, game rules, and user actions.~~ | ~~Admin Controls~~         |
+| ~~AC-02~~  | ~~The system must allow admins to mute or unmute users.~~                                         | ~~Admin Controls~~         |
+| ~~AC-03~~  | ~~The system must allow admins to ban or unban users.~~                                           | ~~Admin Controls~~         |
+| ~~AC-04~~  | ~~The system must provide admins with a dashboard showing users, questions, and system status.~~  | ~~Admin Controls~~         |
+| ~~AC-05~~  | ~~The system must allow admins to perform bulk updates on users.~~                                | ~~Admin Controls~~         |
+| ~~CM-01~~  | ~~The system must prevent banned or muted users from interacting in chat.~~                       | ~~Content Moderation~~     |
+| ~~CM-02~~  | ~~The system must confirm user actions like deleting accounts or changing admin levels.~~         | ~~Content Moderation~~     |
+| ~~SF-01~~  | ~~The system must schedule automatic unban/unmute operations.~~                                   | ~~Support & Feedback~~     |
+| ~~NFR-01~~ | ~~The system must support multiple concurrent rooms and users without performance degradation.~~  | ~~Scalability~~            |
+| ~~NFR-02~~ | ~~The system must deliver chat messages with minimal latency.~~                                   | ~~Performance~~            |
+| ~~NFR-03~~ | ~~The system must store sensitive user data securely.~~                                           | ~~Security~~               |
+| ~~NFR-04~~ | ~~The system must maintain reliable uptime for all users.~~                                       | ~~Availability~~           |
+| LL-01  | The system must introduce user levels based on accumulated experience points (XP).            | Leveling & Leaderboards |
+| LL-02  | The system must display the user's level on their profile and in rooms.                          | Leveling & Leaderboards |
+| LL-03  | The system must provide a global leaderboard based on accumulated points or XP.                  | Leveling & Leaderboards |
+| GT-01  | The system must support multiple game modes.                                                     | Game Types             |
+| PR-01  | The system must allow users to create private rooms protected by a password.                      | Room Management        |
+| PR-02  | The system must restrict access to private rooms only to users who enter the correct password.    | Room Management        |
+| TM-01  | The system must allow users to create or join teams.                                              | Teams                  |
+| TM-02  | The system must provide team-only chat channels.                                                  | Teams                  |
+| TM-03  | The system must support team vs. team game modes.                                                 | Teams                  |
+| TM-04  | The system must provide a monthly team leaderboard.                                               | Teams                  |
+| TM-05  | The system must allow awarding monthly rewards to top-performing teams.                           | Teams                  |
+| ST-01  | The system must track user streaks based on continuous daily activity.                            | User Activity          |
+| ST-02  | The system must reward users with streak bonuses, XP, or badges.                                  | User Activity          |
+| ST-03  | The system must break a streak if a user is inactive for a full day.                              | User Activity          |
+| RP-01  | The system must allow users to report inappropriate questions.                                    | Reporting              |
+| RP-02  | The system must allow users to report other users for inappropriate behavior.                     | Reporting              |
+| RP-03  | The system should automatically detect and flag inappropriate chat messages using content filtering. | Reporting              |
+| RP-04  | The system must provide admins with a dashboard listing all reports and flagged content.         | Reporting              |
+| STATS-01 | The system must store detailed statistics about user performance.                                  | Statistics             |
+| STATS-02 | The system should display charts and graphs on the user's profile based on historical performance data. | Statistics             |
+| FR-01  | The system must allow users to send and accept friend requests.                                   | Friends                |
+| FR-02  | The system must allow users to remove friends or block users.                                     | Friends                |
+| PM-01  | The system must provide private one-on-one messaging between friends.                             | Messaging              |
+| PM-02  | The system must store and load message history between friends.                                   | Messaging              |
+| NW-01  | The system must allow publishing news related to quiz events in Croatia.                          | News                   |
+| NW-02  | The system must allow users to comment on published news or articles.                             | News                   |
+| NW-03  | The system must allow admins to highlight important news items.                                   | News                   |
+| NW-04  | The system must introduce a Content Creator or Editor role.                                        | News                   |
+| NW-05  | The system must allow users to request creator/editor access.                                      | News                   |
+| NW-06  | The system must allow admins to approve or reject creator/editor requests.                         | News                   |
+| NW-07  | The system must allow reporting of news articles or comments.                                     | News                   |
+| NW-08  | The system must allow admins to delete or edit articles or comments.                              | News                   |
+| UX-04  | The system must provide a fully responsive interface optimized for mobile devices.               | User Experience        |
+| UX-05  | The system shall display clear and informative error messages to users.                           | User Experience        |
+| EV-01  | The system must allow administrators to schedule Happy Hours events.                              | Events                 |
+| SF-02  | The system must allow the user to give feedback or ideas for new features.                         | Support & Feedback     |
+| ~~RM-10~~ | ~~The system must provide users the option to prevent viewing messages sent by others.~~            | ~~Room Management~~        |
+| ~~SF-03~~ | ~~The system must prevent users from spamming in chat.~~                                             | ~~Support & Feedback~~     |
