@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const { streakBonus } = require('../helpers/streak');
+const {levels, getLevelByScore} = require('../config/levels');
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true },
@@ -8,6 +9,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   adminLevel: { type: Number, enum: [0, 1, 2], default: 0, required: true },
   totalScore: { type: Number, default: 0 },
+  currentLevel: {type: Number, default: getLevelByScore(this.totalScore)?.level || 1},
   questionsApproved: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
   isActive: { type: Boolean, default: false },
@@ -39,6 +41,16 @@ userSchema.pre('save', function (next) {
 userSchema.pre("save", async function (next) {
   if (this.isModified("activityStreak")) {
   this.totalScore += streakBonus(this.activityStreak);
+  }
+  next();
+});
+
+userSchema.pre("save", async function (next) {
+  if (this.isModified("totalScore")) {
+    const level = getLevelByScore(this.totalScore).level;
+    if(level && level > this.currentLevel) {
+      this.currentLevel = level;
+    }
   }
   next();
 });
