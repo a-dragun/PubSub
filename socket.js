@@ -156,14 +156,13 @@ async function emitUserList(roomId, io, roomUsers) {
       totalScore: user.totalScore,
       profilePicture: user.profilePicture,
       adminLevel: user.adminLevel,
-      
+
       level: level ? {
         number: level.level,
         name: level.name,
         icon: level.icon,
-        description: level.description,
         minScore: level.min_score,
-        maxScore: level.max_score
+        maxScore: level.max_score+1
       } : null
     };
   });

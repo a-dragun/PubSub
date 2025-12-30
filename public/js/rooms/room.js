@@ -38,44 +38,61 @@ socket.on('userListUpdated', (userList) => {
     const a = document.createElement('a');
     a.href = `/user/${user.id}`;
     a.className = 'user-card-link';
+    const hasNextLevel = user.level && typeof user.level.maxScore === 'number' && user.level.maxScore > user.level.minScore;
+    const progress = hasNextLevel ? Math.min(100, Math.max(0, ((user.totalScore - user.level.minScore) / (user.level.maxScore - user.level.minScore)) * 100)) : 100;
 
     a.dataset.tooltip = `
       <div class="tooltip-header">
-        <img src="${user.profilePicture}" alt="${user.name}" />
+        <img src="${user.profilePicture}" />
         <div>
           <div class="name">${user.name}</div>
           <div>${user.totalScore} bodova</div>
-          ${user.adminLevel > 1 ? '<div style="color:red;font-weight:bold;">Admin</div>' : ''}
         </div>
       </div>
 
-      ${user.level ? `
       <div class="tooltip-level">
-        <img src="${user.level.icon}" alt="Level icon" />
+        <img src="${user.level.icon}" />
         <div>
           <strong>${user.level.name}</strong><br>
           Level ${user.level.number}
         </div>
       </div>
-      ` : `<div class="tooltip-description">Level unknown</div>`}
-    `;
 
-    a.innerHTML = `
-      <div class="user-card">
-        <div class="user-card-left">
-          <img src="${user.profilePicture}" alt="pfp" />
-          <div class="user-info">
-            <strong>${user.name}</strong>
-            ${user.adminLevel > 1 ? '<span class="admin">Admin</span>' : ''}
+      ${hasNextLevel ? `
+        <div class="tooltip-progress-container">
+          <div class="tooltip-progress-bar-bg">
+            <div class="tooltip-progress-bar-fill" style="width:${progress.toFixed(2)}%"></div>
+          </div>
+          <div class="tooltip-progress-labels">
+            <span>${user.level.minScore}</span>
+            <span>${user.level.maxScore}</span>
+          </div>
+          <div class="tooltip-progress-text">
+            ${Math.max(0, user.level.maxScore - user.totalScore)} bodova do sljedećeg levela
           </div>
         </div>
-        <div><strong>${user.totalScore} bodova</strong></div>
-      </div>
+      ` : `
+        <div class="tooltip-max-level">
+          🏆 Maksimalni level
+        </div>
+      `}
     `;
+      a.innerHTML = `
+        <div class="user-card">
+          <div class="user-card-left">
+            <img src="${user.profilePicture}" alt="pfp" />
+            <div class="user-info">
+              <strong>${user.name}</strong>
+              ${user.adminLevel > 1 ? '<span class="admin">Admin</span>' : ''}
+            </div>
+          </div>
+          <div><strong>${user.totalScore} bodova</strong></div>
+        </div>
+      `;
 
-    userListContainer.appendChild(a);
+      userListContainer.appendChild(a);
+    });
   });
-});
 
 
   const form = document.getElementById('chat-form');

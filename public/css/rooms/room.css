@@ -234,14 +234,13 @@ header {
   padding: 18px;
   box-shadow: 0 14px 35px rgba(0,0,0,0.25);
   z-index: 9999;
-
   width: 340px;
   color: var(--text);
   font-size: 0.95rem;
-
   opacity: 0;
   transform: translateY(8px) scale(0.97);
   transition: opacity 0.15s ease, transform 0.15s ease;
+  overflow: visible;
 }
 
 .user-tooltip.visible {
@@ -286,8 +285,45 @@ header {
   font-size: 1rem;
 }
 
-.tooltip-description {
-  font-size: 0.85rem;
-  opacity: 0.85;
-  line-height: 1.4;
+.tooltip-progress-container {
+  margin-top: 14px;
+}
+
+.tooltip-progress-bar-bg {
+  width: 100%;
+  height: 10px;
+  background: rgba(0,0,0,0.12);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.tooltip-progress-bar-fill {
+  height: 100%;
+  display: block;
+  width: 0%;
+  background: linear-gradient(135deg, #ffb347, #ff7a18);
+  border-radius: 6px;
+  transition: width 0.6s ease-out;
+}
+
+.tooltip-progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  opacity: 0.6;
+  margin-bottom: 4px;
+}
+
+.tooltip-progress-text {
+  font-size: 0.75rem;
+  opacity: 0.75;
+  text-align: center;
+}
+
+.tooltip-max-level {
+  margin-top: 12px;
+  font-weight: bold;
+  color: goldenrod;
+  text-align: center;
 }
