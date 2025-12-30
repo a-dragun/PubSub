@@ -35,12 +35,13 @@ Dostupno na linku: https://pubsub-51xj.onrender.com/
 | NFR-02   | The system must deliver chat messages with minimal latency.                                      | Performance            | DONE   |
 | NFR-03   | The system must store sensitive user data securely.                                              | Security               | DONE   |
 | NFR-04   | The system must maintain reliable uptime for all users.                                          | Availability           | DONE   |
-| LL-01    | The system must introduce user levels based on accumulated experience points (XP).               | Leveling & Leaderboards | IDLE   |
-| LL-02    | The system must display the user's level on their profile and in rooms.                          | Leveling & Leaderboards | IDLE   |
+| LL-01    | The system must introduce user levels based on accumulated experience points (XP).               | Leveling & Leaderboards | DONE   |
+| LL-02    | The system must display the user's level in rooms.                                                 | Leveling & Leaderboards | DONE   |
 | LL-03    | The system must provide a global leaderboard based on accumulated points or XP.                   | Leveling & Leaderboards | IDLE   |
 | GT-01    | The system must support multiple game modes.                                                    | Game Types             | IDLE   |
 | PR-01    | The system must allow users to create private rooms protected by a password.                     | Room Management        | IDLE   |
 | PR-02    | The system must restrict access to private rooms only to users who enter the correct password.   | Room Management        | IDLE   |
+| PR-03    | The system must show number of users for each room.                                                | Room Management        | IDLE   |
 | TM-01    | The system must allow users to create or join teams.                                             | Teams                  | IDLE   |
 | TM-02    | The system must provide team-only chat channels.                                                 | Teams                  | IDLE   |
 | TM-03    | The system must support team vs. team game modes.                                                | Teams                  | IDLE   |
