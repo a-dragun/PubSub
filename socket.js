@@ -1,7 +1,7 @@
 const Room = require("./models/Room");
 const Question = require("./models/Question");
 const User = require("./models/User");
-const {getLevelByScore} = require('./config/levels');
+const {levels, getLevelByScore} = require('./config/levels');
 const userSocketMap = new Map();
 const roomUsers = {};
 
@@ -141,17 +141,36 @@ function setupSocketHandlers(io) {
     });
   });
 
-  async function emitUserList(roomId, io, roomUsers) {
-    const users = await User.find({ name: { $in: roomUsers[roomId] } }, 'name totalScore profilePicture adminLevel id');
-    const formattedUsers = users.map(user => ({
+async function emitUserList(roomId, io, roomUsers) {
+  const users = await User.find(
+    { name: { $in: roomUsers[roomId] } },
+    'name totalScore profilePicture adminLevel id'
+  );
+
+  const formattedUsers = users.map(user => {
+    const level = getLevelByScore(user.totalScore);
+
+    return {
+      id: user.id,
       name: user.name,
       totalScore: user.totalScore,
       profilePicture: user.profilePicture,
       adminLevel: user.adminLevel,
-      id: user.id
-    }));
-    io.to(roomId).emit('userListUpdated', formattedUsers);
-  }
+      
+      level: level ? {
+        number: level.level,
+        name: level.name,
+        icon: level.icon,
+        description: level.description,
+        minScore: level.min_score,
+        maxScore: level.max_score
+      } : null
+    };
+  });
+
+  io.to(roomId).emit('userListUpdated', formattedUsers);
+}
+
 
   function clearRoomTimeouts(roomId, roomTimers, roomTimeouts) {
     if (roomTimers[roomId]) {

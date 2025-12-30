@@ -29,31 +29,54 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 socket.on('userListUpdated', (userList) => {
-    const userListContainer = document.getElementById('user-list');
-    userListContainer.innerHTML = '';
-    const sortedUsers = userList.sort((a, b) => b.totalScore - a.totalScore);
+  const userListContainer = document.getElementById('user-list');
+  userListContainer.innerHTML = '';
 
-    sortedUsers.forEach((user) => {
-        const a = document.createElement('a');
-        a.href = `/user/${user.id}`;
-        a.className = 'user-card-link';
+  const sortedUsers = userList.sort((a, b) => b.totalScore - a.totalScore);
 
-        a.innerHTML = `
-          <div class="user-card">
-            <div class="user-card-left">
-              <img src="${user.profilePicture}" alt="pfp" />
-              <div class="user-info">
-                <strong>${user.name}</strong>
-                ${user.adminLevel > 1 ? '<span class="admin">Admin</span>' : ''}
-              </div>
-            </div>
-            <div><strong>${user.totalScore} bodova</strong></div>
+  sortedUsers.forEach((user) => {
+    const a = document.createElement('a');
+    a.href = `/user/${user.id}`;
+    a.className = 'user-card-link';
+
+    a.dataset.tooltip = `
+      <div class="tooltip-header">
+        <img src="${user.profilePicture}" alt="${user.name}" />
+        <div>
+          <div class="name">${user.name}</div>
+          <div>${user.totalScore} bodova</div>
+          ${user.adminLevel > 1 ? '<div style="color:red;font-weight:bold;">Admin</div>' : ''}
+        </div>
+      </div>
+
+      ${user.level ? `
+      <div class="tooltip-level">
+        <img src="${user.level.icon}" alt="Level icon" />
+        <div>
+          <strong>${user.level.name}</strong><br>
+          Level ${user.level.number}
+        </div>
+      </div>
+      ` : `<div class="tooltip-description">Level unknown</div>`}
+    `;
+
+    a.innerHTML = `
+      <div class="user-card">
+        <div class="user-card-left">
+          <img src="${user.profilePicture}" alt="pfp" />
+          <div class="user-info">
+            <strong>${user.name}</strong>
+            ${user.adminLevel > 1 ? '<span class="admin">Admin</span>' : ''}
           </div>
-        `;
+        </div>
+        <div><strong>${user.totalScore} bodova</strong></div>
+      </div>
+    `;
 
-        userListContainer.appendChild(a);
-    });
+    userListContainer.appendChild(a);
+  });
 });
+
 
   const form = document.getElementById('chat-form');
   const input = document.getElementById('message-input');
@@ -117,5 +140,46 @@ socket.on('userListUpdated', (userList) => {
     drawer.classList.toggle('closed');
     toggle.textContent = drawer.classList.contains('closed') ? '👥' : '❌';
   });
+
+  const tooltip = document.getElementById('user-tooltip');
+
+document.addEventListener('mouseover', (e) => {
+  const target = e.target.closest('.user-card-link');
+  if (!target || !target.dataset.tooltip) return;
+
+  tooltip.innerHTML = target.dataset.tooltip;
+  tooltip.classList.add('visible');
+
+  positionTooltip(e);
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (!tooltip.classList.contains('visible')) return;
+  positionTooltip(e);
+});
+
+document.addEventListener('mouseout', (e) => {
+  if (e.target.closest('.user-card-link')) {
+    tooltip.classList.remove('visible');
+  }
+});
+
+function positionTooltip(e) {
+  const padding = 12;
+
+  let x = e.clientX + padding;
+  let y = e.clientY + padding;
+  const rect = tooltip.getBoundingClientRect();
+  if (x + rect.width > window.innerWidth) {
+    x = e.clientX - rect.width - padding;
+  }
+  if (y + rect.height > window.innerHeight) {
+    y = e.clientY - rect.height - padding;
+  }
+
+  tooltip.style.left = `${x}px`;
+  tooltip.style.top = `${y}px`;
+}
+
 
 });

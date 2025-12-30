@@ -225,3 +225,69 @@ header {
   left: calc(100% - 2px);
   transform: translateX(-100%);
 }
+
+.user-tooltip {
+  position: fixed;
+  pointer-events: none;
+  background: #fff;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 14px 35px rgba(0,0,0,0.25);
+  z-index: 9999;
+
+  width: 340px;
+  color: var(--text);
+  font-size: 0.95rem;
+
+  opacity: 0;
+  transform: translateY(8px) scale(0.97);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.user-tooltip.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.tooltip-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.tooltip-header img {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+}
+
+.tooltip-header .name {
+  font-size: 1.15rem;
+  font-weight: bold;
+}
+
+.tooltip-level {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--system);
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.tooltip-level img {
+  width: 44px;
+  height: 44px;
+}
+
+.tooltip-level strong {
+  font-size: 1rem;
+}
+
+.tooltip-description {
+  font-size: 0.85rem;
+  opacity: 0.85;
+  line-height: 1.4;
+}
