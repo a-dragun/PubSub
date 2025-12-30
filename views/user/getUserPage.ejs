@@ -15,7 +15,7 @@
     <p><strong>Bodovi:</strong> <%= user.totalScore %></p>
     <p><strong>Stvoren:</strong> <%= user.createdAt.toLocaleDateString() %></p>
     <p><strong>Admin razina:</strong> Level <%= user.adminLevel %></p>
-    <p>Zadnji put logiran: <%= user.lastLoginAt.toLocaleDateString() %></p>
+    <p>Zadnji put logiran: <%= user.lastLoginAt ? user.lastLoginAt.toLocaleDateString() : 'Nepoznato' %></p>
   </div>
 </body>
 </html>

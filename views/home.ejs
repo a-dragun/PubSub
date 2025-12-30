@@ -19,6 +19,29 @@
     <% if (streakData) { %>
         <%- include("partials/streak-modal", streakData) %>
     <% } %>
+    <section id="global-leaderboard">
+  <h2>Globalni Leaderboard</h2>
+  <table class="leaderboard-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Username</th>
+        <th>Bodovi</th>
+        <th>Zadnji put logiran</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% leaderboardUsers.forEach((u, index) => { %>
+        <tr>
+          <td><%= index + 1 %></td>
+          <td><a href="/user/<%= u._id %>"><%= u.name %></a></td>
+          <td><%= u.totalScore %></td>
+          <td><%= u.lastLoginAt ? new Date(u.lastLoginAt).toLocaleDateString() : 'Nepoznato' %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</section>
 
 </body>
 </html>

@@ -38,7 +38,11 @@ exports.getHome = async (req, res) => {
       }
     }
 
-    return res.render("home", { user, streakData });
+    const leaderboardUsers = await User.find({}, 'name totalScore lastLoginAt')
+      .sort({ totalScore: -1 })
+      .limit(10)
+
+    return res.render("home", { user, streakData, leaderboardUsers });
   } catch (error) {
     return res.send("Error: " + error.message);
   }
