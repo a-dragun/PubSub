@@ -23,31 +23,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
   socket.emit('joinRoom', { roomId, username });
 
-  socket.on('userListUpdated', (userList) => {
+  socket.on("levelUp", (data) => {
+    console.log("Level Up Događaj Primljen:", data);
+    openLevelUp({level: data.level, name: data.name, description: data.description, icon: data.icon, max_score: data.max_score, user_score: data.user_score});
+});
+
+socket.on('userListUpdated', (userList) => {
     const userListContainer = document.getElementById('user-list');
     userListContainer.innerHTML = '';
+    const sortedUsers = userList.sort((a, b) => b.totalScore - a.totalScore);
 
-    userList.forEach((user) => {
-      const a = document.createElement('a');
-      a.href = `/user/${user.id}`;
-      a.className = 'user-card-link';
+    sortedUsers.forEach((user) => {
+        const a = document.createElement('a');
+        a.href = `/user/${user.id}`;
+        a.className = 'user-card-link';
 
-      a.innerHTML = `
-        <div class="user-card">
-          <div class="user-card-left">
-            <img src="${user.profilePicture}" alt="pfp" />
-            <div class="user-info">
-              <strong>${user.name}</strong>
-              ${user.adminLevel > 1 ? '<span class="admin">Admin</span>' : ''}
+        a.innerHTML = `
+          <div class="user-card">
+            <div class="user-card-left">
+              <img src="${user.profilePicture}" alt="pfp" />
+              <div class="user-info">
+                <strong>${user.name}</strong>
+                ${user.adminLevel > 1 ? '<span class="admin">Admin</span>' : ''}
+              </div>
             </div>
+            <div><strong>${user.totalScore} bodova</strong></div>
           </div>
-          <div><strong>${user.totalScore} bodova</strong></div>
-        </div>
-      `;
+        `;
 
-      userListContainer.appendChild(a);
+        userListContainer.appendChild(a);
     });
-  });
+});
 
   const form = document.getElementById('chat-form');
   const input = document.getElementById('message-input');
@@ -111,4 +117,5 @@ document.addEventListener('DOMContentLoaded', () => {
     drawer.classList.toggle('closed');
     toggle.textContent = drawer.classList.contains('closed') ? '👥' : '❌';
   });
+
 });

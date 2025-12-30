@@ -1,7 +1,7 @@
 const Room = require("./models/Room");
 const Question = require("./models/Question");
 const User = require("./models/User");
-
+const {getLevelByScore} = require('./config/levels');
 const userSocketMap = new Map();
 const roomUsers = {};
 
@@ -51,6 +51,8 @@ function setupSocketHandlers(io) {
       const normalizedMessage = normalizeAnswer(message.trim());
       const userSocket = userSocketMap.get(username);
       const isMuted = userSocket ? userSocket.isMuted : false;
+      const user = await User.findOne({ name: username });
+      const oldLevelNumber = user.currentLevel;
 
       if (currentQuestion && currentQuestion.answers && !currentQuestion.answered) {
         const correctAnswers = currentQuestion.answers.map(ans => normalizeAnswer(ans));
@@ -59,7 +61,28 @@ function setupSocketHandlers(io) {
           currentQuestion.answered = true;
 
           const room = await Room.findById(roomId);
-          await User.findOneAndUpdate({ name: username }, { $inc: { totalScore: room.points } });
+          user.totalScore += room.points;
+          await user.save();
+
+          const newLevelNumber = user.currentLevel;
+
+          if (newLevelNumber > oldLevelNumber) {
+            const levelData = getLevelByScore(user.totalScore);
+
+            if(userSocketMap){
+              const userSocket = userSocketMap.get(user.name);
+              if (userSocket && userSocket.socket) {
+                userSocket.socket.emit("levelUp", {
+                level: levelData.level,
+                name: levelData.name,
+                description: levelData.description,
+                icon: levelData.icon,
+                max_score: levelData.max_score,
+                user_score: user.totalScore,
+              });
+              }
+            }
+          }
 
           io.to(roomId).emit('chatMessage', {
             username: currentQuestion.room.name,
