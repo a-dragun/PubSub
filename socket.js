@@ -3,7 +3,12 @@ const Question = require("./models/Question");
 const User = require("./models/User");
 const {levels, getLevelByScore} = require('./config/levels');
 const userSocketMap = new Map();
-const roomUsers = {};
+const {
+  addUserToRoom,
+  removeUserFromRoom,
+  roomUsers
+} = require('./state/roomState');
+
 
 function isRoomEmpty(roomId) {
   return !roomUsers[roomId] || roomUsers[roomId].length === 0;
@@ -31,13 +36,8 @@ function setupSocketHandlers(io) {
       socket.username = username;
       socket.roomId = roomId;
 
-      if (!roomUsers[roomId]) {
-        roomUsers[roomId] = [];
-      }
+      addUserToRoom(roomId, username);
 
-      if (!roomUsers[roomId].includes(username)) {
-        roomUsers[roomId].push(username);
-      }
 
       await emitUserList(roomId, io, roomUsers);
 
@@ -125,18 +125,17 @@ function setupSocketHandlers(io) {
         }
       }
 
-      for (let roomId in roomUsers) {
-        roomUsers[roomId] = roomUsers[roomId].filter(user => user !== socket.username);
+      if (socket.roomId && socket.username) {
+        removeUserFromRoom(socket.roomId, socket.username);
 
-        await emitUserList(roomId, io, roomUsers);
+        await emitUserList(socket.roomId, io, roomUsers);
 
-        if (roomUsers[roomId].length === 0) {
-          console.log(`Room ${roomId} is now empty.`);
-          clearRoomTimeouts(roomId, roomTimers, roomTimeouts);
-          delete activeQuestions[roomId];
+        if (!roomUsers[socket.roomId]) {
+          console.log(`Room ${socket.roomId} is now empty.`);
+          clearRoomTimeouts(socket.roomId, roomTimers, roomTimeouts);
+          delete activeQuestions[socket.roomId];
         }
       }
-
       console.log('User disconnected', socket.id);
     });
   });

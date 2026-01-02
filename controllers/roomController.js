@@ -1,17 +1,30 @@
 const Room = require("../models/Room");
 const User = require("../models/User");
+const { getAllRoomCounts } = require('../state/roomState');
 
 exports.getRoomsPage = async (req, res) => {
   try {
     const rooms = await Room.find().lean();
     const leaderboardUsers = await User.find({}, 'name totalScore lastLoginAt')
-          .sort({ totalScore: -1 })
-          .limit(10)
-    return res.render("rooms/index", {rooms, leaderboardUsers});
+      .sort({ totalScore: -1 })
+      .limit(10);
+
+    const roomCounts = getAllRoomCounts();
+
+    const roomsWithCounts = rooms.map(room => ({
+      ...room,
+      onlineCount: roomCounts[room._id.toString()] || 0
+    }));
+
+    return res.render("rooms/index", {
+      rooms: roomsWithCounts,
+      leaderboardUsers
+    });
   } catch (error) {
     return res.send("Error: " + error.message);
   }
 };
+
 
 exports.getRoomPage = async (req, res) => {
     try {
