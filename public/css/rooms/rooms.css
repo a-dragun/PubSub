@@ -87,3 +87,44 @@ h1 {
 hr {
     display: none;
 }
+
+#global-leaderboard {
+    width: 80%;
+    max-width: 800px;
+    margin: 50px auto;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    margin: 0 auto;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+    padding: 12px;
+    border: 1px solid #cce0ff;
+}
+
+.leaderboard-table th {
+    background-color: #0073e6;
+    color: white;
+    font-weight: bold;
+}
+
+.leaderboard-table tr:nth-child(even) {
+    background-color: #f0f8ff;
+}
+
+.leaderboard-table tr:hover {
+    background-color: #f0f8ff;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}

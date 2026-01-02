@@ -4,7 +4,10 @@ const User = require("../models/User");
 exports.getRoomsPage = async (req, res) => {
   try {
     const rooms = await Room.find().lean();
-    return res.render("rooms/index", {rooms});
+    const leaderboardUsers = await User.find({}, 'name totalScore lastLoginAt')
+          .sort({ totalScore: -1 })
+          .limit(10)
+    return res.render("rooms/index", {rooms, leaderboardUsers});
   } catch (error) {
     return res.send("Error: " + error.message);
   }
