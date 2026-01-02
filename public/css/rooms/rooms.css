@@ -128,3 +128,89 @@ a {
     text-decoration: none;
     color: black;
 }
+.password-container {
+    background: var(--light);
+    backdrop-filter: blur(10px);
+    padding: 3rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    max-width: 450px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+.password-container h1 {
+    color: var(--accent);
+    margin-top: 0;
+    font-size: 2rem;
+}
+
+.description {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    color: var(--text);
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+}
+
+.password-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.input-group {
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: var(--text);
+}
+
+.password-form input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid var(--accent);
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    background-color: #fff;
+    transition: border-color 0.3s ease;
+}
+
+.password-form input[type="password"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(116, 140, 171, 0.3);
+}
+
+.submit-button {
+    background-color: var(--accent);
+    color: var(--light);
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.submit-button:hover {
+    background-color: #5d748f;
+    transform: translateY(-1px);
+}
+
+.lock-icon {
+    font-size: 30px;
+}

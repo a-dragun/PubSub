@@ -40,8 +40,8 @@ Dostupno na linku: https://pubsub-51xj.onrender.com/
 | LL-03    | The system must provide a global leaderboard based on accumulated points or XP.                   | Leveling & Leaderboards | IDLE   |
 | GT-01    | The system must support multiple game modes.                                                    | Game Types             | IDLE   |
 | PR-01    | The system must allow users to create private rooms protected by a password.                     | Room Management        | IDLE   |
-| PR-02    | The system must restrict access to private rooms only to users who enter the correct password.   | Room Management        | IDLE   |
-| PR-03    | The system must show number of users for each room.                                                | Room Management        | IDLE   |
+| PR-02    | The system must restrict access to private rooms only to users who enter the correct password.   | Room Management        | DONE   |
+| PR-03    | The system must show number of users for each room.                                                | Room Management        | DONE   |
 | TM-01    | The system must allow users to create or join teams.                                             | Teams                  | IDLE   |
 | TM-02    | The system must provide team-only chat channels.                                                 | Teams                  | IDLE   |
 | TM-03    | The system must support team vs. team game modes.                                                | Teams                  | IDLE   |

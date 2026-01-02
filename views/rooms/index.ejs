@@ -11,18 +11,24 @@
     <div class="grid-container">
         <% rooms.forEach(room => { %>
             <a href="/rooms/<%= room._id %>" class="room-box">
-                <h2><%= room.name %></h2>
+                <h2><%= room.name %>
+                    <% if (room.password) { %>
+                    <span class="lock-icon" title="Privatna soba">🔒</span>
+                    <% } else { %>
+                    <span class="lock-icon" title="Javna soba">🔓</span>
+                    <% } %>
+                </h2>
                 <ul>
+                    <li><strong>Online:</strong>
+                      <span class="online-count">
+                        <%= room.onlineCount %>
+                      </span>
+                    </li>
                     <li><strong>Tip sobe:</strong> <%= room.type %></li>
                     <li><strong>Kategorije:</strong>
                         <% room.categories.forEach(cat => { %>
                             <span class="category"><%= cat %></span>
                         <% }); %>
-                    </li>
-                    <li><strong>Online:</strong>
-                      <span class="online-count">
-                        <%= room.onlineCount %>
-                      </span>
                     </li>
                 </ul>
             </a>

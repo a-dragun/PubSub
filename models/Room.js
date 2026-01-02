@@ -10,7 +10,8 @@ const roomSchema = new mongoose.Schema({
     hintTime: { type: Number, required: true },
     currentQuestion: { type: mongoose.Schema.Types.ObjectId, ref: 'Question' },
     createdAt: { type: Date, default: Date.now, required: true },
-    categories: [{ type: String, enum: categories, required: true }]
+    categories: [{ type: String, enum: categories, required: true }],
+    password: {type: String, default: null}
 });
   
 roomSchema.pre('validate', function (next) {
