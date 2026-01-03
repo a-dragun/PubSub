@@ -39,7 +39,7 @@ Dostupno na linku: https://pubsub-51xj.onrender.com/
 | LL-02    | The system must display the user's level in rooms.                                                 | Leveling & Leaderboards | DONE   |
 | LL-03    | The system must provide a global leaderboard based on accumulated points or XP.                   | Leveling & Leaderboards | DONE   |
 | GT-01    | The system must support multiple game modes.                                                    | Game Types             | IDLE   |
-| PR-01    | The system must allow users to create private rooms protected by a password.                     | Room Management        | IDLE   |
+| PR-01    | The system must allow admins to create private rooms protected by a password.                     | Room Management        | DONE   |
 | PR-02    | The system must restrict access to private rooms only to users who enter the correct password.   | Room Management        | DONE   |
 | PR-03    | The system must show number of users for each room.                                                | Room Management        | DONE   |
 | TM-01    | The system must allow users to create or join teams.                                             | Teams                  | IDLE   |
@@ -51,7 +51,7 @@ Dostupno na linku: https://pubsub-51xj.onrender.com/
 | ST-02    | The system must reward users with streak bonuses, XP, or badges.                                 | User Activity          | DONE   |
 | ST-03    | The system must break a streak if a user is inactive for a full day.                             | User Activity          | DONE   |
 | RP-02    | The system must allow users to report other users for inappropriate behavior.                    | Reporting              | IDLE   |
-| RP-03    | The system should automatically detect and flag inappropriate chat messages using content filtering. | Reporting              | IDLE   |
+| RP-03    | The system should automatically detect and flag inappropriate chat messages.                       | Reporting              | DONE   |
 | RP-04    | The system must provide admins with a dashboard listing all reports and flagged content.        | Reporting              | IDLE   |
 | STATS-01 | The system must store detailed statistics about user performance.                                | Statistics             | IDLE   |
 | STATS-02 | The system should display charts and graphs on the user's profile based on historical performance data. | Statistics             | IDLE   |

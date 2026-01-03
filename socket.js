@@ -3,6 +3,7 @@ const Question = require("./models/Question");
 const User = require("./models/User");
 const {levels, getLevelByScore} = require('./config/levels');
 const userSocketMap = new Map();
+const {hasProfanity} = require("./helpers/profanity");
 const {
   addUserToRoom,
   removeUserFromRoom,
@@ -103,12 +104,22 @@ function setupSocketHandlers(io) {
         }
       }
 
+      if (hasProfanity(normalizedMessage)) {
+        if (userSocket && userSocket.socket) {
+          userSocket.socket.emit('profanityWarning', {
+            message: 'Molimo vas da se suzdržite od neprimjerenog jezika.'
+          });
+        }
+        return;
+      }
+
+
       if (!isMuted) {
         io.to(roomId).emit('chatMessage', { username, message });
         userSocket.isMuted = true;
         setTimeout(function(){
           userSocket.isMuted = false;
-        }, 1500)
+        }, 750)
       }
     });
 

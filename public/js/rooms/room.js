@@ -150,6 +150,11 @@ socket.on('userListUpdated', (userList) => {
     window.location.href = '/';
   });
 
+  socket.on('profanityWarning', (data) => {
+    alert(data.message);
+  });
+
+
   const drawer = document.getElementById('drawer');
   const toggle = document.getElementById('drawer-toggle');
 
