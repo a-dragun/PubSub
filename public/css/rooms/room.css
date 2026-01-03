@@ -327,3 +327,28 @@ header {
   color: goldenrod;
   text-align: center;
 }
+
+#messages li {
+  position: relative;
+}
+
+.report-flag {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+#messages li:hover .report-flag {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.2);
+}
+
+.report-flag:hover {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.4);
+}

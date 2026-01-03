@@ -5,6 +5,7 @@ const indexRoutes = require("./routes/index");
 const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
 const questionRoutes = require("./routes/questions");
+const reportRoutes = require("./routes/reports");
 const authMiddleware = require("./middleware/authMiddleware");
 const cacheControl = require("./middleware/cacheControl");
 const userRoutes = require("./routes/user");
@@ -57,5 +58,7 @@ app.use("/admin", authMiddleware.requireAuth, authMiddleware.checkBan, authMiddl
 app.use("/questions", authMiddleware.requireAuth, authMiddleware.checkBan, questionRoutes);
 app.use("/user", authMiddleware.requireAuth, authMiddleware.checkBan, userRoutes);
 app.use("/rooms", authMiddleware.requireAuth, authMiddleware.checkBan, roomRoutes);
+app.use('/api/reports', authMiddleware.requireAuth, reportRoutes);
+
 
 server.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

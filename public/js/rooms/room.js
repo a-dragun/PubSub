@@ -130,6 +130,13 @@ socket.on('userListUpdated', (userList) => {
     } else {
       const color = getColorForUser(sender);
       li.innerHTML = `<strong style="color: ${color};">${sender}:</strong> ${message}`;
+      if(!isSystem) {
+        li.innerHTML += `<span class="report-flag" title="Prijavi poruku">🚩</span>`;
+        const flag = li.querySelector('.report-flag');
+        flag.addEventListener('click', () => {
+          openReportModal(sender, message);
+        });
+      }
     }
 
     messages.appendChild(li);
