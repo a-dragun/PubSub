@@ -47,10 +47,12 @@ h2 {
 
 .links-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 220px));
     gap: 1.5rem;
     margin-bottom: 2rem;
+    justify-content: center;
 }
+
 
 .link-card {
     background: #ffffff99;

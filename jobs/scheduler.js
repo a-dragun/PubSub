@@ -1,5 +1,6 @@
 const cron = require('node-cron');
 const User = require('../models/User');
+const Report = require('../models/Report');
 
 cron.schedule('0 0 * * *', async () => {
   const now = new Date();
@@ -20,9 +21,12 @@ cron.schedule('0 0 * * *', async () => {
       { lastLogin: { $lt: yesterday } },
       { activityStreak: 0 }
     );
+    await Report.deleteMany({
+      status: { $in: ['resolved', 'rejected'] }
+    });
 
-    console.log(`[UNBAN SCHEDULER]: Successfully processed at ${new Date().toISOString()}`);
+    console.log(`[SCHEDULER]: Successfully processed at ${new Date().toISOString()}`);
   } catch (err) {
-    console.error('[UNBAN SCHEDULER ERROR]:', err.message);
+    console.error('[SCHEDULER ERROR]:', err.message);
   }
 });

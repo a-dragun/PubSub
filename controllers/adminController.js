@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const Question = require("../models/Question");
 const Room = require('../models/Room');
+const Report = require("../models/Report");
 const categories = require('../config/categories');
 const socketHandler = require("../socket");
 const userSocketMap = socketHandler.userSocketMap;
@@ -346,6 +347,63 @@ exports.getRooms = async(req, res) => {
   }
 }
 
+exports.getReports = async (req, res) => {
+  try {
+    let reports = await Report.find()
+        .sort({
+          status: 1,
+          createdAt: -1
+        })
+        .lean();
+    const userIds = [
+      ...new Set(reports.flatMap(r => [r.authorId, r.reportedUserId]))
+    ];
+
+    const users = await User.find({ _id: { $in: userIds } }, 'name').lean();
+    const userMap = {};
+    users.forEach(u => {
+      userMap[u._id.toString()] = u.name;
+    });
+
+    reports = reports.map(r => ({
+      ...r,
+      authorUsername: userMap[r.authorId] || 'Nepoznato',
+      reportedUsername: userMap[r.reportedUserId] || 'Nepoznato'
+    }));
+
+    return res.render("admin/reports/index", { reports });
+  } catch (error) {
+    return res.send("Error: " + error.message);
+  }
+};
+
+exports.getReport = async (req, res) => {
+  try {
+    const reportId = req.params.id;
+    let report = await Report.findById(reportId).lean();
+    if (!report) {
+      return res.status(404).send("Report nije pronađen.");
+    }
+
+    const userIds = [report.authorId, report.reportedUserId];
+    const users = await User.find({ _id: { $in: userIds } }, 'name').lean();
+
+    const userMap = {};
+    users.forEach(u => {
+      userMap[u._id.toString()] = u.name;
+    });
+
+    report.authorUsername = userMap[report.authorId] || 'Nepoznato';
+    report.reportedUsername = userMap[report.reportedUserId] || 'Nepoznato';
+
+    return res.render("admin/reports/report", { report });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("Error: " + error.message);
+  }
+};
+
 
 exports.getRoom = async(req, res) => {
   try {
@@ -398,7 +456,8 @@ exports.banUser = async (req, res) => {
       }
 
 
-      return res.redirect("/admin/users/");
+      const backUrl = req.get('Referer') || '/admin/users';
+      return res.redirect(backUrl);
     }
   } catch (error) {
     return res.send("Error: " + error.message);
@@ -429,7 +488,8 @@ exports.muteUser = async (req, res) => {
       }
     }
 
-    return res.redirect("/admin/users/");
+    const backUrl = req.get('Referer') || '/admin/users';
+    return res.redirect(backUrl);
   } catch (error) {
     return res.send("Error: " + error.message);
   }
@@ -444,3 +504,43 @@ exports.unmuteUser = async (req, res) => {
     return res.send("Error: " + error.message);
   }
 }
+
+exports.dismissReport = async (req, res) => {
+  try {
+    const reportId = req.params.id;
+
+    const report = await Report.findByIdAndUpdate(reportId, { status: 'resolved' }, { new: true });
+    if (!report) return res.status(404).send("Report nije pronađen.");
+
+    return res.redirect(`/admin/reports/${reportId}`);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("Greška pri ažuriranju reporta.");
+  }
+};
+
+exports.punishUserFromReport = async (req, res) => {
+  try {
+    const reportId = req.params.id;
+    const report = await Report.findById(reportId);
+    if (!report) return res.status(404).send("Report nije pronađen.");
+
+    const userId = report.reportedUserId;
+    req.params.id = userId;
+
+    if (req.body.type === 'ban') {
+      req.body.banReason = req.body.reason;
+      req.body.banDuration = req.body.duration;
+      await exports.banUser(req, res);
+    } else if (req.body.type === 'mute') {
+      req.body.muteReason = req.body.reason;
+      req.body.muteDuration = req.body.duration;
+      await exports.muteUser(req, res);
+    }
+    report.status = 'resolved';
+    await report.save();
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("Greška pri kažnjavanju korisnika.");
+  }
+};

@@ -58,7 +58,7 @@ app.use("/admin", authMiddleware.requireAuth, authMiddleware.checkBan, authMiddl
 app.use("/questions", authMiddleware.requireAuth, authMiddleware.checkBan, questionRoutes);
 app.use("/user", authMiddleware.requireAuth, authMiddleware.checkBan, userRoutes);
 app.use("/rooms", authMiddleware.requireAuth, authMiddleware.checkBan, roomRoutes);
-app.use('/api/reports', authMiddleware.requireAuth, reportRoutes);
+app.use('/api/reports', authMiddleware.requireAuth, authMiddleware.checkBan, reportRoutes);
 
 
 server.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

@@ -7,7 +7,7 @@ const reportSchema = new mongoose.Schema({
   reportedMessage: { type: String, required: true },
   status: {
     type: String,
-    enum: ["pending", "reviewed", "resolved", "rejected"],
+    enum: ["pending", "resolved"],
     default: "pending"
   },
   createdAt: { type: Date, default: Date.now }

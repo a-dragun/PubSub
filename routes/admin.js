@@ -11,6 +11,8 @@ router.get("/questions/:id", adminController.getQuestion);
 router.get("/rooms/new", adminController.getCreateRoomPage);
 router.get("/rooms", adminController.getRooms);
 router.get("/rooms/:id", adminController.getRoom);
+router.get("/reports", adminController.getReports);
+router.get("/reports/:id", adminController.getReport);
 
 router.post("/bulk_update", adminController.bulkUpdate);
 router.post("/rooms", adminController.createRoom);
@@ -18,6 +20,8 @@ router.post("/users/:id/ban", authMiddleware.checkAdminLevel(1), adminController
 router.post("/users/:id/unban", authMiddleware.checkAdminLevel(1), adminController.unbanUser);
 router.post("/users/:id/mute", authMiddleware.checkAdminLevel(1), adminController.muteUser);
 router.post("/users/:id/unmute", authMiddleware.checkAdminLevel(1), adminController.unmuteUser);
+router.post('/reports/:id/dismiss', authMiddleware.checkAdminLevel(2), adminController.dismissReport);
+router.post('/reports/:id/punish', authMiddleware.checkAdminLevel(2), adminController.punishUserFromReport);
 
 router.put("/users/:id", authMiddleware.checkAdminLevel(2), adminController.updateUser);
 router.put("/questions/:id", adminController.approveQuestion);

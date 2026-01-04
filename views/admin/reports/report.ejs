@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Detalji prijave</title>
+  <link rel="stylesheet" href="/css/admin/reports.css">
+</head>
+<body>
+  <%- include('../../partials/header') %>
+
+  <div class="report-container">
+    <h1>Detalji prijave</h1>
+
+    <div class="report-box">
+      <div class="reported-user">
+        <span>Prijavljen korisnik: <strong><%= report.reportedUsername %></strong></span>
+        <span class="status-badge status-<%= report.status %>"><%= report.status %></span>
+      </div>
+
+      <div class="message-preview">
+        <strong>Razlog prijave:</strong> <%= report.reason %>
+      </div>
+
+      <div class="message-detail">
+        <strong>Poruka:</strong> "<%= report.reportedMessage %>"
+      </div>
+
+      <div class="report-meta">
+        <span>Prijavio: <strong><%= report.authorUsername %></strong></span>
+        <span><%= new Date(report.createdAt).toLocaleDateString('hr-HR', {year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'}) %></span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <form action="/admin/reports/<%= report._id %>/dismiss" method="POST">
+        <button type="submit" class="dismiss-btn">Odbaci prijavu</button>
+      </form>
+      <form id="punishForm" action="/admin/reports/<%= report._id %>/punish" method="POST">
+        <label for="type">Vrsta kazne:</label>
+        <select name="type" id="type" required>
+          <option value="" disabled selected>Odaberi...</option>
+          <option value="ban">Ban</option>
+          <option value="mute">Mute</option>
+        </select>
+
+        <label for="reason">Razlog kazne:</label>
+        <input type="text" name="reason" id="reason" required>
+
+        <label for="duration">Trajanje:</label>
+        <input type="date" name="duration" id="duration" required min="<%= new Date(Date.now() + 86400000).toISOString().split('T')[0] %>">
+
+        <button type="submit" class="punish-btn">Izvrši kaznu</button>
+      </form>
+    </div>
+  </div>

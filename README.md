@@ -50,9 +50,9 @@ Dostupno na linku: https://pubsub-51xj.onrender.com/
 | ST-01    | The system must track user streaks based on continuous daily activity.                           | User Activity          | DONE   |
 | ST-02    | The system must reward users with streak bonuses, XP, or badges.                                 | User Activity          | DONE   |
 | ST-03    | The system must break a streak if a user is inactive for a full day.                             | User Activity          | DONE   |
-| RP-02    | The system must allow users to report other users for inappropriate behavior.                    | Reporting              | IDLE   |
+| RP-02    | The system must allow users to report other users for inappropriate behavior.                    | Reporting              | DONE   |
 | RP-03    | The system should automatically detect and flag inappropriate chat messages.                       | Reporting              | DONE   |
-| RP-04    | The system must provide admins with a dashboard listing all reports and flagged content.        | Reporting              | IDLE   |
+| RP-04    | The system must provide admins with a dashboard listing all reports and flagged content.        | Reporting              | DONE   |
 | STATS-01 | The system must store detailed statistics about user performance.                                | Statistics             | IDLE   |
 | STATS-02 | The system should display charts and graphs on the user's profile based on historical performance data. | Statistics             | IDLE   |
 | FR-01    | The system must allow users to send and accept friend requests.                                  | Friends                | IDLE   |
