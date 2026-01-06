@@ -20,6 +20,62 @@ exports.deleteUser = async (req, res) => {
   }
 }
 
+exports.getUserList = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 20;
+    const skip = (page - 1) * limit;
+    const search = req.query.search ? req.query.search.trim() : '';
+    const sort = req.query.sort || 'name-asc';
+
+    let query = {};
+    
+    if (search) {
+      query.name = { $regex: search, $options: 'i' };
+    }
+
+    let sortOption = {};
+    switch (sort) {
+      case 'name-asc':
+        sortOption.name = 1;
+        break;
+      case 'totalScore-desc':
+        sortOption.totalScore = -1;
+        break;
+      case 'name-desc':
+        sortOption.name = -1;
+        break;
+      case 'totalScore-asc':
+        sortOption.totalScore = 1;
+        break;
+      default:
+        sortOption.name = 1;
+    }
+
+    const totalUsers = await User.countDocuments(query);
+    const dbUsers = await User.find(query)
+      .sort(sortOption)
+      .skip(skip)
+      .limit(limit)
+      .lean();
+    const users = dbUsers.map(({ password, ...user }) => user);
+
+    const totalPages = Math.ceil(totalUsers / limit);
+
+    return res.render("user/list", {
+      users,
+      currentPage: page,
+      totalPages,
+      limit,
+      search,
+      sort,
+    });
+  } catch (error) {
+    return res.send("Error: " + error.message);
+  }
+};
+
+
 exports.getProfile = async (req, res) => {
     try {
       let userId = req.session.user.id;

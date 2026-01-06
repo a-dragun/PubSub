@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Popis korisnika</title>
+  <link rel="stylesheet" href="/css/user/list.css">
+  <script src="/js/user/list.js" defer></script>
+</head>
+<body>
+  <%- include('../partials/header') %>
+  <div class="search-filter-container">
+    <input type="text" id="searchInput" placeholder="Pretraži po imenu..." value="<%= search || '' %>">
+    <select id="sortSelect">
+      <option value="name-asc" <%= sort === 'name-asc' ? 'selected' : '' %>>Ime (A-Z)</option>
+      <option value="name-desc" <%= sort === 'name-desc' ? 'selected' : '' %>>Ime (Z-A)</option>
+      <option value="totalScore-asc" <%= sort === 'totalScore-asc' ? 'selected' : '' %>>Bodovi (Niski-Visoki)</option>
+      <option value="totalScore-desc" <%= sort === 'totalScore-desc' ? 'selected' : '' %>>Bodovi (Visoki-Niski)</option>
+    </select>
+  </div>
+
+  <h1>Svi korisnici</h1>
+  <% if (users.length === 0) { %>
+    <p class="no-users">Nema korisnika.</p>
+  <% } else { %>
+    <div class="users-grid">
+      <% users.forEach(user => { %>
+        <a href="/user/<%= user._id %>" style="text-decoration: none;">
+          <div class="user-box">
+            <img src="<%= user.profilePicture %>" alt="Profilna slika" class="profile-picture">
+            <h2><%= user.name %></h2>
+            <p><strong>Ukupni bodovi:</strong> <%= user.totalScore %></p>
+          </div>
+        </a>
+      <% }); %>
+    </div>
+
+    <div class="pagination">
+      <% if (currentPage > 1) { %>
+        <a href="?page=<%= currentPage - 1 %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= sort ? '&sort=' + sort : '' %>">Prethodno</a>
+      <% } %>
+
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <a href="?page=<%= i %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= sort ? '&sort=' + sort : '' %>" <%= i === currentPage ? 'class="active"' : '' %>><%= i %></a>
+      <% } %>
+
+      <% if (currentPage < totalPages) { %>
+        <a href="?page=<%= currentPage + 1 %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= sort ? '&sort=' + sort : '' %>">Dalje</a>
+      <% } %>
+    </div>
+  <% } %>
+</body>
+</html>
