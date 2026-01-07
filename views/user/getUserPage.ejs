@@ -26,7 +26,7 @@
 
     <% if (!canSendFriendRequest && user._id.toString() !== currentUser.id) { %>
       <form class="edit-form" method="POST" action="/friends/<%= user._id %>?_method=DELETE">
-        <button type="submit" id="deleteFriendBtn"><%= friendshipStatus === "pending" ? "Otkaži zahtjev" : "Obriši prijatelja" %></button>
+        <button type="submit" id="deleteFriendBtn"><%= friendshipStatus === "pending" ? "Obriši zahtjev" : "Obriši prijatelja" %></button>
       </form>
     <% } %>
 
