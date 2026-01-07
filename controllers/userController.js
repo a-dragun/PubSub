@@ -135,8 +135,8 @@ exports.editUser = async (req, res) => {
     await user.save();
     req.session.user.name = user.name;
     req.session.user.profilePicture = user.profilePicture;
-    res.locals.user.profilePicture = user.profilePicture;
-    res.locals.user.name = user.name;
+    res.locals.currentUser.profilePicture = user.profilePicture;
+    res.locals.currentUser.name = user.name;
 
 
     return res.redirect("/user/profile/");
