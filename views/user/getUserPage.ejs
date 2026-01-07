@@ -16,6 +16,20 @@
     <p><strong>Stvoren:</strong> <%= user.createdAt.toLocaleDateString() %></p>
     <p><strong>Admin razina:</strong> Level <%= user.adminLevel %></p>
     <p>Zadnji put logiran: <%= user.lastLoginAt ? user.lastLoginAt.toLocaleDateString() : 'Nepoznato' %></p>
+
+    <% if (canSendFriendRequest) { %>
+      <form id="friendRequestForm" class="edit-form" method="POST" action="/friends">
+        <input type="hidden" name="receiverId" value="<%= user._id %>">
+        <button type="submit" id="sendFriendRequestBtn">Pošalji zahtjev za prijateljstvo</button>
+      </form>
+    <% } %>
+
+    <% if (!canSendFriendRequest && user._id.toString() !== currentUser.id) { %>
+      <form class="edit-form" method="POST" action="/friends/<%= user._id %>?_method=DELETE">
+        <button type="submit" id="deleteFriendBtn"><%= friendshipStatus === "pending" ? "Otkaži zahtjev" : "Obriši prijatelja" %></button>
+      </form>
+    <% } %>
+
   </div>
 </body>
 </html>

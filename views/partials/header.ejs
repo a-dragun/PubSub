@@ -88,20 +88,21 @@
 </head>
 <body>
     <nav class="navbar" id="navbar">
-        <% if (locals.user) { %>
+        <% if (typeof currentUser !== 'undefined') { %>
             <div class="user-profile">
                 <a href="/user/profile">
-                    <img src="<%= locals.user.profilePicture || 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg' %>" 
+                    <img src="<%= locals.currentUser.profilePicture || 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg' %>" 
                          alt="Profile Picture">
                 </a>
-                <a href="/user/profile"><%= locals.user.name %></a>
+                <a href="/user/profile"><%= locals.currentUser.name %></a>
             </div>
             <div class="center-links">
                 <a href="/">Početna stranica</a>
                 <a href="/questions/new">Stvori pitanje</a>
                 <a href="/rooms">Popis soba</a>
                 <a href="/user/list">Popis korisnika</a>
-                <% if (locals.user.adminLevel > 0) { %>
+                <a href="/friends">Prijatelji</a>
+                <% if (locals.currentUser.adminLevel > 0) { %>
                     <a href="/admin/dashboard">Admin</a>
                 <% } %>
             </div>

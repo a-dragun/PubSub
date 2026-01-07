@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Friendship = require("../models/Friendship");
 const socketHandler	= require("../socket");
 const userSocketMap = socketHandler.userSocketMap;
 
@@ -155,14 +156,35 @@ exports.getEditUserPage = async (req, res) => {
       return res.send("Error: " + error.message);
   }
 }
-
 exports.getUserPage = async (req, res) => {
   try {
     let userId = req.params.id;
+    let currentUser = req.session.user;
+
     let user = await User.findById(userId).lean();
-    return res.render("user/getUserPage", {user});
+    if (!user) return res.send("Error: Korisnik nije pronađen");
+
+    let friendshipStatus;
+    let canSendFriendRequest = false;
+
+    if (user._id.toString() !== currentUser.id) {
+      const existingFriendship = await Friendship.findOne({
+        $or: [
+          { requester: currentUser.id, receiver: userId },
+          { requester: userId, receiver: currentUser.id }
+        ]
+      });
+
+      if (!existingFriendship) {
+        canSendFriendRequest = true;
+      } else {
+        friendshipStatus = existingFriendship.status;
+      }
+    }
+
+    return res.render("user/getUserPage", { user, currentUser, canSendFriendRequest, friendshipStatus });
 
   } catch (error) {
-    return res.send("Error: " + error.message)
+    return res.send("Error: " + error.message);
   }
-}
+};

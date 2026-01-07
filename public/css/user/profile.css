@@ -96,3 +96,42 @@ button#deleteBtn {
 button#deleteBtn:hover {
     background-color: #d68c90;
 }
+
+button {
+    display: block;
+    margin: 0 auto;
+    padding: 1rem;
+    background-color: #748CAB;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: #ffffff;
+    transition: background-color 0.3s;
+    text-align: center;
+    width: 100%;
+    max-width: 200px;
+}
+
+button:hover {
+    background-color: #5a6e8a;
+}
+
+button#deleteFriendBtn {
+    padding: 1rem;
+    background-color: #c25d62;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: #ffffff;
+    transition: background-color 0.3s;
+    width: 100%;
+    max-width: 200px;
+}
+
+button#deleteFriendBtn:hover {
+    background-color: #d68c90;
+}

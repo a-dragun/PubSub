@@ -55,8 +55,8 @@ Dostupno na linku: https://pubsub-51xj.onrender.com/
 | RP-04    | The system must provide admins with a dashboard listing all reports and flagged content.        | Reporting              | DONE   |
 | STATS-01 | The system must store detailed statistics about user performance.                                | Statistics             | IDLE   |
 | STATS-02 | The system should display charts and graphs on the user's profile based on historical performance data. | Statistics             | IDLE   |
-| FR-01    | The system must allow users to send and accept friend requests.                                  | Friends                | IDLE   |
-| FR-02    | The system must allow users to remove friends or block users.                                    | Friends                | IDLE   |
+| FR-01    | The system must allow users to send and accept friend requests.                                  | Friends                | DONE   |
+| FR-02    | The system must allow users to remove friends users.                                             | Friends                | DONE   |
 | PM-01    | The system must provide private one-on-one messaging between friends.                            | Messaging              | IDLE   |
 | PM-02    | The system must store and load message history between friends.                                  | Messaging              | IDLE   |
 | NW-01    | The system must allow publishing news related to quiz events in Croatia.                         | News                   | IDLE   |
