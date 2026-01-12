@@ -20,7 +20,8 @@
             <div class="news-grid">
                 <% if (news && news.length> 0) { %>
                     <% news.forEach(item=> { %>
-                        <article class="news-card <%= item.isHighlighted ? 'highlighted' : '' %>">
+                        <a href="/news/<%= item._id %>">
+                            <article class="news-card <%= item.isHighlighted ? 'highlighted' : '' %>">
                             <% if (item.isHighlighted) { %>
                                 <div class="highlight-badge"><i class="fas fa-thumbtack"></i> Istaknuto</div>
                                 <% } %>
@@ -48,9 +49,6 @@
 
                                                     <div
                                                         style="margin-top: auto; display: flex; justify-content: space-between; align-items: center;">
-                                                        <a href="/news/<%= item._id %>" class="read-more">Pročitaj više
-                                                            <i class="fas fa-arrow-right"></i></a>
-
                                                         <% if (locals.currentUser && locals.currentUser.adminLevel> 0) {
                                                             %>
                                                             <form action="/news/<%= item._id %>/highlight" method="POST"
@@ -64,7 +62,8 @@
                                                             <% } %>
                                                     </div>
                                                 </div>
-                        </article>
+                            </article>
+                        </a>
                         <% }); %>
                             <% } else { %>
                                 <p>Nema novih vijesti.</p>
