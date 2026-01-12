@@ -3,7 +3,9 @@ const Comment = require('../models/Comment');
 
 exports.getNews = async (req, res) => {
     try {
-        const newsDetails = await News.find().sort({ createdAt: -1 }).populate('author', 'name');
+        const newsDetails = await News.find()
+            .sort({ isHighlighted: -1, createdAt: -1 })
+            .populate('author', 'name');
         res.render('news/index', {
             title: 'PubSub - Vijesti',
             news: newsDetails,
@@ -24,13 +26,14 @@ exports.getCreateNews = (req, res) => {
 
 exports.postCreateNews = async (req, res) => {
     try {
-        const { title, content, imageUrl, category } = req.body;
+        const { title, content, imageUrl, category, isHighlighted } = req.body;
 
         const newNews = new News({
             title,
             content,
             imageUrl,
             category,
+            isHighlighted: isHighlighted === 'on',
             author: req.session.user.id
         });
 
@@ -85,5 +88,19 @@ exports.postComment = async (req, res) => {
     } catch (err) {
         console.error(err);
         res.redirect(`/news/${req.params.id}`);
+    }
+};
+
+exports.postToggleHighlight = async (req, res) => {
+    try {
+        const newsItem = await News.findById(req.params.id);
+        if (newsItem) {
+            newsItem.isHighlighted = !newsItem.isHighlighted;
+            await newsItem.save();
+        }
+        res.redirect('/news');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
     }
 };

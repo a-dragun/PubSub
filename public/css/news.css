@@ -241,3 +241,41 @@ body {
   color: var(--news-accent);
   font-weight: 600;
 }
+
+.news-card.highlighted {
+  border: 2px solid #f1c40f;
+  position: relative;
+  background-color: #fffcf0;
+}
+
+.highlight-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #f1c40f;
+  color: #2c3e50;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #95a5a6;
+  transition: color 0.2s;
+  font-size: 1.1rem;
+  padding: 0.5rem;
+}
+
+.icon-btn:hover {
+  color: #3498db;
+}
+
+.icon-btn.active {
+  color: #f1c40f;
+}

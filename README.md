@@ -59,9 +59,9 @@ Dostupno na linku: https://pubsub-51xj.onrender.com/
 | FR-02    | The system must allow users to remove friends users.                                             | Friends                | DONE   |
 | PM-01    | The system must provide private one-on-one messaging between friends.                            | Messaging              | IDLE   |
 | PM-02    | The system must store and load message history between friends.                                  | Messaging              | IDLE   |
-| NW-01    | The system must allow publishing news related to quiz events in Croatia.                         | News                   | IDLE   |
-| NW-02    | The system must allow users to comment on published news or articles.                            | News                   | IDLE   |
-| NW-03    | The system must allow admins to highlight important news items.                                  | News                   | IDLE   |
+| NW-01    | The system must allow publishing news related to quiz events in Croatia.                         | News                   | DONE   |
+| NW-02    | The system must allow users to comment on published news or articles.                            | News                   | DONE   |
+| NW-03    | The system must allow admins to highlight important news items.                                  | News                   | DONE   |
 | NW-04    | The system must introduce a Content Creator or Editor role.                                       | News                   | IDLE   |
 | NW-05    | The system must allow users to request creator/editor access.                                     | News                   | IDLE   |
 | NW-06    | The system must allow admins to approve or reject creator/editor requests.                        | News                   | IDLE   |

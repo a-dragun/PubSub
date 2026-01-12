@@ -24,6 +24,10 @@ const newsSchema = new mongoose.Schema({
         enum: ['Events', 'Updates', 'General'],
         default: 'General'
     },
+    isHighlighted: {
+        type: Boolean,
+        default: false
+    },
     createdAt: {
         type: Date,
         default: Date.now

@@ -8,5 +8,6 @@ router.get('/create', authMiddleware.requireAuth, authMiddleware.checkAdminLevel
 router.post('/create', authMiddleware.requireAuth, authMiddleware.checkAdminLevel(1), newsController.postCreateNews);
 router.get('/:id', newsController.getNewsDetail);
 router.post('/:id/comments', authMiddleware.requireAuth, newsController.postComment);
+router.post('/:id/highlight', authMiddleware.requireAuth, authMiddleware.checkAdminLevel(1), newsController.postToggleHighlight);
 
 module.exports = router;
