@@ -43,6 +43,46 @@
                                 vijesti</a>
                         </div>
             </article>
+
+            <div class="comments-section">
+                <h3>Komentari</h3>
+
+                <% if (locals.currentUser) { %>
+                    <form action="/news/<%= newsItem._id %>/comments" method="POST" class="comment-form">
+                        <textarea name="content" rows="3" placeholder="Napiši komentar..." required></textarea>
+                        <button type="submit" class="btn-primary" style="margin-top: 0.5rem;">Pošalji</button>
+                    </form>
+                    <% } else { %>
+                        <div class="login-prompt">
+                            <a href="/auth/login">Prijavi se</a> za objavu komentara.
+                        </div>
+                        <% } %>
+
+                            <div class="comments-list">
+                                <% if (comments && comments.length> 0) { %>
+                                    <% comments.forEach(comment=> { %>
+                                        <div class="comment-item">
+                                            <div class="comment-header">
+                                                <img src="<%= comment.author.profilePicture || 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg' %>"
+                                                    alt="Avatar">
+                                                <span class="comment-author">
+                                                    <%= comment.author.name %>
+                                                </span>
+                                                <span class="comment-date">
+                                                    <%= new Date(comment.createdAt).toLocaleDateString('hr-HR') %>
+                                                </span>
+                                            </div>
+                                            <div class="comment-body">
+                                                <%= comment.content %>
+                                            </div>
+                                        </div>
+                                        <% }); %>
+                                            <% } else { %>
+                                                <p style="color: #666; font-style: italic;">Nema komentara. Budite prvi!
+                                                </p>
+                                                <% } %>
+                            </div>
+            </div>
         </div>
 </body>
 

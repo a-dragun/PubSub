@@ -1,4 +1,5 @@
 const News = require('../models/News');
+const Comment = require('../models/Comment');
 
 exports.getNews = async (req, res) => {
     try {
@@ -51,13 +52,38 @@ exports.getNewsDetail = async (req, res) => {
         if (!newsItem) {
             return res.status(404).send('News not found');
         }
+
+        const comments = await Comment.find({ newsItem: req.params.id })
+            .sort({ createdAt: -1 })
+            .populate('author', 'name profilePicture');
+
         res.render('news/show', {
             title: newsItem.title,
             newsItem,
+            comments,
             currentUser: req.session.user
         });
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');
+    }
+};
+
+exports.postComment = async (req, res) => {
+    try {
+        const { content } = req.body;
+        const newsId = req.params.id;
+
+        const newComment = new Comment({
+            content,
+            newsItem: newsId,
+            author: req.session.user.id
+        });
+
+        await newComment.save();
+        res.redirect(`/news/${newsId}`);
+    } catch (err) {
+        console.error(err);
+        res.redirect(`/news/${req.params.id}`);
     }
 };
