@@ -42,8 +42,14 @@ app.use(cacheControl);
 app.use(methodOverride("_method"));
 
 app.set("view engine", "ejs");
+app.set("view engine", "ejs");
+
+// Use the new middleware to keep session in sync with DB and set locals
+app.use(authMiddleware.updateUserSession);
+
 app.use((req, res, next) => {
-  if (req.session && req.session.user)
+  // Fallback if session exists but user not found in DB (edge case) or just to be safe
+  if (req.session && req.session.user && !res.locals.currentUser)
     res.locals.currentUser = req.session.user;
   next();
 });

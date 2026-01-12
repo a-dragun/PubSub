@@ -1,7 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const { isYesterday } = require("date-fns");
-const {isToday} = require("date-fns");
+const { isToday } = require("date-fns");
 const { streakBonus, getDaysToNextBonus } = require('../helpers/streak');
 
 exports.getRegister = (req, res) => {
@@ -14,23 +14,23 @@ exports.getRegister = (req, res) => {
 
 exports.postRegister = async (req, res) => {
   try {
-      const { name, email, password, password_repeat } = req.body;
-      if (!name || !email || !password || !password_repeat) {
-        return res.send("All fields required.");
-      }
-      if (name.length > 15 || name.includes(' ')) {
-        return res.send("Username cannot contain more than 15 characters and has to be one word.");
-      }
-      if (password.length < 8) {
-        return res.send("Password must contain at least 8 characters.");
-      }
-      if (password !== password_repeat) {
-        return res.send("Passwords do not match.");
-      }
-      let showStreakModal = true;
-    
-      const user = await User.create({ name: name, email: email, password: password, lastLoginAt: Date.now(), activityStreak: 1 });
-      await user.save();
+    const { name, email, password, password_repeat } = req.body;
+    if (!name || !email || !password || !password_repeat) {
+      return res.send("All fields required.");
+    }
+    if (name.length > 15 || name.includes(' ')) {
+      return res.send("Username cannot contain more than 15 characters and has to be one word.");
+    }
+    if (password.length < 8) {
+      return res.send("Password must contain at least 8 characters.");
+    }
+    if (password !== password_repeat) {
+      return res.send("Passwords do not match.");
+    }
+    let showStreakModal = true;
+
+    const user = await User.create({ name: name, email: email, password: password, lastLoginAt: Date.now(), activityStreak: 1 });
+    await user.save();
 
     const currentStreak = user.activityStreak;
     const todayBonus = streakBonus(user.activityStreak);
@@ -40,9 +40,9 @@ exports.postRegister = async (req, res) => {
     if (currentStreak < 365) nextBonusDays.push(365 - currentStreak);
     const daysToNextBonus = getDaysToNextBonus(user.activityStreak);
 
-      req.session.user = { id: user._id, name: user.name, profile_picture: user.profilePicture, showStreakModal: showStreakModal, todayBonus: todayBonus, daysToNextBonus: daysToNextBonus };
-      return res.redirect("/");
-      
+    req.session.user = { id: user._id, name: user.name, profile_picture: user.profilePicture, showStreakModal: showStreakModal, todayBonus: todayBonus, daysToNextBonus: daysToNextBonus };
+    return res.redirect("/");
+
   } catch (error) {
     return res.send("Error: " + error.message);
   }
@@ -93,6 +93,8 @@ exports.postLogin = async (req, res) => {
       name: user.name,
       profilePicture: user.profilePicture,
       adminLevel: user.adminLevel,
+      isEditor: user.isEditor,
+      editorRequestStatus: user.editorRequestStatus,
       showStreakModal: showStreakModal,
       todayBonus: todayBonus,
       daysToNextBonus: daysToNextBonus
@@ -105,12 +107,12 @@ exports.postLogin = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-    req.session.destroy((err) => {
-      if (err) {
-        return res.send("Logout failed: " + err.message);
-      }
-      res.clearCookie('connect.sid');
-      return res.redirect('/');
-    });
+  req.session.destroy((err) => {
+    if (err) {
+      return res.send("Logout failed: " + err.message);
+    }
+    res.clearCookie('connect.sid');
+    return res.redirect('/');
+  });
 };
 

@@ -20,6 +20,7 @@ exports.getAdminDashboard = async (req, res) => {
     let mutedUsers = users.filter(u => u.isMuted === true);
     let bannedUsers = users.filter(u => u.isBanned === true);
     let pendingQuestions = questions.filter(q => q.status === 'pending');
+    let editorRequests = users.filter(u => u.editorRequestStatus === 'pending');
 
     const totalMutedPages = Math.ceil(mutedUsers.length / itemsPerPage);
     const totalBannedPages = Math.ceil(bannedUsers.length / itemsPerPage);
@@ -29,6 +30,7 @@ exports.getAdminDashboard = async (req, res) => {
       mutedUsers,
       bannedUsers,
       pendingQuestions,
+      editorRequests,
       mutedPage,
       bannedPage,
       pendingPage,
@@ -52,7 +54,7 @@ exports.getUsers = async (req, res) => {
     const sort = req.query.sort || 'name-asc';
 
     let query = {};
-    
+
     if (search) {
       query.name = { $regex: search, $options: 'i' };
     }
@@ -165,13 +167,13 @@ exports.getQuestions = async (req, res) => {
 };
 
 
-exports.getUser = async(req, res) => {
+exports.getUser = async (req, res) => {
   try {
     let userId = req.params.id;
-    if(userId){
+    if (userId) {
       let dbUser = await User.findById(userId).lean();
       const { password, ...filteredUser } = dbUser;
-      return res.render("admin/users/user", {filteredUser});
+      return res.render("admin/users/user", { filteredUser });
     }
     else {
       res.send("User id does not exist");
@@ -181,17 +183,17 @@ exports.getUser = async(req, res) => {
   }
 }
 
-exports.getQuestion = async(req, res) => {
+exports.getQuestion = async (req, res) => {
   try {
     let questionId = req.params.id;
     let question = await Question.findById(questionId);
     let user = await User.findById(question.authorId);
-    if(user) {
+    if (user) {
       username = user.name
     } else {
       username = "deleted user"
     }
-    return res.render("admin/questions/question", {question, username});
+    return res.render("admin/questions/question", { question, username });
   } catch (error) {
     return res.send("Error: " + error.message);
   }
@@ -203,7 +205,7 @@ exports.updateUser = async (req, res) => {
     const updates = req.body;
     const currentUser = req.session.user;
 
-    if(id != currentUser.id)
+    if (id != currentUser.id)
       await User.findByIdAndUpdate(id, updates, { new: true });
 
     return res.redirect(`/admin/users/${id}`);
@@ -218,7 +220,7 @@ exports.approveQuestion = async (req, res) => {
     const question = await Question.findById(id);
     question.status = "approved";
     const user = await User.findById(question.authorId);
-    if(user) {
+    if (user) {
       user.totalScore += 5;
       user.questionsApproved += 1;
       await user.save();
@@ -248,12 +250,12 @@ exports.deleteUser = async (req, res) => {
       return res.redirect(`/admin/users/${id}`);
     }
     else {
-      if(userSocketMap){
-      const userSocket = userSocketMap.get(user.name);
-      if (userSocket && userSocket.socket) {
-        userSocket.socket.emit('forceDisconnect', { reason: "Obrisan račun" });
+      if (userSocketMap) {
+        const userSocket = userSocketMap.get(user.name);
+        if (userSocket && userSocket.socket) {
+          userSocket.socket.emit('forceDisconnect', { reason: "Obrisan račun" });
+        }
       }
-    }
       await user.deleteOne();
       return res.redirect("/admin/users/");
     }
@@ -282,7 +284,7 @@ exports.bulkUpdate = async (req, res) => {
         await user.save();
       }
     }
-    
+
     for (const action of actions.questions) {
       const { id, actionType } = action;
       const question = await Question.findById(id);
@@ -290,8 +292,8 @@ exports.bulkUpdate = async (req, res) => {
 
       if (actionType === 'approve' && question) {
         question.status = 'approved';
-        if(user){
-          user.totalScore+= 5;
+        if (user) {
+          user.totalScore += 5;
           await user.save();
         }
         await question.save();
@@ -316,7 +318,7 @@ exports.getCreateRoomPage = (req, res) => {
 
 exports.createRoom = async (req, res) => {
   try {
-    const {name, type, categories} = req.body;
+    const { name, type, categories } = req.body;
 
     if (!name || !type || !categories) {
       return res.status(400).send('All fields are required');
@@ -338,10 +340,10 @@ exports.createRoom = async (req, res) => {
   }
 }
 
-exports.getRooms = async(req, res) => {
+exports.getRooms = async (req, res) => {
   try {
     let rooms = await Room.find().lean();
-    return res.render("admin/rooms/index", {rooms});
+    return res.render("admin/rooms/index", { rooms });
   } catch (error) {
     return res.send("Error: " + error.message);
   }
@@ -350,11 +352,11 @@ exports.getRooms = async(req, res) => {
 exports.getReports = async (req, res) => {
   try {
     let reports = await Report.find()
-        .sort({
-          status: 1,
-          createdAt: -1
-        })
-        .lean();
+      .sort({
+        status: 1,
+        createdAt: -1
+      })
+      .lean();
     const userIds = [
       ...new Set(reports.flatMap(r => [r.authorId, r.reportedUserId]))
     ];
@@ -405,11 +407,11 @@ exports.getReport = async (req, res) => {
 };
 
 
-exports.getRoom = async(req, res) => {
+exports.getRoom = async (req, res) => {
   try {
     let roomId = req.params.id;
     let room = await Room.findById(roomId).lean();
-    return res.render("admin/rooms/room", {room});
+    return res.render("admin/rooms/room", { room });
   } catch (error) {
     return res.send("Error: " + error.message);
   }
@@ -418,7 +420,7 @@ exports.getRoom = async(req, res) => {
 exports.deleteRoom = async (req, res) => {
   try {
     const id = req.params.id;
-    if(!socketHandler.isRoomEmpty(id)) {
+    if (!socketHandler.isRoomEmpty(id)) {
       res.send("Soba nije prazna i ne može se obrisati!");
     }
     else {
@@ -432,10 +434,10 @@ exports.deleteRoom = async (req, res) => {
 
 exports.banUser = async (req, res) => {
   try {
-    const {banReason, banDuration} = req.body;
+    const { banReason, banDuration } = req.body;
     const id = req.params.id;
     const user = await User.findById(id);
-    if(user.adminLevel == 2) {
+    if (user.adminLevel == 2) {
       return res.redirect("admin/users")
     }
     else {
@@ -446,9 +448,9 @@ exports.banUser = async (req, res) => {
       if (selectedDate <= today) {
         return res.send("Error: Ban duration must be a date after today.");
       }
-      await user.updateOne({'isBanned': true, 'banReason': banReason, 'banDuration': banDuration});
-      
-      if(userSocketMap){
+      await user.updateOne({ 'isBanned': true, 'banReason': banReason, 'banDuration': banDuration });
+
+      if (userSocketMap) {
         const userSocket = userSocketMap.get(user.name);
         if (userSocket && userSocket.socket) {
           userSocket.socket.emit('forceDisconnect', { reason: banReason });
@@ -467,7 +469,7 @@ exports.banUser = async (req, res) => {
 exports.unbanUser = async (req, res) => {
   try {
     const id = req.params.id;
-    await User.findByIdAndUpdate(id, {'isBanned': false, 'banReason': '', 'banDuration': null});
+    await User.findByIdAndUpdate(id, { 'isBanned': false, 'banReason': '', 'banDuration': null });
     return res.redirect("/admin/users/");
   } catch (error) {
     return res.send("Error: " + error.message);
@@ -476,12 +478,12 @@ exports.unbanUser = async (req, res) => {
 
 exports.muteUser = async (req, res) => {
   try {
-    const {muteReason, muteDuration} = req.body;
+    const { muteReason, muteDuration } = req.body;
     const id = req.params.id;
     const user = await User.findById(id);
 
-    await user.updateOne({'isMuted': true, 'muteReason': muteReason, 'muteDuration': muteDuration});
-    if(userSocketMap){
+    await user.updateOne({ 'isMuted': true, 'muteReason': muteReason, 'muteDuration': muteDuration });
+    if (userSocketMap) {
       const userSocket = userSocketMap.get(user.name);
       if (userSocket && userSocket.socket) {
         userSocket.socket.emit('forceDisconnect', { reason: muteReason });
@@ -498,7 +500,7 @@ exports.muteUser = async (req, res) => {
 exports.unmuteUser = async (req, res) => {
   try {
     const id = req.params.id;
-    await User.findByIdAndUpdate(id, {'isMuted': false, 'muteReason': '', 'muteDuration': null});
+    await User.findByIdAndUpdate(id, { 'isMuted': false, 'muteReason': '', 'muteDuration': null });
     return res.redirect("/admin/users/");
   } catch (error) {
     return res.send("Error: " + error.message);
@@ -542,5 +544,29 @@ exports.punishUserFromReport = async (req, res) => {
   } catch (err) {
     console.error(err);
     return res.status(500).send("Greška pri kažnjavanju korisnika.");
+  }
+};
+
+exports.handleEditorRequest = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const { action } = req.body; // 'approve' or 'reject'
+    const user = await User.findById(userId);
+
+    if (!user) return res.status(404).send("User not found");
+
+    if (action === 'approve') {
+      user.isEditor = true;
+      user.editorRequestStatus = 'approved';
+    } else if (action === 'reject') {
+      user.isEditor = false;
+      user.editorRequestStatus = 'rejected';
+    }
+
+    await user.save();
+    res.redirect('/admin/dashboard');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error");
   }
 };

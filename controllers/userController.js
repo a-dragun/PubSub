@@ -1,20 +1,20 @@
 const User = require("../models/User");
 const Friendship = require("../models/Friendship");
-const socketHandler	= require("../socket");
+const socketHandler = require("../socket");
 const userSocketMap = socketHandler.userSocketMap;
 
 exports.deleteUser = async (req, res) => {
   try {
     const user = req.session.user;
-    if(user && user.id){
-      if(userSocketMap){
+    if (user && user.id) {
+      if (userSocketMap) {
         const userSocket = userSocketMap.get(user.name);
         if (userSocket && userSocket.socket) {
           userSocket.socket.emit('forceDisconnect', { reason: "Obrisan račun" });
         }
       }
-        await User.findByIdAndDelete(user.id);
-        req.session.destroy(() => res.redirect("/"));
+      await User.findByIdAndDelete(user.id);
+      req.session.destroy(() => res.redirect("/"));
     }
   } catch (error) {
     return res.send("Error: " + error.message);
@@ -30,7 +30,7 @@ exports.getUserList = async (req, res) => {
     const sort = req.query.sort || 'name-asc';
 
     let query = {};
-    
+
     if (search) {
       query.name = { $regex: search, $options: 'i' };
     }
@@ -78,15 +78,15 @@ exports.getUserList = async (req, res) => {
 
 
 exports.getProfile = async (req, res) => {
-    try {
-      let userId = req.session.user.id;
-      let dbUser = await User.findById(userId).lean();
-      const { password, ...user } = dbUser;
-      return res.render("user/profile", {user});
+  try {
+    let userId = req.session.user.id;
+    let dbUser = await User.findById(userId).lean();
+    const { password, ...user } = dbUser;
+    return res.render("user/profile", { user });
 
-    } catch (error) {
-        return res.send("Error: " + error.message);
-    }
+  } catch (error) {
+    return res.send("Error: " + error.message);
+  }
 }
 
 exports.editUser = async (req, res) => {
@@ -104,22 +104,22 @@ exports.editUser = async (req, res) => {
     }
 
     if (username && (username.length > 15 || username.includes(' '))) {
-        return res.send("Username cannot contain more than 15 characters and has to be one word.");
-      }
-    
-    
+      return res.send("Username cannot contain more than 15 characters and has to be one word.");
+    }
+
+
     const user = await User.findById(userId);
 
-    if(userSocketMap){
-        const userSocket = userSocketMap.get(user.name);
-        if (userSocket && userSocket.socket) {
-          userSocket.socket.emit('forceDisconnect', { reason: "Uređen račun" });
-        }
+    if (userSocketMap) {
+      const userSocket = userSocketMap.get(user.name);
+      if (userSocket && userSocket.socket) {
+        userSocket.socket.emit('forceDisconnect', { reason: "Uređen račun" });
       }
-    if(username) {
+    }
+    if (username) {
       user.name = username;
     }
-    
+
     if (profilePicture) {
       const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
       const isValid = allowedExtensions.some(ext => profilePicture.toLowerCase().endsWith(ext));
@@ -127,7 +127,7 @@ exports.editUser = async (req, res) => {
         return res.send("Profile picture must be an image (jpg, png, gif, webp).");
       }
       user.profilePicture = profilePicture;
-}
+    }
 
     if (newPassword) {
       user.password = newPassword;
@@ -150,10 +150,10 @@ exports.getEditUserPage = async (req, res) => {
   try {
     let userId = req.session.user.id;
     let user = await User.findById(userId).lean();
-    return res.render("user/editUser", {user});
+    return res.render("user/editUser", { user });
 
   } catch (error) {
-      return res.send("Error: " + error.message);
+    return res.send("Error: " + error.message);
   }
 }
 exports.getUserPage = async (req, res) => {
@@ -186,5 +186,21 @@ exports.getUserPage = async (req, res) => {
 
   } catch (error) {
     return res.send("Error: " + error.message);
+  }
+};
+
+exports.requestEditorAccess = async (req, res) => {
+  try {
+    const userId = req.session.user.id;
+    const user = await User.findById(userId);
+
+    user.editorRequestStatus = 'pending';
+    await user.save();
+
+    req.session.user.editorRequestStatus = 'pending';
+    res.redirect('/user/profile');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error");
   }
 };

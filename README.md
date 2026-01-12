@@ -62,9 +62,9 @@ Dostupno na linku: https://pubsub-51xj.onrender.com/
 | NW-01    | The system must allow publishing news related to quiz events in Croatia.                         | News                   | DONE   |
 | NW-02    | The system must allow users to comment on published news or articles.                            | News                   | DONE   |
 | NW-03    | The system must allow admins to highlight important news items.                                  | News                   | DONE   |
-| NW-04    | The system must introduce a Content Creator or Editor role.                                       | News                   | IDLE   |
-| NW-05    | The system must allow users to request creator/editor access.                                     | News                   | IDLE   |
-| NW-06    | The system must allow admins to approve or reject creator/editor requests.                        | News                   | IDLE   |
+| NW-04    | The system must introduce a Content Creator or Editor role.                                       | News                   | DONE  |
+| NW-05    | The system must allow users to request creator/editor access.                                     | News                   | DONE  |
+| NW-06    | The system must allow admins to approve or reject creator/editor requests.                        | News                   | DONE  |
 | NW-07    | The system must allow reporting of news articles or comments.                                    | News                   | IDLE   |
 | NW-08    | The system must allow admins to delete or edit articles or comments.                             | News                   | IDLE   |
 | UX-04    | The system must provide a fully responsive interface optimized for mobile devices.               | User Experience        | IDLE   |

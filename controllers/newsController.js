@@ -33,7 +33,7 @@ exports.postCreateNews = async (req, res) => {
             content,
             imageUrl,
             category,
-            isHighlighted: isHighlighted === 'on',
+            isHighlighted: (req.session.user.adminLevel >= 1) ? (isHighlighted === 'on') : false,
             author: req.session.user.id
         });
 

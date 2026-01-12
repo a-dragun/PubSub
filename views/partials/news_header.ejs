@@ -2,9 +2,9 @@
     <div class="news-brand">PubSub Vijesti</div>
     <div class="news-links">
         <a href="/news">Naslovnica</a>
-        <% if (locals.currentUser && locals.currentUser.adminLevel > 0) { %>
+        <% if (locals.currentUser && (locals.currentUser.adminLevel> 0 || locals.currentUser.isEditor)) { %>
             <a href="/news/create">Nova vijest</a>
-        <% } %>
-        <a href="/">Natrag na Kviz</a>
+            <% } %>
+                <a href="/">Natrag na Kviz</a>
     </div>
 </nav>

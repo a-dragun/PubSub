@@ -11,5 +11,6 @@ router.get("/list", userController.getUserList);
 router.get("/:id", userController.getUserPage);
 
 router.put("/edit", userController.editUser);
+router.post("/request-editor", authMiddleware.requireAuth, userController.requestEditorAccess);
 
 module.exports = router;

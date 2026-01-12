@@ -22,6 +22,7 @@ router.post("/users/:id/mute", authMiddleware.checkAdminLevel(1), adminControlle
 router.post("/users/:id/unmute", authMiddleware.checkAdminLevel(1), adminController.unmuteUser);
 router.post('/reports/:id/dismiss', authMiddleware.checkAdminLevel(2), adminController.dismissReport);
 router.post('/reports/:id/punish', authMiddleware.checkAdminLevel(2), adminController.punishUserFromReport);
+router.post('/editor-request/:id', authMiddleware.checkAdminLevel(1), adminController.handleEditorRequest);
 
 router.put("/users/:id", authMiddleware.checkAdminLevel(2), adminController.updateUser);
 router.put("/questions/:id", adminController.approveQuestion);
