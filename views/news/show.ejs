@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="hr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link rel="stylesheet" href="/css/news.css">
+</head>
+
+<body>
+    <%- include('../partials/news_header') %>
+
+        <div class="news-container">
+            <article class="news-detail">
+                <% if (newsItem.imageUrl) { %>
+                    <img src="<%= newsItem.imageUrl %>" alt="<%= newsItem.title %>"
+                        style="max-height: 400px; width: 100%; object-fit: cover;">
+                    <% } %>
+
+                        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">
+                            <%= newsItem.title %>
+                        </h1>
+
+                        <div class="news-meta"
+                            style="margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 1rem;">
+                            <strong>Kategorija:</strong>
+                            <%= newsItem.category %> |
+                                <strong>Autor:</strong>
+                                <%= newsItem.author.name %> |
+                                    <strong>Datum:</strong>
+                                    <%= new Date(newsItem.createdAt).toLocaleDateString('hr-HR') %>
+                        </div>
+
+                        <div class="news-body">
+                            <%- newsItem.content.replace(/\n/g, '<br>' ) %>
+                        </div>
+
+                        <div style="margin-top: 3rem;">
+                            <a href="/news" class="btn-primary" style="text-decoration: none;">&larr; Povratak na
+                                vijesti</a>
+                        </div>
+            </article>
+        </div>
+</body>
+
+</html>

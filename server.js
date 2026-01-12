@@ -31,10 +31,10 @@ app.set('io', io);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
-app.use(session({ 
-  secret: process.env.SESSION_SECRET, 
-  resave: false, 
-  saveUninitialized: false 
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false
 }));
 
 app.use(cacheControl);
@@ -43,7 +43,7 @@ app.use(methodOverride("_method"));
 
 app.set("view engine", "ejs");
 app.use((req, res, next) => {
-  if(req.session && req.session.user)
+  if (req.session && req.session.user)
     res.locals.currentUser = req.session.user;
   next();
 });
@@ -60,6 +60,7 @@ app.use("/questions", authMiddleware.requireAuth, authMiddleware.checkBan, quest
 app.use("/user", authMiddleware.requireAuth, authMiddleware.checkBan, userRoutes);
 app.use("/rooms", authMiddleware.requireAuth, authMiddleware.checkBan, roomRoutes);
 app.use("/friends", authMiddleware.requireAuth, authMiddleware.checkBan, friendsRoutes);
+app.use("/news", require("./routes/news"));
 
 app.use('/api/reports', authMiddleware.requireAuth, authMiddleware.checkBan, reportRoutes);
 

@@ -1,0 +1,10 @@
+<nav class="news-navbar">
+    <div class="news-brand">PubSub Vijesti</div>
+    <div class="news-links">
+        <a href="/news">Naslovnica</a>
+        <% if (locals.currentUser && locals.currentUser.adminLevel > 0) { %>
+            <a href="/news/create">Nova vijest</a>
+        <% } %>
+        <a href="/">Natrag na Kviz</a>
+    </div>
+</nav>

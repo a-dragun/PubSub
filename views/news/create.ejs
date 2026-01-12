@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="hr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link rel="stylesheet" href="/css/news.css">
+</head>
+
+<body>
+    <%- include('../partials/news_header') %>
+
+        <div class="news-container">
+            <div class="form-container">
+                <h1 style="margin-bottom: 2rem;">Objavi novu vijest</h1>
+
+                <% if (typeof error !=='undefined' ) { %>
+                    <div
+                        style="background: #fee; color: #c0392b; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                        <%= error %>
+                    </div>
+                    <% } %>
+
+                        <form action="/news/create" method="POST">
+                            <div class="form-group">
+                                <label for="title">Naslov</label>
+                                <input type="text" id="title" name="title" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="category">Kategorija</label>
+                                <select id="category" name="category" class="form-control">
+                                    <option value="General">Općenito</option>
+                                    <option value="Events">Događaji</option>
+                                    <option value="Updates">Ažuriranja</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="imageUrl">URL Slike (opcionalno)</label>
+                                <input type="url" id="imageUrl" name="imageUrl" class="form-control"
+                                    placeholder="https://...">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="content">Sadržaj</label>
+                                <textarea id="content" name="content" class="form-control" rows="10"
+                                    required></textarea>
+                            </div>
+
+                            <button type="submit" class="btn-primary">Objavi vijest</button>
+                        </form>
+            </div>
+        </div>
+</body>
+
+</html>
