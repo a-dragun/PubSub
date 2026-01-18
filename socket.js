@@ -2,6 +2,7 @@ const Room = require("./models/Room");
 const Question = require("./models/Question");
 const User = require("./models/User");
 const {levels, getLevelByScore} = require('./config/levels');
+const scoreService = require("./helpers/scoreService");
 const userSocketMap = new Map();
 const {hasProfanity} = require("./helpers/profanity");
 const {
@@ -64,6 +65,7 @@ function setupSocketHandlers(io) {
           const room = await Room.findById(roomId);
           user.totalScore += room.points;
           await user.save();
+          scoreService.addPoints(user.id, room.points);
 
           const newLevelNumber = user.currentLevel;
 

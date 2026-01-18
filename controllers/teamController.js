@@ -41,6 +41,11 @@ exports.getAllTeams = async (req, res) => {
       }
       team.isUsersTeam = team.members.some(m => m.userId.toString() === req.session.user.id);
     }));
+
+    const monthlyTopTeams = [...teams]
+      .sort((a, b) => (b.currentMonthPoints || 0) - (a.currentMonthPoints || 0))
+      .slice(0, 10);
+
     
     const userAlreadyInAnyTeam = await Team.exists({
       "members.userId": req.session.user.id
@@ -55,7 +60,8 @@ exports.getAllTeams = async (req, res) => {
       totalTeams,
       userAlreadyInAnyTeam,
       search,
-      sort
+      sort,
+      monthlyTopTeams
     });
   } catch (error) {
     return res.status(500).send("Error: " + error.message);

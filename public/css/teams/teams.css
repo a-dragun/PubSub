@@ -458,3 +458,43 @@ a {
   font-weight: bold;
   margin-left: 0.5rem;
 }
+
+.monthly-leaderboard {
+    width: 90%;
+    max-width: 800px;
+    margin: 2rem auto 3rem;
+    border-collapse: collapse;
+    background-color: #ffffffcc;
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.monthly-leaderboard th,
+.monthly-leaderboard td {
+    padding: 0.8rem 1rem;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    font-weight: 500;
+}
+
+.monthly-leaderboard th {
+    background-color: var(--accent);
+    color: var(--light);
+    font-size: 1rem;
+}
+
+.monthly-leaderboard tr:nth-child(even) {
+    background-color: #f9f9f9cc;
+}
+
+.monthly-leaderboard tr:hover {
+    background-color: #e0e0e0cc;
+}
+
+.users-team-row {
+    border-left: 4px solid gold;
+    font-weight: bold;
+    background-color: #fff8dccc !important;
+}

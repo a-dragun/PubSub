@@ -65,5 +65,30 @@
     <br>
 <% } %>
 
+<% if (monthlyTopTeams && monthlyTopTeams.length > 0) { %>
+  <h2 class="team-section-title">Top 10 timova ovog mjeseca</h2>
+  <table class="monthly-leaderboard">
+    <thead>
+      <tr>
+        <th><strong>#</strong></th>
+        <th><strong>Tim</strong></th>
+        <th><strong>Bodova ovaj mjesec</strong></th>
+        <th><strong>Mjesečni bonus po korisniku</strong></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% monthlyTopTeams.forEach((team, index) => { %>
+        <tr class="<%= team.isUsersTeam ? 'users-team-row' : '' %>">
+          <td><strong><%= index + 1 %></strong></td>
+          <td><%= team.name %></td>
+          <td><%= team.currentMonthPoints %></td>
+          <td><% if(index === 0) { %>500<% } else if(index === 1) { %>250<% } else if(index === 2) { %>100<% } else { %>0<% } %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } %>
+
+
 </body>
 </html>
