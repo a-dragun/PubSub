@@ -43,8 +43,8 @@ Dostupno na linku: https://pubsub-51xj.onrender.com/
 | PR-03    | The system must show number of users for each room.                                                | Room Management        | DONE   |
 | TM-01    | The system must allow users to create or join teams.                                             | Teams                  | DONE   |
 | TM-02    | The system must provide team-only chat channels.                                                 | Teams                  | IDLE   |
-| TM-03    | The system must provide a monthly team leaderboard.                                              | Teams                  | IDLE   |
-| TM-04    | The system must allow awarding monthly rewards to top-performing teams.                          | Teams                  | IDLE   |
+| TM-03    | The system must provide a monthly team leaderboard.                                              | Teams                  | DONE   |
+| TM-04    | The system must allow awarding monthly rewards to top-performing teams.                          | Teams                  | DONE   |
 | ST-01    | The system must track user streaks based on continuous daily activity.                           | User Activity          | DONE   |
 | ST-02    | The system must reward users with streak bonuses, XP, or badges.                                 | User Activity          | DONE   |
 | ST-03    | The system must break a streak if a user is inactive for a full day.                             | User Activity          | DONE   |
