@@ -1,0 +1,447 @@
+:root {
+    --bg: #B0D9E9;
+    --accent: #748CAB;
+    --light: #ffffffcc;
+    --text: #4C5B66;
+    --beige: #EAD7BB;
+    --white: #ffffff;
+    --danger: #c25d62;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(-45deg, #B0D9E9, #EAD7BB, #a2d2ee, #F4EAE0);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+    color: var(--text);
+    line-height: 1.6;
+}
+
+@keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.page-title {
+    text-align: center;
+    font-size: 2.8rem;
+    margin-bottom: 2.5rem;
+    color: var(--text);
+    font-weight: 700;
+}
+
+.btn-primary {
+    display: inline-block;
+    background-color: var(--beige);
+    color: var(--text);
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.3s ease, transform 0.1s ease;
+    text-align: center;
+}
+
+.btn-primary:hover {
+    background-color: #dec6a5;
+    transform: translateY(-1px);
+}
+
+.teams-actions {
+    max-width: 1200px;
+    margin: 0 auto 3rem;
+    text-align: center;
+}
+
+.teams-list {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.team-item {
+    background-color: #ffffff99;
+    backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+
+.team-name {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--accent);
+}
+
+.team-info span {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--light);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    margin-right: 0.3rem;
+}
+
+
+.team-name {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: var(--accent);
+    font-weight: bold;
+}
+
+.team-info {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.team-info strong {
+    color: var(--text);
+}
+
+.create-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 10vh;
+    min-height: 80vh;
+}
+
+.form-wrapper {
+    width: 100%;
+    max-width: 550px;
+    background: var(--light);
+    backdrop-filter: blur(10px);
+    padding: 3.5rem;
+    border-radius: 14px;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.18);
+}
+
+.form-group {
+    margin-bottom: 2rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.8rem;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 15px 20px;
+    border-radius: 8px;
+    border: 2px solid var(--accent);
+    font-size: 1.1rem;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.form-group input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(116, 140, 171, 0.3);
+}
+
+.form-actions {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.form-actions .btn-primary {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+}
+
+.no-teams-message {
+    text-align: center;
+    font-size: 1.4rem;
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+    opacity: 0.8;
+}
+
+.pagination {
+    margin: 2rem 0;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+.pagination a {
+    padding: 0.9rem 1.2rem;
+    background-color: var(--beige);
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--text);
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.2s;
+}
+.pagination a:hover {
+    background-color: #dec6a5;
+    transform: scale(1.05);
+}
+.pagination a.active {
+    background-color: var(--accent);
+    color: var(--light);
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border: 2px solid #ffffff99;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+.search-filter-container {
+    background-color: #ffffff99;
+    backdrop-filter: blur(10px);
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    position: sticky;
+    top: 1rem;
+    z-index: 10;
+}
+
+.search-filter-container input,
+.search-filter-container select {
+    padding: 0.5rem;
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #ffffffcc;
+    color: var(--text);
+    outline: none;
+}
+
+.team-request-card {
+    background-color: #ffffff99;
+    padding: 1rem 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    gap: 1rem;
+    display: flex;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 1rem;
+}
+
+.team-request-card img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid var(--accent);
+    object-fit: cover;
+}
+
+.team-request-info {
+    flex-grow: 1;
+}
+
+.team-request-info span {
+    font-weight: bold;
+    color: var(--text);
+}
+
+.team-request-card form button {
+    padding: 0.5rem 1rem;
+    background-color: var(--beige);
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.team-request-card form button:hover {
+    background-color: #dec6a5;
+}
+
+.team-join-request-form {
+    margin: 1.5rem 0;
+    text-align: center;
+}
+
+.team-section-title {
+    margin: 2rem 0 1rem;
+    text-align: center;
+    color: var(--text);
+}
+
+.join-request-sent {
+    text-align: center;
+    font-weight: bold;
+    color: var(--text);
+    margin: 1.5rem 0;
+    opacity: 0.9;
+}
+
+.role-form {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.role-select {
+    padding: 0.4rem 0.6rem;
+    border-radius: 10px;
+    border: 1px solid var(--accent);
+    background: var(--white);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.role-confirm-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.team-action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.team-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    border: none;
+    font-weight: bold;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s;
+    color: white;
+}
+
+.team-action-btn i {
+    font-size: 1.1rem;
+}
+
+.team-action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+    opacity: 0.95;
+}
+
+.team-action-btn:active {
+    transform: scale(0.97);
+}
+
+.leave-team-btn {
+    background-color: var(--accent);
+}
+
+.delete-team-btn {
+    background-color: var(--danger);
+}
+
+.team-request-card form button.reject {
+    background-color: var(--danger);
+}
+
+.team-request-card form button.reject:hover {
+    background-color: #b54b50;
+}
+
+.team-members-title {
+    text-align: center;
+    color: var(--text);
+}
+
+.member-item-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.member-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.member-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    object-fit: cover;
+}
+
+.member-name-small {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.member-role-badge {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--accent);
+}
+
+.member-actions-flex {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.kick-btn {
+    background: var(--danger);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s;
+}
+
+.kick-btn:hover {
+    background-color: #b54b50;
+}

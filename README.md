@@ -38,15 +38,13 @@ Dostupno na linku: https://pubsub-51xj.onrender.com/
 | LL-01    | The system must introduce user levels based on accumulated experience points (XP).               | Leveling & Leaderboards | DONE   |
 | LL-02    | The system must display the user's level in rooms.                                                 | Leveling & Leaderboards | DONE   |
 | LL-03    | The system must provide a global leaderboard based on accumulated points or XP.                   | Leveling & Leaderboards | DONE   |
-| GT-01    | The system must support multiple game modes.                                                    | Game Types             | IDLE   |
 | PR-01    | The system must allow admins to create private rooms protected by a password.                     | Room Management        | DONE   |
 | PR-02    | The system must restrict access to private rooms only to users who enter the correct password.   | Room Management        | DONE   |
 | PR-03    | The system must show number of users for each room.                                                | Room Management        | DONE   |
 | TM-01    | The system must allow users to create or join teams.                                             | Teams                  | IDLE   |
 | TM-02    | The system must provide team-only chat channels.                                                 | Teams                  | IDLE   |
-| TM-03    | The system must support team vs. team game modes.                                                | Teams                  | IDLE   |
-| TM-04    | The system must provide a monthly team leaderboard.                                              | Teams                  | IDLE   |
-| TM-05    | The system must allow awarding monthly rewards to top-performing teams.                          | Teams                  | IDLE   |
+| TM-03    | The system must provide a monthly team leaderboard.                                              | Teams                  | IDLE   |
+| TM-04    | The system must allow awarding monthly rewards to top-performing teams.                          | Teams                  | IDLE   |
 | ST-01    | The system must track user streaks based on continuous daily activity.                           | User Activity          | DONE   |
 | ST-02    | The system must reward users with streak bonuses, XP, or badges.                                 | User Activity          | DONE   |
 | ST-03    | The system must break a streak if a user is inactive for a full day.                             | User Activity          | DONE   |

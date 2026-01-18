@@ -111,7 +111,7 @@ hr {
 }
 
 .leaderboard-table th {
-    background-color: #0073e6;
+    background-color: var(--accent);
     color: white;
     font-weight: bold;
 }
