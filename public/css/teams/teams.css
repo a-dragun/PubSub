@@ -445,3 +445,16 @@ a {
 .kick-btn:hover {
     background-color: #b54b50;
 }
+
+.users-team {
+  border: 4px solid gold;
+  background-color: #ffffffcc;
+  position: relative;
+}
+
+.users-team-label {
+  font-size: 0.9rem;
+  color: gold;
+  font-weight: bold;
+  margin-left: 0.5rem;
+}

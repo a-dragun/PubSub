@@ -39,7 +39,12 @@ exports.getAllTeams = async (req, res) => {
       } else {
         team.ownerUsername = "Nema vlasnika";
       }
+      team.isUsersTeam = team.members.some(m => m.userId.toString() === req.session.user.id);
     }));
+    
+    const userAlreadyInAnyTeam = await Team.exists({
+      "members.userId": req.session.user.id
+    });
 
     const totalPages = Math.ceil(totalTeams / limit);
 
@@ -48,6 +53,7 @@ exports.getAllTeams = async (req, res) => {
       currentPage: page, 
       totalPages,
       totalTeams,
+      userAlreadyInAnyTeam,
       search,
       sort
     });
@@ -59,7 +65,15 @@ exports.getAllTeams = async (req, res) => {
 
 exports.getCreateTeam = async (req, res) => {
   try {
-    return res.render("teams/create");
+    const userAlreadyInAnyTeam = await Team.exists({
+      "members.userId": req.session.user.id
+    });
+    if(userAlreadyInAnyTeam) {
+      return res.redirect("/teams")
+    }
+    else {
+      return res.render("teams/create");
+    }
   } catch (error) {
     return res.send("Error: " + error.message);
   }

@@ -24,30 +24,33 @@
             <a href="/teams/create" class="btn-primary">+Kreiraj tim</a>
         </div>
 <% } else { %>
-    <div class="teams-list">
+        <div class="teams-list">
         <% teams.forEach(team => { %>
-            <a href="/teams/<%= team._id %>"><div class="team-item">
+            <a href="/teams/<%= team._id %>">
+            <div class="team-item <%= team.isUsersTeam ? 'users-team' : '' %>">
                 <div class="team-name"><%= team.name %></div>
                 <div class="team-info">
-                    Broj članova: <strong><%= team.members.length %></strong>
+                Broj članova: <strong><%= team.members.length %></strong>
                 </div>
                 <div class="team-info">
-                    Owner: <strong><%= team.ownerUsername %></strong>
+                Owner: <strong><%= team.ownerUsername %></strong>
                 </div>
                 <div class="team-info">
-                    Ukupno bodova: <strong><%= team.totalPoints %> bodova</strong>
+                Ukupno bodova: <strong><%= team.totalPoints %> bodova</strong>
                 </div>
                 <div class="team-info">
-                    Bodova ovaj mjesec: <strong><%= team.currentMonthPoints %> bodova</strong>
+                Bodova ovaj mjesec: <strong><%= team.currentMonthPoints %> bodova</strong>
                 </div>
-            </div></a>
+            </div>
+            </a>
         <% }) %>
-    </div>
+        </div>
     <br>
-    <div class="teams-actions">
-        <a href="/teams/create" class="btn-primary">+Kreiraj tim</a>
-    </div>
-
+    <% if (!userAlreadyInAnyTeam) { %>
+        <div class="teams-actions">
+            <a href="/teams/create" class="btn-primary">+Kreiraj tim</a>
+        </div>
+    <% } %>
     <div class="pagination">
     <% if (currentPage > 1) { %>
         <a href="?page=<%= currentPage - 1 %>">Prethodno</a>
