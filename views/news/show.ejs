@@ -41,6 +41,18 @@
                         <div style="margin-top: 3rem;">
                             <a href="/news" class="btn-primary" style="text-decoration: none;">&larr; Povratak na
                                 vijesti</a>
+
+                            <% if (locals.currentUser && (locals.currentUser.id===newsItem.author._id.toString() ||
+                                locals.currentUser.adminLevel> 0)) { %>
+                                <form action="/news/<%= newsItem._id %>/delete" method="POST"
+                                    style="display:inline; margin-left: 1rem;"
+                                    onsubmit="return confirm('Sigurno želite obrisati ovu vijest? Ovo je nepovratno.');">
+                                    <button type="submit" class="btn-primary"
+                                        style="background: #e74c3c; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);">
+                                        <i class="fas fa-trash"></i> Obriši vijest
+                                    </button>
+                                </form>
+                                <% } %>
                         </div>
             </article>
 
