@@ -11,6 +11,9 @@ const authMiddleware = require("./middleware/authMiddleware");
 const cacheControl = require("./middleware/cacheControl");
 const userRoutes = require("./routes/user");
 const roomRoutes = require("./routes/rooms");
+const newsRoutes = require("./routes/news");
+const teamsRoutes = require("./routes/teams");
+const teamJoinRequestsRoutes = require("./routes/teamJoinRequests");
 const methodOverride = require("method-override");
 const http = require('http');
 const socketIO = require('socket.io');
@@ -43,12 +46,9 @@ app.use(methodOverride("_method"));
 
 app.set("view engine", "ejs");
 app.set("view engine", "ejs");
-
-// Use the new middleware to keep session in sync with DB and set locals
 app.use(authMiddleware.updateUserSession);
 
 app.use((req, res, next) => {
-  // Fallback if session exists but user not found in DB (edge case) or just to be safe
   if (req.session && req.session.user && !res.locals.currentUser)
     res.locals.currentUser = req.session.user;
   next();
@@ -66,8 +66,9 @@ app.use("/questions", authMiddleware.requireAuth, authMiddleware.checkBan, quest
 app.use("/user", authMiddleware.requireAuth, authMiddleware.checkBan, userRoutes);
 app.use("/rooms", authMiddleware.requireAuth, authMiddleware.checkBan, roomRoutes);
 app.use("/friends", authMiddleware.requireAuth, authMiddleware.checkBan, friendsRoutes);
-app.use("/news", require("./routes/news"));
-
+app.use("/news", newsRoutes);
+app.use("/teams", authMiddleware.requireAuth, teamsRoutes);
+app.use("/team-join-requests", authMiddleware.requireAuth, teamJoinRequestsRoutes);
 app.use('/api/reports', authMiddleware.requireAuth, authMiddleware.checkBan, reportRoutes);
 
 

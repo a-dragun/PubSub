@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= team.name %></title>
+    <link rel="stylesheet" href="/css/teams/teams.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <%- include('../partials/header') %>
+</head>
+<body>
+<h1 class="page-title"><%= team.name %></h1>
+
+<div class="team-action-buttons">
+
+  <% if (currentUserMember) { %>
+    <form action="/teams/<%= team._id %>/leave?_method=DELETE"
+          method="POST"
+          onsubmit="return confirm('Jeste li sigurni da želite napustiti ovaj tim?')">
+      <button type="submit" class="team-action-btn leave-team-btn">
+        <i class="fa-solid fa-door-open"></i>
+        Napusti tim
+      </button>
+    </form>
+  <% } %>
+
+  <% if (isOwner) { %>
+    <form action="/teams/<%= team._id %>?_method=DELETE"
+          method="POST"
+          onsubmit="return confirm('OBRISATI TIM? Ova radnja je trajna!')">
+      <button type="submit" class="team-action-btn delete-team-btn">
+        <i class="fa-solid fa-trash"></i>
+        Obriši tim
+      </button>
+    </form>
+  <% } %>
+
+</div>
+
+
+<div class="teams-list">
+    <h2 class="team-members-title">Članovi tima (<%= team.members.length %>)</h2>
+    <% team.members.forEach(m => { %>
+        <div class="team-item member-item-flex">
+            <div class="member-info">
+                <img src="<%= m.userId.profilePicture || '/images/default.png' %>" class="member-avatar">
+                <div>
+                    <a href="/user/<%= m.userId ._id%>"><div class="team-name member-name-small"><%= m.userId.name %></div></a>
+                    <span class="member-role-badge"><%= m.role.toUpperCase() %></span>
+                </div>
+            </div>
+
+            <% if (isOwner && m.userId._id.toString() !== currentUserId) { %>
+                <div class="member-actions-flex">
+                    <form action="/teams/<%= team._id %>/role/<%= m.userId._id %>?_method=PUT" method="POST" class="role-form">
+                        <select name="newRole" class="role-select"
+                                onchange="if(confirm('Jeste li sigurni da želite promijeniti ulogu ovog korisnika?')){ this.form.submit(); } else { this.value = '<%= m.role %>'; }">
+                            <option value="member" <%= m.role === 'member' ? 'selected' : '' %>>Member</option>
+                            <option value="coowner" <%= m.role === 'coowner' ? 'selected' : '' %>>Co-owner</option>
+                        </select>
+                    </form>
+
+
+                    <form action="/teams/<%= team._id %>/kick/<%= m.userId._id %>?_method=DELETE" method="POST" onsubmit="return confirm('Izbaci korisnika?')">
+                        <button type="submit" class="kick-btn">X</button>
+                    </form>
+                </div>
+            <% } %>
+        </div>
+    <% }) %>
+</div>
+
+<% if (hasPendingJoinRequest) { %>
+  <p class="join-request-sent">Zahtjev za pridruživanje je poslan</p>
+<% } else if (canSendJoinRequest) { %>
+  <form method="POST"
+        action="/team-join-requests/<%= team._id %>"
+        class="team-join-request-form">
+    <button type="submit" class="btn-primary">
+      Pošalji zahtjev za pridruživanje
+    </button>
+  </form>
+<% } %>
+
+
+<% if (canManageRequests && joinRequests.length > 0) { %>
+  <h2 class="team-section-title">Zahtjevi za pridruživanje</h2>
+
+  <% joinRequests.forEach(r => { %>
+    <div class="team-request-card">
+      <img src="<%= r.sender.profilePicture %>" alt="<%= r.sender.name %>">
+
+      <div class="team-request-info">
+        <a href="/user/<%= r.sender._id%>"><span><%= r.sender.name %></span></a>
+      </div>
+
+      <form method="POST" action="/team-join-requests/<%= r._id %>/accept?_method=PUT">
+        <button type="submit">Prihvati</button>
+      </form>
+
+      <form method="POST" action="/team-join-requests/<%= r._id %>/reject?_method=PUT">
+        <button type = "submit" class="reject">Odbij</button>
+      </form>
+    </div>
+  <% }) %>
+<% } %>
+
+</body>
+</html>

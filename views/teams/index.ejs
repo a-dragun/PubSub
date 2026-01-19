@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Timovi</title>
+    <link rel="stylesheet" href="/css/teams/teams.css">
+    <script src="/js/teams/index.js" defer></script>
+    <%- include('../partials/header') %>
+</head>
+<body>
+
+<h1 class="page-title">Timovi</h1>
+
+<div class="search-filter-container">
+    <input type="text" id="searchInput" placeholder="Pretraži timove..." value="<%= search || '' %>">
+    <select id="sortSelect">
+        <option value="name-asc" <%= sort === 'name-asc' ? 'selected' : '' %>>Ime (A-Z)</option>
+        <option value="name-desc" <%= sort === 'name-desc' ? 'selected' : '' %>>Ime (Z-A)</option>
+    </select>
+</div>
+
+<% if (teams.length == 0) { %>
+        <p class="no-teams-message">Nema timova.</p>
+        <div class="teams-actions">
+            <a href="/teams/create" class="btn-primary">+Kreiraj tim</a>
+        </div>
+<% } else { %>
+        <div class="teams-list">
+        <% teams.forEach(team => { %>
+            <a href="/teams/<%= team._id %>">
+            <div class="team-item <%= team.isUsersTeam ? 'users-team' : '' %>">
+                <div class="team-name"><%= team.name %></div>
+                <div class="team-info">
+                Broj članova: <strong><%= team.members.length %></strong>
+                </div>
+                <div class="team-info">
+                Owner: <strong><%= team.ownerUsername %></strong>
+                </div>
+                <div class="team-info">
+                Ukupno bodova: <strong><%= team.totalPoints %> bodova</strong>
+                </div>
+                <div class="team-info">
+                Bodova ovaj mjesec: <strong><%= team.currentMonthPoints %> bodova</strong>
+                </div>
+            </div>
+            </a>
+        <% }) %>
+        </div>
+    <br>
+    <% if (!userAlreadyInAnyTeam) { %>
+        <div class="teams-actions">
+            <a href="/teams/create" class="btn-primary">+Kreiraj tim</a>
+        </div>
+    <% } %>
+    <div class="pagination">
+    <% if (currentPage > 1) { %>
+        <a href="?page=<%= currentPage - 1 %>">Prethodno</a>
+    <% } %>
+    <% for (let i = 1; i <= totalPages; i++) { %>
+        <a href="?page=<%= i %>" <%= i === currentPage ? 'class="active"' : '' %>><%= i %></a>
+    <% } %>
+    <% if (currentPage < totalPages) { %>
+        <a href="?page=<%= currentPage + 1 %>">Dalje</a>
+    <% } %>
+    </div>
+    <br>
+<% } %>
+
+<% if (monthlyTopTeams && monthlyTopTeams.length > 0) { %>
+  <h2 class="team-section-title">Top 10 timova ovog mjeseca</h2>
+  <table class="monthly-leaderboard">
+    <thead>
+      <tr>
+        <th><strong>#</strong></th>
+        <th><strong>Tim</strong></th>
+        <th><strong>Bodova ovaj mjesec</strong></th>
+        <th><strong>Mjesečni bonus po korisniku</strong></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% monthlyTopTeams.forEach((team, index) => { %>
+        <tr class="<%= team.isUsersTeam ? 'users-team-row' : '' %>">
+          <td><strong><%= index + 1 %></strong></td>
+          <td><%= team.name %></td>
+          <td><%= team.currentMonthPoints %></td>
+          <td><% if(index === 0) { %>500<% } else if(index === 1) { %>250<% } else if(index === 2) { %>100<% } else { %>0<% } %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } %>
+
+
+</body>
+</html>

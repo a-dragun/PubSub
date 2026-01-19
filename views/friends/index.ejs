@@ -7,45 +7,48 @@
   <script src="/js/friends/index.js" defer></script>
 </head>
 <body>
-<%- include('../partials/header') %>
-<h1><%= title %> (<%= totalFriendships %>)</h1>
+  <%- include('../partials/header') %>
 
-<div class="header-options-container">
-<% if (status === "accepted") { %>
-<a href="/friends?status=pending" class="pending-requests-card">
-<h2>Zahtjevi za prijateljstvo</h2>
-<% if (pendingCount > 0) { %>
-<span class="pending-notifier"><%= pendingCount %></span>
-<% } %>
-</a>
-<% } else { %>
-<a href="/friends" class="all-friends-card">
-<h2>Moji prijatelji</h2>
-</a>
-<% } %>
-</div>
+  <h1><%= title %> (<%= totalFriendships %>)</h1>
 
+  <div class="header-options-container">
+    <% if (status === "accepted") { %>
+      <a href="/friends?status=pending" class="pending-requests-card">
+        <h2>Zahtjevi za prijateljstvo</h2>
+        <% if (pendingCount > 0) { %>
+          <span class="pending-notifier"><%= pendingCount %></span>
+        <% } %>
+      </a>
+    <% } else { %>
+      <a href="/friends" class="all-friends-card">
+        <h2>Moji prijatelji</h2>
+      </a>
+    <% } %>
+  </div>
 
-<% if (friendships.length === 0) { %>
-<p class="no-friends"><%= status === "accepted" ? "Nema prijatelja." : "Nema zahtjeva za prijateljstvo." %></p>
-<% } else { %>
-<% friendships.forEach(f => { %>
-<a href="/user/<%= f.friend._id %>" class="friend-card">
-<img src="<%= f.friend.profilePicture %>" alt="<%= f.friend.name %>">
-<div class="friend-info">
-<span><%= f.friend.name %></span>
-</div>
-<% if (status === "pending" && f.receiver._id.toString() === currentUser.id) { %>
-<form method="POST" action="/friends/<%= f._id %>/accept?_method=PUT">
-<button type="submit">Prihvati</button>
-</form>
-<% } else if (status==="pending") { %>
-<p>Poslano</p>
-<% } else { %>
-<p>Prijatelj</p>
-<% } %>
-</a>
-<% }) %>
+  <% if (friendships.length === 0) { %>
+    <p class="no-friends">
+      <%= status === "accepted" ? "Nema prijatelja." : "Nema zahtjeva za prijateljstvo." %>
+    </p>
+  <% } else { %>
+    <% friendships.forEach(f => { %>
+      <a href="/user/<%= f.friend._id %>" class="friend-card">
+        <img src="<%= f.friend.profilePicture %>" alt="<%= f.friend.name %>">
+        <div class="friend-info">
+          <span><%= f.friend.name %></span>
+        </div>
+
+        <% if (status === "pending" && f.receiver._id.toString() === currentUser.id) { %>
+          <form method="POST" action="/friends/<%= f._id %>/accept?_method=PUT">
+            <button type="submit">Prihvati</button>
+          </form>
+        <% } else if (status === "pending") { %>
+          <p>Poslano</p>
+        <% } else { %>
+          <p>Prijatelj</p>
+        <% } %>
+      </a>
+    <% }) %>
 
     <div class="pagination">
       <% if (currentPage > 1) { %>
@@ -62,7 +65,5 @@
     </div>
   <% } %>
 
-
 </body>
-</html>
 </html>
