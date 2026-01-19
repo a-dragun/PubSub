@@ -61,7 +61,8 @@
                             <div class="comments-list">
                                 <% if (comments && comments.length> 0) { %>
                                     <% comments.forEach(comment=> { %>
-                                        <div class="comment-item">
+                                        <div class="comment-item"
+                                            style="<%= (comment.isDeleted && (!locals.currentUser || locals.currentUser.adminLevel < 2)) ? 'opacity: 0.6;' : '' %>">
                                             <div class="comment-header">
                                                 <img src="<%= comment.author.profilePicture || 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg' %>"
                                                     alt="Avatar">
@@ -71,16 +72,57 @@
                                                 <span class="comment-date">
                                                     <%= new Date(comment.createdAt).toLocaleDateString('hr-HR') %>
                                                 </span>
+
+                                                <div class="comment-actions"
+                                                    style="margin-left: auto; display: flex; gap: 10px;">
+                                                    <% if (locals.currentUser && locals.currentUser.id
+                                                        !==comment.author.id.toString()) { %>
+                                                        <button onclick="openReportModal('<%= comment._id %>')"
+                                                            style="background: none; border: none; cursor: pointer; color: #ff6b6b;"
+                                                            title="Prijavi komentar">
+                                                            🚩
+                                                        </button>
+                                                        <% } %>
+
+                                                            <% if (locals.currentUser && locals.currentUser.adminLevel>=
+                                                                2 && !comment.isDeleted) { %>
+                                                                <form action="/news/comments/<%= comment._id %>/delete"
+                                                                    method="POST" style="display:inline;"
+                                                                    onsubmit="return confirm('Jeste li sigurni da želite obrisati ovaj komentar?');">
+                                                                    <button type="submit"
+                                                                        style="background: none; border: none; cursor: pointer; color: #cc0000;"
+                                                                        title="Obriši komentar">
+                                                                        🗑️
+                                                                    </button>
+                                                                </form>
+                                                                <% } %>
+                                                </div>
                                             </div>
                                             <div class="comment-body">
-                                                <%= comment.content %>
+                                                <% if (comment.isDeleted) { %>
+                                                    <% if (locals.currentUser && locals.currentUser.adminLevel>= 2) { %>
+                                                        <p style="color: red; font-size: 0.8em; margin-bottom: 5px;">
+                                                            (Ovaj komentar je izbrisan)</p>
+                                                        <div style="opacity: 0.7;">
+                                                            <%= comment.content %>
+                                                        </div>
+                                                        <% } else { %>
+                                                            <p style="font-style: italic; color: #888;">Ovaj komentar je
+                                                                izbrisan.</p>
+                                                            <% } %>
+                                                                <% } else { %>
+                                                                    <%= comment.content %>
+                                                                        <% } %>
                                             </div>
                                         </div>
                                         <% }); %>
-                                            <% } else { %>
-                                                <p style="color: #666; font-style: italic;">Nema komentara. Budite prvi!
-                                                </p>
-                                                <% } %>
+
+                                            <%- include('../partials/report-comment-modal') %>
+                                                <% } else { %>
+                                                    <p style="color: #666; font-style: italic;">Nema komentara. Budite
+                                                        prvi!
+                                                    </p>
+                                                    <% } %>
                             </div>
             </div>
         </div>

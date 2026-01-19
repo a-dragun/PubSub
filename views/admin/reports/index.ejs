@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Popis prijava</title>
     <style>
@@ -26,9 +27,17 @@
         }
 
         @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         h1 {
@@ -79,7 +88,7 @@
             font-size: 1rem;
             margin-bottom: 0.5rem;
             color: var(--text);
-            white-space: nowrap; 
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
@@ -94,7 +103,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        
+
         .report-meta {
             font-size: 0.85rem;
             color: var(--accent);
@@ -115,8 +124,13 @@
             color: white;
         }
 
-        .status-pending { background-color: var(--status-pending); }
-        .status-resolved { background-color: var(--status-resolved); }
+        .status-pending {
+            background-color: var(--status-pending);
+        }
+
+        .status-resolved {
+            background-color: var(--status-resolved);
+        }
 
         .report-meta span strong {
             font-weight: 600;
@@ -124,56 +138,67 @@
         }
 
         .no-reports {
-        text-align: center;
+            text-align: center;
         }
     </style>
 </head>
+
 <body>
     <%- include('../../partials/header') %>
-    
-    <h1>Popis prijava</h1>
 
-    <div class="grid-container">
-<% if (reports.length == 0) { %>
-    <p class="no-reports">Nema prijavljenih poruka!</p>
-<% } %>
-<% reports.forEach(report => { %>
-    <% 
-      const reportedName = report.reportedUsername;
-      const authorName = report.authorUsername;
-      const dateOptions = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-      const formattedDate = new Date(report.createdAt).toLocaleDateString('hr-HR', dateOptions);
+        <h1>Popis prijava</h1>
 
-      const status = report.status || 'pending';
-      const statusClass = 'status-' + status;
-      
-      let borderColor = 'var(--status-pending)';
-      if (status === 'resolved') borderColor = 'var(--status-resolved)';
-    %>
-    
-    <a href="/admin/reports/<%= report._id %>" class="report-box">
-        <div class="reported-user">
-            <span>Prijavljen: <strong><%= reportedName %></strong></span>
-            <span class="status-badge <%= statusClass %>">
-                <%= status %>
-            </span>
-        </div>
-        
-        <div class="message-preview">
-            Razlog: <%= report.reason %>
-        </div>
+        <div class="grid-container">
+            <% if (reports.length==0) { %>
+                <p class="no-reports">Nema prijavljenih poruka!</p>
+                <% } %>
+                    <% reports.forEach(report=> { %>
+                        <% const reportedName=report.reportedUsername; const authorName=report.authorUsername; const
+                            dateOptions={ year: 'numeric' , month: 'short' , day: 'numeric' , hour: '2-digit' ,
+                            minute: '2-digit' }; const formattedDate=new
+                            Date(report.createdAt).toLocaleDateString('hr-HR', dateOptions); const status=report.status
+                            || 'pending' ; const statusClass='status-' + status; let borderColor='var(--status-pending)'
+                            ; if (status==='resolved' ) borderColor='var(--status-resolved)' ; %>
 
-        <div class="message-detail">
-            Poruka: "<%= report.reportedMessage %>"
-        </div>
-        
-        <div class="report-meta">
-            <span>Prijavio: <strong><%= authorName %></strong></span>
-            <span><%= formattedDate %></span>
-        </div>
-    </a>
-<% }); %>
+                            <a href="/admin/reports/<%= report._id %>" class="report-box">
+                                <div class="reported-user">
+                                    <span>Prijavljen: <strong>
+                                            <%= reportedName %>
+                                        </strong></span>
+                                    <div>
+                                        <% if (report.reportType==='comment' ) { %>
+                                            <span class="status-badge"
+                                                style="background-color: #6c757d; margin-right: 5px;">Komentar</span>
+                                            <% } else if (report.reportType==='chat' ) { %>
+                                                <span class="status-badge"
+                                                    style="background-color: #007bff; margin-right: 5px;">Poruka</span>
+                                                <% } %>
+                                                    <span class="status-badge <%= statusClass %>">
+                                                        <%= status %>
+                                                    </span>
+                                    </div>
+                                </div>
 
-    </div>
+                                <div class="message-preview">
+                                    Razlog: <%= report.reason %>
+                                </div>
+
+                                <div class="message-detail">
+                                    Poruka: "<%= report.reportedMessage %>"
+                                </div>
+
+                                <div class="report-meta">
+                                    <span>Prijavio: <strong>
+                                            <%= authorName %>
+                                        </strong></span>
+                                    <span>
+                                        <%= formattedDate %>
+                                    </span>
+                                </div>
+                            </a>
+                            <% }); %>
+
+        </div>
 </body>
+
 </html>

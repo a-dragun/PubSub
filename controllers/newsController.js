@@ -99,6 +99,32 @@ exports.postToggleHighlight = async (req, res) => {
             await newsItem.save();
         }
         res.redirect('/news');
+    }catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+};
+
+exports.deleteComment = async (req, res) => {
+    try {
+        if (!req.session.user || req.session.user.adminLevel < 2) {
+            return res.status(403).send('Unauthorized');
+        }
+
+        const commentId = req.params.id;
+        const comment = await Comment.findById(commentId);
+
+        if (!comment) {
+            return res.status(404).send('Comment not found');
+        }
+
+        comment.isDeleted = true;
+        comment.deletedAt = new Date();
+        comment.deletedBy = req.session.user.id;
+
+        await comment.save();
+
+        res.redirect('back');
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');
