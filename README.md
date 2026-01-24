@@ -42,7 +42,7 @@ Dostupno na linku: https://pubsub-51xj.onrender.com/
 | PR-02    | The system must restrict access to private rooms only to users who enter the correct password.   | Room Management        | DONE   |
 | PR-03    | The system must show number of users for each room.                                                | Room Management        | DONE   |
 | TM-01    | The system must allow users to create or join teams.                                             | Teams                  | DONE   |
-| TM-02    | The system must provide team-only chat channels.                                                 | Teams                  | IDLE   |
+| TM-02    | The system must provide team-only chat channels.                                                 | Teams                  | DONE   |
 | TM-03    | The system must provide a monthly team leaderboard.                                              | Teams                  | DONE   |
 | TM-04    | The system must allow awarding monthly rewards to top-performing teams.                          | Teams                  | DONE   |
 | ST-01    | The system must track user streaks based on continuous daily activity.                           | User Activity          | DONE   |
@@ -51,12 +51,10 @@ Dostupno na linku: https://pubsub-51xj.onrender.com/
 | RP-02    | The system must allow users to report other users for inappropriate behavior.                    | Reporting              | DONE   |
 | RP-03    | The system should automatically detect and flag inappropriate chat messages.                       | Reporting              | DONE   |
 | RP-04    | The system must provide admins with a dashboard listing all reports and flagged content.        | Reporting              | DONE   |
-| STATS-01 | The system must store detailed statistics about user performance.                                | Statistics             | IDLE   |
-| STATS-02 | The system should display charts and graphs on the user's profile based on historical performance data. | Statistics             | IDLE   |
 | FR-01    | The system must allow users to send and accept friend requests.                                  | Friends                | DONE   |
 | FR-02    | The system must allow users to remove friends users.                                             | Friends                | DONE   |
-| PM-01    | The system must provide private one-on-one messaging between friends.                            | Messaging              | IDLE   |
-| PM-02    | The system must store and load message history between friends.                                  | Messaging              | IDLE   |
+| PM-01    | The system must provide private one-on-one messaging between friends.                            | Messaging              | DONE   |
+| PM-02    | The system must store and load message history between friends.                                  | Messaging              | DONE   |
 | NW-01    | The system must allow publishing news related to quiz events in Croatia.                         | News                   | DONE   |
 | NW-02    | The system must allow users to comment on published news or articles.                            | News                   | DONE   |
 | NW-03    | The system must allow admins to highlight important news items.                                  | News                   | DONE   |

@@ -550,7 +550,7 @@ exports.punishUserFromReport = async (req, res) => {
 exports.handleEditorRequest = async (req, res) => {
   try {
     const userId = req.params.id;
-    const { action } = req.body; // 'approve' or 'reject'
+    const { action } = req.body;
     const user = await User.findById(userId);
 
     if (!user) return res.status(404).send("User not found");

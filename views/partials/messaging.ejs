@@ -1,0 +1,43 @@
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+  window.CHAT_USER_NAME = "<%= (locals.currentUser && locals.currentUser.name) ? locals.currentUser.name : '' %>";
+  window.CHAT_USER_ID = "<%= (locals.currentUser && locals.currentUser._id) ? locals.currentUser._id.toString() : '' %>";
+</script>
+<script src="/js/partials/messaging.js"></script>
+  <link rel="stylesheet" href="/css/partials/messaging.css">
+</head>
+<body>
+<div id="msgChatContainer" class="msg-chat-container">
+  
+  <div id="msgChatIcon" class="msg-floating-icon">
+    💬
+    <span id="msgUnreadBadge" class="msg-badge msg-hidden"></span>
+  </div>
+
+  <div id="msgChatDrawer" class="msg-drawer msg-hidden">
+    <h4 class="msg-drawer-title">Prijatelji</h4>
+    <ul id="msgFriendList" class="msg-list"></ul>
+    
+    <h4 class="msg-drawer-title">Tim</h4>
+    <ul id="msgTeamList" class="msg-list"></ul>
+  </div>
+
+  <div id="msgChatWindow" class="msg-chat-window msg-hidden">
+    <div id="msgChatHeader" class="msg-chat-header draggable">
+      <span id="msgChatTitle" class="msg-chat-title"></span>
+      <button id="msgChatClose" class="msg-chat-close">✖</button>
+    </div>
+    
+    <div id="msgMessages" class="msg-messages-area"></div>
+    
+    <form id="msgChatForm" class="msg-chat-form">
+      <input type="text" id="msgChatInput" class="msg-chat-input" placeholder="Piši poruku..." autocomplete="off"/>
+      <button type="submit" id="msgChatSubmit" class="msg-chat-submit">Send</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>

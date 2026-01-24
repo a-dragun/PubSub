@@ -7,7 +7,8 @@
   <script src="/js/admin/question.js" defer></script>
 </head>
 <body>
-  <%- include('../../partials/header') %>
+    <%- include('../../partials/header') %>
+  <%- include('../../partials/messaging') %>
   <div class="question-box">
     <h1><%= question.text %></h1>
     <p><strong>HINT: </strong><span style="white-space: pre; font-family: monospace;"><%= question.hint.replace(/\u00a0/g, ' ') %></span></p>

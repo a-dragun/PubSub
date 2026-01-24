@@ -22,7 +22,6 @@ function setupSocketHandlers(io) {
   const activeQuestions = {};
 
   io.on('connection', (socket) => {
-    console.log('User connected', socket.id);
     socket.on('joinRoom', async ({ roomId, username }) => {
       const room = await Room.findById(roomId);
       const user = await User.findOne({ name: username });
@@ -144,12 +143,10 @@ function setupSocketHandlers(io) {
         await emitUserList(socket.roomId, io, roomUsers);
 
         if (!roomUsers[socket.roomId]) {
-          console.log(`Room ${socket.roomId} is now empty.`);
           clearRoomTimeouts(socket.roomId, roomTimers, roomTimeouts);
           delete activeQuestions[socket.roomId];
         }
       }
-      console.log('User disconnected', socket.id);
     });
   });
 
@@ -201,7 +198,7 @@ async function emitUserList(roomId, io, roomUsers) {
   async function startGame(room, io, roomTimers, roomUsers, roomTimeouts, activeQuestions) {
     const roomId = room.id;
 
-    if (roomUsers[roomId].length === 0) {
+    if (!roomUsers[roomId] || roomUsers[roomId].length === 0) {
       clearRoomTimeouts(roomId, roomTimers, roomTimeouts);
       return;
     }

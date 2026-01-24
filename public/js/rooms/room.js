@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
   socket.emit('joinRoom', { roomId, username });
 
   socket.on("levelUp", (data) => {
-    console.log("Level Up Događaj Primljen:", data);
     openLevelUp({level: data.level, name: data.name, description: data.description, icon: data.icon, max_score: data.max_score, user_score: data.user_score});
 });
 

@@ -6,10 +6,10 @@
 </head>
 <body>
     <%- include('partials/header') %>
-
     <div class="content">
         <h1>Dobrodošli na PubSub!</h1>
         <% if (user) { %>
+            <%- include('partials/messaging') %>
             <p> <a href="rooms/">Klikni i započni avanturu!</a></p>
         <% } else { %>
             <a href="auth/login">Prijava</a>

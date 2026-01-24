@@ -14,12 +14,13 @@ const roomRoutes = require("./routes/rooms");
 const newsRoutes = require("./routes/news");
 const teamsRoutes = require("./routes/teams");
 const teamJoinRequestsRoutes = require("./routes/teamJoinRequests");
+const messagingRoutes = require("./routes/messaging");
+const conversationRoutes = require("./routes/conversation");
 const methodOverride = require("method-override");
 const http = require('http');
 const socketIO = require('socket.io');
-
+const { setupMessagingSocket } = require("./messagingSocket");
 require('./jobs/scheduler');
-
 require("dotenv").config();
 
 const app = express();
@@ -34,11 +35,12 @@ app.set('io', io);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
-app.use(session({
+sessionMiddleware = session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false
-}));
+});
+app.use(sessionMiddleware);
 
 app.use(cacheControl);
 
@@ -52,6 +54,33 @@ app.use((req, res, next) => {
   if (req.session && req.session.user && !res.locals.currentUser)
     res.locals.currentUser = req.session.user;
   next();
+});
+
+io.use((socket, next) => {
+  sessionMiddleware(socket.request, {}, () => {
+    if (!socket.request.session || !socket.request.session.user) {
+      return next(new Error("Unauthorized"));
+    }
+    socket.user = socket.request.session.user;
+    next();
+  });
+});
+
+const messagingNamespace = io.of("/messaging");
+messagingNamespace.use((socket, next) => {
+  sessionMiddleware(socket.request, {}, () => {
+    if (!socket.request.session || !socket.request.session.user) {
+      return next(new Error("Unauthorized"));
+    }
+    socket.user = socket.request.session.user;
+    next();
+  });
+});
+
+setupMessagingSocket(io);
+
+io.on("connection", (socket) => {
+  console.log("User connected:", socket.user.name);
 });
 
 mongoose
@@ -70,6 +99,7 @@ app.use("/news", newsRoutes);
 app.use("/teams", authMiddleware.requireAuth, teamsRoutes);
 app.use("/team-join-requests", authMiddleware.requireAuth, teamJoinRequestsRoutes);
 app.use('/api/reports', authMiddleware.requireAuth, authMiddleware.checkBan, reportRoutes);
-
+app.use('/api/messaging', authMiddleware.requireAuth, messagingRoutes);
+app.use('/api/conversation', authMiddleware.requireAuth, conversationRoutes);
 
 server.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
