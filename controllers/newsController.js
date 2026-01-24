@@ -99,7 +99,7 @@ exports.postToggleHighlight = async (req, res) => {
             await newsItem.save();
         }
         res.redirect('/news');
-    }catch (err) {
+    } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');
     }
@@ -125,6 +125,30 @@ exports.deleteComment = async (req, res) => {
         await comment.save();
 
         res.redirect('back');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+};
+
+exports.deleteNews = async (req, res) => {
+    try {
+        const newsId = req.params.id;
+        const newsItem = await News.findById(newsId);
+
+        if (!newsItem) {
+            return res.status(404).send('News not found');
+        }
+
+        if (newsItem.author.toString() !== req.session.user.id && req.session.user.adminLevel < 1) {
+            return res.status(403).send('Unauthorized');
+        }
+
+        await Comment.deleteMany({ newsItem: newsId });
+
+        await News.findByIdAndDelete(newsId);
+
+        res.redirect('/news');
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');
