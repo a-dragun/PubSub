@@ -10,183 +10,185 @@
 
 <body>
     <%- include('../partials/header') %>
-    <%- include('../partials/messaging') %>
-        <div class="section">
-            <h1>Admin Dashboard</h1>
-            <div class="links-grid">
-                <a href="/admin/users/" class="link-card">
-                    <h2>Popis svih korisnika</h2>
-                </a>
-                <a href="/admin/questions/" class="link-card">
-                    <h2>Popis svih pitanja</h2>
-                </a>
-                <a href="/admin/rooms/new" class="link-card">
-                    <h2>Stvori novu sobu</h2>
-                </a>
-                <a href="/admin/rooms/" class="link-card">
-                    <h2>Popis svih soba</h2>
-                </a>
-                <a href="/admin/reports/" class="link-card">
-                    <h2>Prijavljene poruke</h2>
-                </a>
+        <%- include('../partials/messaging') %>
+            <div class="section">
+                <h1>Admin Dashboard</h1>
+                <div class="links-grid">
+                    <a href="/admin/users/" class="link-card">
+                        <h2>Popis svih korisnika</h2>
+                    </a>
+                    <a href="/admin/questions/" class="link-card">
+                        <h2>Popis svih pitanja</h2>
+                    </a>
+                    <a href="/admin/rooms/new" class="link-card">
+                        <h2>Stvori novu sobu</h2>
+                    </a>
+                    <a href="/admin/rooms/" class="link-card">
+                        <h2>Popis svih soba</h2>
+                    </a>
+                    <a href="/admin/reports/" class="link-card">
+                        <h2>Prijavljene poruke</h2>
+                    </a>
+                </div>
             </div>
-        </div>
 
-        <div class="section">
-            <h1>Utišani korisnici</h1>
-            <% if (mutedUsers.length===0) { %>
-                <p class="no-items">Nema utišanih korisnika.</p>
-                <% } else { %>
-                    <% mutedUsers.slice((mutedPage - 1) * 10, mutedPage * 10).forEach(user=> { %>
-                        <div class="user-box" id="user-<%= user._id %>">
-                            <h2>
-                                <%= user.name %>
-                            </h2>
-                            <p>Mute reason: <%= user.muteReason %>
-                            </p>
-                            <p>Mute duration: <%= user.muteDuration %>
-                            </p>
-                            <button class="user-action-btn" data-id="<%= user._id %>"
-                                data-action="unmute">Unmute</button>
-                        </div>
-                        <% }); %>
-                            <div class="pagination">
-                                <% if (mutedPage> 1) { %>
-                                    <a
-                                        href="?mutedPage=<%= mutedPage - 1 %>&bannedPage=<%= bannedPage %>&pendingPage=<%= pendingPage %>">Prethodno</a>
-                                    <% } %>
-                                        <% for (let i=1; i <=totalMutedPages; i++) { %>
-                                            <a href="?mutedPage=<%= i %>&bannedPage=<%= bannedPage %>&pendingPage=<%= pendingPage %>"
-                                                <%=i===mutedPage ? 'class="active"' : '' %>><%= i %></a>
-                                            <% } %>
-                                                <% if (mutedPage < totalMutedPages) { %>
-                                                    <a
-                                                        href="?mutedPage=<%= mutedPage + 1 %>&bannedPage=<%= bannedPage %>&pendingPage=<%= pendingPage %>">Dalje</a>
-                                                    <% } %>
+            <div class="section">
+                <h1>Utišani korisnici</h1>
+                <% if (mutedUsers.length===0) { %>
+                    <p class="no-items">Nema utišanih korisnika.</p>
+                    <% } else { %>
+                        <% mutedUsers.slice((mutedPage - 1) * 10, mutedPage * 10).forEach(user=> { %>
+                            <div class="user-box" id="user-<%= user._id %>">
+                                <h2>
+                                    <%= user.name %>
+                                </h2>
+                                <p>Mute reason: <%= user.muteReason %>
+                                </p>
+                                <p>Mute duration: <%= user.muteDuration %>
+                                </p>
+                                <button class="user-action-btn" data-id="<%= user._id %>"
+                                    data-action="unmute">Unmute</button>
                             </div>
-                            <% } %>
-        </div>
-
-        <div class="section">
-            <h1>Bannani korisnici</h1>
-            <% if (bannedUsers.length===0) { %>
-                <p class="no-items">Nema bannanih korisnika.</p>
-                <% } else { %>
-                    <% bannedUsers.slice((bannedPage - 1) * 10, bannedPage * 10).forEach(user=> { %>
-                        <div class="user-box" id="user-<%= user._id %>">
-                            <h2>
-                                <%= user.name %>
-                            </h2>
-                            <p>Ban reason: <%= user.banReason %>
-                            </p>
-                            <p>Ban duration: <%= user.banDuration %>
-                            </p>
-                            <button class="user-action-btn" data-id="<%= user._id %>" data-action="unban">Unban</button>
-                        </div>
-                        <% }); %>
-                            <div class="pagination">
-                                <% if (bannedPage> 1) { %>
-                                    <a href="?mutedPage=" <%=mutedPage %>&bannedPage=<%= bannedPage - 1 %>&pendingPage=
-                                            <%= pendingPage %>">Prethodno</a>
-                                    <% } %>
-                                        <% for (let i=1; i <=totalBannedPages; i++) { %>
-                                            <a href="?mutedPage=<%= mutedPage %>&bannedPage=<%= i %>&pendingPage=<%= pendingPage %>"
-                                                <%=i===bannedPage ? 'class="active"' : '' %>><%= i %></a>
-                                            <% } %>
-                                                <% if (bannedPage < totalBannedPages) { %>
-                                                    <a
-                                                        href="?mutedPage=<%= mutedPage %>&bannedPage=<%= bannedPage + 1 %>&pendingPage=<%= pendingPage %>">Dalje</a>
-                                                    <% } %>
-                            </div>
-                            <% } %>
-        </div>
-
-        <div class="section">
-            <h1>Zahtjevi za Editora</h1>
-            <% if (editorRequests && editorRequests.length===0) { %>
-                <p class="no-items">Nema zahtjeva za editora.</p>
-                <% } else { %>
-                    <% editorRequests.forEach(user=> { %>
-                        <div class="user-box" style="border-left: 5px solid #3498db;">
-                            <h2>
-                                <%= user.name %>
-                            </h2>
-                            <p>Želi postati Content Creator / Editor.</p>
-                            <div style="display: flex; gap: 10px; margin-top: 10px;">
-                                <form action="/admin/editor-request/<%= user._id %>" method="POST" style="margin:0;">
-                                    <input type="hidden" name="action" value="approve">
-                                    <button type="submit" class="user-action-btn"
-                                        style="background-color: #2ecc71;">Odobri</button>
-                                </form>
-                                <form action="/admin/editor-request/<%= user._id %>" method="POST" style="margin:0;">
-                                    <input type="hidden" name="action" value="reject">
-                                    <button type="submit" class="user-action-btn"
-                                        style="background-color: #e74c3c;">Odbij</button>
-                                </form>
-                            </div>
-                        </div>
-                        <% }); %>
-                            <% } %>
-        </div>
-
-        <div class="section">
-            <h1>Neprovjerena pitanja</h1>
-            <% if (pendingQuestions.length===0) { %>
-                <p class="no-items">Nema neprovjerenih pitanja.</p>
-                <% } else { %>
-                    <% pendingQuestions.slice((pendingPage - 1) * 10, pendingPage * 10).forEach(question=> { %>
-                        <div class="question-box" id="question-<%= question._id %>">
-                            <h2>
-                                <%= question.text %>
-                            </h2>
-                            <p><strong>HINT: </strong><span style="white-space: pre; font-family: monospace;">
-                                    <%= question.hint.replace(/\u00a0/g, ' ' ) %>
-                                </span></p>
-                            <% if (question.image && question.image !=="" ) { %>
-                                <img src="<%= question.image %>" alt="Question image">
+                            <% }); %>
+                                <div class="pagination">
+                                    <% if (mutedPage> 1) { %>
+                                        <a
+                                            href="?mutedPage=<%= mutedPage - 1 %>&bannedPage=<%= bannedPage %>&pendingPage=<%= pendingPage %>">Prethodno</a>
+                                        <% } %>
+                                            <% for (let i=1; i <=totalMutedPages; i++) { %>
+                                                <a href="?mutedPage=<%= i %>&bannedPage=<%= bannedPage %>&pendingPage=<%= pendingPage %>"
+                                                    <%=i===mutedPage ? 'class="active"' : '' %>><%= i %></a>
+                                                <% } %>
+                                                    <% if (mutedPage < totalMutedPages) { %>
+                                                        <a
+                                                            href="?mutedPage=<%= mutedPage + 1 %>&bannedPage=<%= bannedPage %>&pendingPage=<%= pendingPage %>">Dalje</a>
+                                                        <% } %>
+                                </div>
                                 <% } %>
-                                    <p><strong>Category:</strong>
-                                        <%= question.category %>
-                                    </p>
-                                    <p><strong>Answer 1:</strong>
-                                        <%= question.answers[0] %>
-                                    </p>
-                                    <p><strong>Answer 2:</strong>
-                                        <%= question.answers[1] %>
-                                    </p>
-                                    <p><strong>Answer 3:</strong>
-                                        <%= question.answers[2] %>
-                                    </p>
-                                    <p><strong>Answer 4:</strong>
-                                        <%= question.answers[3] %>
-                                    </p>
-                                    <p><strong>Status:</strong>
-                                        <%= question.status.toUpperCase() %>
-                                    </p>
-                                    <button class="question-action-btn" data-id="<%= question._id %>"
-                                        data-action="approve">Odobri</button>
-                                    <button class="question-action-btn delete-btn" data-id="<%= question._id %>"
-                                        data-action="delete">Obriši</button>
-                        </div>
-                        <% }); %>
-                            <div class="pagination">
-                                <% if (pendingPage> 1) { %>
-                                    <a
-                                        href="?mutedPage=<%= mutedPage %>&bannedPage=<%= bannedPage %>&pendingPage=<%= pendingPage - 1 %>">Prethodno</a>
-                                    <% } %>
-                                        <% for (let i=1; i <=totalPendingPages; i++) { %>
-                                            <a href="?mutedPage=<%= mutedPage %>&bannedPage=<%= bannedPage %>&pendingPage=<%= i %>"
-                                                <%=i===pendingPage ? 'class="active"' : '' %>><%= i %></a>
-                                            <% } %>
-                                                <% if (pendingPage < totalPendingPages) { %>
-                                                    <a
-                                                        href="?mutedPage=<%= mutedPage %>&bannedPage=<%= bannedPage %>&pendingPage=<%= pendingPage + 1 %>">Dalje</a>
-                                                    <% } %>
-                            </div>
-                            <% } %>
-        </div>
+            </div>
 
-        <button id="submit-all-changes" onclick="submitBulkChanges()">Spremi sve promjene</button>
+            <div class="section">
+                <h1>Bannani korisnici</h1>
+                <% if (bannedUsers.length===0) { %>
+                    <p class="no-items">Nema bannanih korisnika.</p>
+                    <% } else { %>
+                        <% bannedUsers.slice((bannedPage - 1) * 10, bannedPage * 10).forEach(user=> { %>
+                            <div class="user-box" id="user-<%= user._id %>">
+                                <h2>
+                                    <%= user.name %>
+                                </h2>
+                                <p>Ban reason: <%= user.banReason %>
+                                </p>
+                                <p>Ban duration: <%= user.banDuration %>
+                                </p>
+                                <button class="user-action-btn" data-id="<%= user._id %>"
+                                    data-action="unban">Unban</button>
+                            </div>
+                            <% }); %>
+                                <div class="pagination">
+                                    <% if (bannedPage> 1) { %>
+                                        <a href="?mutedPage=" <%=mutedPage %>&bannedPage=<%= bannedPage - 1 %>
+                                                &pendingPage=
+                                                <%= pendingPage %>">Prethodno</a>
+                                        <% } %>
+                                            <% for (let i=1; i <=totalBannedPages; i++) { %>
+                                                <a href="?mutedPage=<%= mutedPage %>&bannedPage=<%= i %>&pendingPage=<%= pendingPage %>"
+                                                    <%=i===bannedPage ? 'class="active"' : '' %>><%= i %></a>
+                                                <% } %>
+                                                    <% if (bannedPage < totalBannedPages) { %>
+                                                        <a
+                                                            href="?mutedPage=<%= mutedPage %>&bannedPage=<%= bannedPage + 1 %>&pendingPage=<%= pendingPage %>">Dalje</a>
+                                                        <% } %>
+                                </div>
+                                <% } %>
+            </div>
+
+            <div class="section">
+                <h1>Zahtjevi za Editora</h1>
+                <% if (editorRequests && editorRequests.length===0) { %>
+                    <p class="no-items">Nema zahtjeva za editora.</p>
+                    <% } else { %>
+                        <% editorRequests.forEach(user=> { %>
+                            <div class="user-box editor-request-box">
+                                <h2>
+                                    <%= user.name %>
+                                </h2>
+                                <p>Želi postati Content Creator / Editor.</p>
+                                <div class="action-group">
+                                    <form action="/admin/editor-request/<%= user._id %>" method="POST"
+                                        class="form-inline">
+                                        <input type="hidden" name="action" value="approve">
+                                        <button type="submit" class="user-action-btn btn-success">Odobri</button>
+                                    </form>
+                                    <form action="/admin/editor-request/<%= user._id %>" method="POST"
+                                        class="form-inline">
+                                        <input type="hidden" name="action" value="reject">
+                                        <button type="submit" class="user-action-btn btn-danger">Odbij</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <% }); %>
+                                <% } %>
+            </div>
+
+            <div class="section">
+                <h1>Neprovjerena pitanja</h1>
+                <% if (pendingQuestions.length===0) { %>
+                    <p class="no-items">Nema neprovjerenih pitanja.</p>
+                    <% } else { %>
+                        <% pendingQuestions.slice((pendingPage - 1) * 10, pendingPage * 10).forEach(question=> { %>
+                            <div class="question-box" id="question-<%= question._id %>">
+                                <h2>
+                                    <%= question.text %>
+                                </h2>
+                                <p><strong>HINT: </strong><span class="hint-text">
+                                        <%= question.hint.replace(/\u00a0/g, ' ' ) %>
+                                    </span></p>
+                                <% if (question.image && question.image !=="" ) { %>
+                                    <img src="<%= question.image %>" alt="Question image">
+                                    <% } %>
+                                        <p><strong>Category:</strong>
+                                            <%= question.category %>
+                                        </p>
+                                        <p><strong>Answer 1:</strong>
+                                            <%= question.answers[0] %>
+                                        </p>
+                                        <p><strong>Answer 2:</strong>
+                                            <%= question.answers[1] %>
+                                        </p>
+                                        <p><strong>Answer 3:</strong>
+                                            <%= question.answers[2] %>
+                                        </p>
+                                        <p><strong>Answer 4:</strong>
+                                            <%= question.answers[3] %>
+                                        </p>
+                                        <p><strong>Status:</strong>
+                                            <%= question.status.toUpperCase() %>
+                                        </p>
+                                        <button class="question-action-btn" data-id="<%= question._id %>"
+                                            data-action="approve">Odobri</button>
+                                        <button class="question-action-btn delete-btn" data-id="<%= question._id %>"
+                                            data-action="delete">Obriši</button>
+                            </div>
+                            <% }); %>
+                                <div class="pagination">
+                                    <% if (pendingPage> 1) { %>
+                                        <a
+                                            href="?mutedPage=<%= mutedPage %>&bannedPage=<%= bannedPage %>&pendingPage=<%= pendingPage - 1 %>">Prethodno</a>
+                                        <% } %>
+                                            <% for (let i=1; i <=totalPendingPages; i++) { %>
+                                                <a href="?mutedPage=<%= mutedPage %>&bannedPage=<%= bannedPage %>&pendingPage=<%= i %>"
+                                                    <%=i===pendingPage ? 'class="active"' : '' %>><%= i %></a>
+                                                <% } %>
+                                                    <% if (pendingPage < totalPendingPages) { %>
+                                                        <a
+                                                            href="?mutedPage=<%= mutedPage %>&bannedPage=<%= bannedPage %>&pendingPage=<%= pendingPage + 1 %>">Dalje</a>
+                                                        <% } %>
+                                </div>
+                                <% } %>
+            </div>
+
+            <button id="submit-all-changes" onclick="submitBulkChanges()">Spremi sve promjene</button>
 </body>
 
 </html>

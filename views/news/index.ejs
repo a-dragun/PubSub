@@ -13,140 +13,141 @@
 
 <body>
     <%- include('../partials/news_header') %>
-    <%- include('../partials/messaging') %>
+        <%- include('../partials/messaging') %>
 
-        <div class="news-container">
-            <% let heroNews=null; let secondaryHighlighted=[]; let regularNews=[]; const
-                highlighted=news.filter(function(item) { return item.isHighlighted; }); const
-                others=news.filter(function(item) { return !item.isHighlighted; }); if (highlighted.length> 0) {
-                heroNews = highlighted[0];
-                secondaryHighlighted = highlighted.slice(1);
-                }
+            <div class="news-container">
+                <% let heroNews=null; let secondaryHighlighted=[]; let regularNews=[]; const
+                    highlighted=news.filter(function(item) { return item.isHighlighted; }); const
+                    others=news.filter(function(item) { return !item.isHighlighted; }); if (highlighted.length> 0) {
+                    heroNews = highlighted[0];
+                    secondaryHighlighted = highlighted.slice(1);
+                    }
 
-                regularNews = others;
-                %>
+                    regularNews = others;
+                    %>
 
-                <!-- 1. HERO SECTION (Latest Pinned) -->
-                <% if (heroNews) { %>
-                    <a href="/news/<%= heroNews._id %>" style="text-decoration: none;">
-                        <div class="news-hero">
-                            <img src="<%= heroNews.imageUrl || 'https://placehold.co/1200x600' %>"
-                                alt="<%= heroNews.title %>" class="news-hero-bg">
-                            <div class="news-hero-overlay"></div>
-                            <div class="news-hero-content">
-                                <span class="news-hero-badge"><i class="fas fa-thumbtack"></i> Izdvojeno</span>
-                                <h1 class="news-hero-title">
-                                    <%= heroNews.title %>
-                                </h1>
-                                <div class="news-hero-meta">
-                                    <span><i class="far fa-calendar"></i>
-                                        <%= new Date(heroNews.createdAt).toLocaleDateString('hr-HR') %>
-                                    </span>
-                                    <span><i class="far fa-user"></i>
-                                        <%= heroNews.author.name %>
-                                    </span>
-                                </div>
-
-                                <% if (locals.currentUser && locals.currentUser.adminLevel> 0) { %>
-                                    <div style="margin-top: 1rem; position: relative; z-index: 10;">
-                                        <form action="/news/<%= heroNews._id %>/highlight" method="POST"
-                                            style="display:inline-block;">
-                                            <button type="submit" class="icon-btn active" title="Ukloni isticanje"
-                                                style="background: rgba(255,255,255,0.2); border-radius: 50%;">
-                                                <i class="fas fa-thumbtack"></i>
-                                            </button>
-                                        </form>
+                    <!-- 1. HERO SECTION (Latest Pinned) -->
+                    <% if (heroNews) { %>
+                        <a href="/news/<%= heroNews._id %>" class="news-link">
+                            <div class="news-hero">
+                                <img src="<%= heroNews.imageUrl || 'https://placehold.co/1200x600' %>"
+                                    alt="<%= heroNews.title %>" class="news-hero-bg">
+                                <div class="news-hero-overlay"></div>
+                                <div class="news-hero-content">
+                                    <span class="news-hero-badge"><i class="fas fa-thumbtack"></i> Izdvojeno</span>
+                                    <h1 class="news-hero-title">
+                                        <%= heroNews.title %>
+                                    </h1>
+                                    <div class="news-hero-meta">
+                                        <span><i class="far fa-calendar"></i>
+                                            <%= new Date(heroNews.createdAt).toLocaleDateString('hr-HR') %>
+                                        </span>
+                                        <span><i class="far fa-user"></i>
+                                            <%= heroNews.author.name %>
+                                        </span>
                                     </div>
-                                    <% } %>
-                            </div>
-                        </div>
-                    </a>
-                    <% } %>
 
-                        <!-- 2. SECONDARY HIGHLIGHTED (List View) -->
-                        <% if (secondaryHighlighted.length> 0) { %>
-                            <h3 class="section-title">Izdvojeno</h3>
-                            <div class="news-list-section">
-                                <% secondaryHighlighted.forEach(item=> { %>
-                                    <div style="position: relative;">
-                                        <a href="/news/<%= item._id %>" class="news-list-item">
-                                            <img src="<%= item.imageUrl || 'https://placehold.co/600x400' %>"
-                                                alt="<%= item.title %>" class="news-list-image">
-                                            <div class="news-list-content">
-                                                <h2 class="news-list-title">
-                                                    <%= item.title %>
-                                                </h2>
-                                                <p class="news-list-excerpt"><%- item.content.replace(/<[^>]*>?/gm,
-                                                        '').substring(0, 200) %>...</p>
-                                                <div class="news-meta">
-                                                    <span><i class="far fa-calendar"></i>
-                                                        <%= new Date(item.createdAt).toLocaleDateString('hr-HR') %>
-                                                    </span>
-                                                    <span style="margin-left: 10px;"><i class="far fa-user"></i>
-                                                        <%= item.author.name %>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <% if (locals.currentUser && locals.currentUser.adminLevel> 0) { %>
-                                            <form action="/news/<%= item._id %>/highlight" method="POST"
-                                                style="position: absolute; top: 10px; right: 10px; z-index: 5;">
-                                                <button type="submit" class="icon-btn active" title="Ukloni isticanje">
+                                    <% if (locals.currentUser && locals.currentUser.adminLevel> 0) { %>
+                                        <div class="news-hero-actions">
+                                            <form action="/news/<%= heroNews._id %>/highlight" method="POST"
+                                                class="highlight-form">
+                                                <button type="submit" class="icon-btn active btn-icon-circle"
+                                                    title="Ukloni isticanje">
                                                     <i class="fas fa-thumbtack"></i>
                                                 </button>
                                             </form>
-                                            <% } %>
-                                    </div>
-                                    <% }); %>
-                            </div>
-                            <% } %>
-
-                                <!-- 3. REGULAR NEWS (Grid View) -->
-                                <h3 class="section-title">Sve Vijesti</h3>
-                                <div class="news-grid">
-                                    <% if (regularNews.length===0 && !heroNews) { %>
-                                        <p>Nema novih vijesti.</p>
+                                        </div>
                                         <% } %>
-
-                                            <% regularNews.forEach(item=> { %>
-                                                <div style="position: relative; display: flex; flex-direction: column;">
-                                                    <a href="/news/<%= item._id %>"
-                                                        style="text-decoration: none; flex-grow: 1;">
-                                                        <article class="news-card">
-                                                            <img src="<%= item.imageUrl || 'https://placehold.co/600x400' %>"
-                                                                alt="<%= item.title %>" class="news-image">
-                                                            <div class="news-content">
-                                                                <h2 class="news-title">
-                                                                    <%= item.title %>
-                                                                </h2>
-                                                                <div class="news-meta">
-                                                                    <span><i class="far fa-calendar"></i>
-                                                                        <%= new
-                                                                            Date(item.createdAt).toLocaleDateString('hr-HR')
-                                                                            %>
-                                                                    </span>
-                                                                </div>
-                                                                <p class="news-excerpt"><%-
-                                                                        item.content.replace(/<[^>]*>?/gm,
-                                                                        '').substring(0, 150) %>...</p>
-                                                            </div>
-                                                        </article>
-                                                    </a>
-
-                                                    <% if (locals.currentUser && locals.currentUser.adminLevel> 0) { %>
-                                                        <form action="/news/<%= item._id %>/highlight" method="POST"
-                                                            style="position: absolute; top: 10px; right: 10px; z-index: 5;">
-                                                            <button type="submit" class="icon-btn"
-                                                                title="Istakni vijest"
-                                                                style="background: white; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                                                                <i class="fas fa-thumbtack"></i>
-                                                            </button>
-                                                        </form>
-                                                        <% } %>
-                                                </div>
-                                                <% }); %>
                                 </div>
-        </div>
+                            </div>
+                        </a>
+                        <% } %>
+
+                            <!-- 2. SECONDARY HIGHLIGHTED (List View) -->
+                            <% if (secondaryHighlighted.length> 0) { %>
+                                <h3 class="section-title">Izdvojeno</h3>
+                                <div class="news-list-section">
+                                    <% secondaryHighlighted.forEach(item=> { %>
+                                        <div class="relative-container">
+                                            <a href="/news/<%= item._id %>" class="news-list-item">
+                                                <img src="<%= item.imageUrl || 'https://placehold.co/600x400' %>"
+                                                    alt="<%= item.title %>" class="news-list-image">
+                                                <div class="news-list-content">
+                                                    <h2 class="news-list-title">
+                                                        <%= item.title %>
+                                                    </h2>
+                                                    <p class="news-list-excerpt"><%- item.content.replace(/<[^>]*>?/gm,
+                                                            '').substring(0, 200) %>...</p>
+                                                    <div class="news-meta">
+                                                        <span><i class="far fa-calendar"></i>
+                                                            <%= new Date(item.createdAt).toLocaleDateString('hr-HR') %>
+                                                        </span>
+                                                        <span class="ml-10"><i class="far fa-user"></i>
+                                                            <%= item.author.name %>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <% if (locals.currentUser && locals.currentUser.adminLevel> 0) { %>
+                                                <form action="/news/<%= item._id %>/highlight" method="POST"
+                                                    class="news-highlight-overlay">
+                                                    <button type="submit" class="icon-btn active"
+                                                        title="Ukloni isticanje">
+                                                        <i class="fas fa-thumbtack"></i>
+                                                    </button>
+                                                </form>
+                                                <% } %>
+                                        </div>
+                                        <% }); %>
+                                </div>
+                                <% } %>
+
+                                    <!-- 3. REGULAR NEWS (Grid View) -->
+                                    <h3 class="section-title">Sve Vijesti</h3>
+                                    <div class="news-grid">
+                                        <% if (regularNews.length===0 && !heroNews) { %>
+                                            <p>Nema novih vijesti.</p>
+                                            <% } %>
+
+                                                <% regularNews.forEach(item=> { %>
+                                                    <div class="news-card-wrapper">
+                                                        <a href="/news/<%= item._id %>" class="news-link">
+                                                            <article class="news-card">
+                                                                <img src="<%= item.imageUrl || 'https://placehold.co/600x400' %>"
+                                                                    alt="<%= item.title %>" class="news-image">
+                                                                <div class="news-content">
+                                                                    <h2 class="news-title">
+                                                                        <%= item.title %>
+                                                                    </h2>
+                                                                    <div class="news-meta">
+                                                                        <span><i class="far fa-calendar"></i>
+                                                                            <%= new
+                                                                                Date(item.createdAt).toLocaleDateString('hr-HR')
+                                                                                %>
+                                                                        </span>
+                                                                    </div>
+                                                                    <p class="news-excerpt"><%-
+                                                                            item.content.replace(/<[^>]*>?/gm,
+                                                                            '').substring(0, 150) %>...</p>
+                                                                </div>
+                                                            </article>
+                                                        </a>
+
+                                                        <% if (locals.currentUser && locals.currentUser.adminLevel> 0) {
+                                                            %>
+                                                            <form action="/news/<%= item._id %>/highlight" method="POST"
+                                                                class="news-highlight-overlay">
+                                                                <button type="submit"
+                                                                    class="icon-btn btn-icon-circle dark"
+                                                                    title="Istakni vijest">
+                                                                    <i class="fas fa-thumbtack"></i>
+                                                                </button>
+                                                            </form>
+                                                            <% } %>
+                                                    </div>
+                                                    <% }); %>
+                                    </div>
+            </div>
 </body>
 
 </html>

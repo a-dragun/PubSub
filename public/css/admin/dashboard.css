@@ -21,9 +21,17 @@ body {
 }
 
 @keyframes gradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 h1 {
@@ -71,7 +79,8 @@ h2 {
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
-.user-box, .question-box {
+.user-box,
+.question-box {
     background: #ffffff99;
     backdrop-filter: blur(10px);
     padding: 1.5rem;
@@ -81,12 +90,14 @@ h2 {
     transition: transform 0.3s ease, background 0.3s ease;
 }
 
-.user-box:hover, .question-box:hover {
+.user-box:hover,
+.question-box:hover {
     transform: translateY(-5px);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
-.user-box p, .question-box p {
+.user-box p,
+.question-box p {
     margin: 0.5rem 0;
     font-size: 1rem;
 }
@@ -102,7 +113,8 @@ h2 {
     color: var(--text);
 }
 
-.user-action-btn, .question-action-btn {
+.user-action-btn,
+.question-action-btn {
     background: var(--accent);
     color: var(--light);
     border: none;
@@ -114,11 +126,13 @@ h2 {
     transition: background 0.3s ease;
 }
 
-.user-action-btn:hover, .question-action-btn:hover {
+.user-action-btn:hover,
+.question-action-btn:hover {
     background: var(--text);
 }
 
-.user-action-btn.selected, .question-action-btn.selected {
+.user-action-btn.selected,
+.question-action-btn.selected {
     background: #d0f0d0;
     border: 2px solid #0a0;
     color: var(--text);
@@ -126,7 +140,7 @@ h2 {
 
 .question-action-btn.delete-btn.selected {
     background: var(--danger);
-    border: 2px solid #b71c1c; 
+    border: 2px solid #b71c1c;
     color: var(--light);
 }
 
@@ -188,4 +202,39 @@ h2 {
     font-size: 1rem;
     text-align: center;
     margin: 1rem 0;
+}
+
+.editor-request-box {
+    border-left: 5px solid #3498db;
+}
+
+.action-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.form-inline {
+    margin: 0;
+}
+
+.btn-success {
+    background-color: #2ecc71 !important;
+}
+
+.btn-success:hover {
+    background-color: #27ae60 !important;
+}
+
+.btn-danger {
+    background-color: #e74c3c !important;
+}
+
+.btn-danger:hover {
+    background-color: #c0392b !important;
+}
+
+.hint-text {
+    white-space: pre;
+    font-family: monospace;
 }

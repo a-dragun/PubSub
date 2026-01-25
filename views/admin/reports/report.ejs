@@ -8,75 +8,75 @@
 </head>
 
 <body>
-    <%- include('../../partials/header') %>
-  <%- include('../../partials/messaging') %>
+  <%- include('../../partials/header') %>
+    <%- include('../../partials/messaging') %>
 
-    <div class="report-container">
-      <h1>Detalji prijave</h1>
+      <div class="report-container">
+        <h1>Detalji prijave</h1>
 
-      <div class="report-box">
-        <div class="reported-user">
-          <span>Prijavljen korisnik: <strong>
-              <%= report.reportedUsername %>
-            </strong></span>
-          <span class="status-badge status-<%= report.status %>">
-            <%= report.status %>
-          </span>
-          <% if (report.reportType==='comment' ) { %>
-            <span class="status-badge" style="background-color: #6c757d; margin-left: 5px;">Komentar</span>
-            <% } else if (report.reportType==='chat' ) { %>
-              <span class="status-badge" style="background-color: #007bff; margin-left: 5px;">Poruka</span>
-              <% } %>
+        <div class="report-box">
+          <div class="reported-user">
+            <span>Prijavljen korisnik: <strong>
+                <%= report.reportedUsername %>
+              </strong></span>
+            <span class="status-badge status-<%= report.status %>">
+              <%= report.status %>
+            </span>
+            <% if (report.reportType==='comment' ) { %>
+              <span class="status-badge status-comment badge-margin-left">Komentar</span>
+              <% } else if (report.reportType==='chat' ) { %>
+                <span class="status-badge status-chat badge-margin-left">Poruka</span>
+                <% } %>
+          </div>
+
+          <div class="message-preview">
+            <strong>Razlog prijave:</strong>
+            <%= report.reason %>
+          </div>
+
+          <div class="message-detail">
+            <strong>Poruka:</strong> "<%= report.reportedMessage %>"
+          </div>
+
+          <div class="report-meta">
+            <span>Prijavio: <strong>
+                <%= report.authorUsername %>
+              </strong></span>
+            <span>
+              <%= new Date(report.createdAt).toLocaleDateString('hr-HR', {year:'numeric', month:'short', day:'numeric',
+                hour:'2-digit', minute:'2-digit'}) %>
+            </span>
+          </div>
         </div>
 
-        <div class="message-preview">
-          <strong>Razlog prijave:</strong>
-          <%= report.reason %>
-        </div>
-
-        <div class="message-detail">
-          <strong>Poruka:</strong> "<%= report.reportedMessage %>"
-        </div>
-
-        <div class="report-meta">
-          <span>Prijavio: <strong>
-              <%= report.authorUsername %>
-            </strong></span>
-          <span>
-            <%= new Date(report.createdAt).toLocaleDateString('hr-HR', {year:'numeric', month:'short', day:'numeric',
-              hour:'2-digit', minute:'2-digit'}) %>
-          </span>
-        </div>
-      </div>
-
-      <div class="actions">
-        <form action="/admin/reports/<%= report._id %>/dismiss" method="POST">
-          <button type="submit" class="dismiss-btn">Odbaci prijavu</button>
-        </form>
-
-        <% if (report.reportType==='comment' && report.relatedId) { %>
-          <form action="/news/comments/<%= report.relatedId %>/delete" method="POST" style="display:inline;"
-            onsubmit="return confirm('Sigurno obrisati komentar?');">
-            <button type="submit" class="punish-btn" style="background-color: #dc3545;">Obriši komentar</button>
+        <div class="actions">
+          <form action="/admin/reports/<%= report._id %>/dismiss" method="POST">
+            <button type="submit" class="dismiss-btn">Odbaci prijavu</button>
           </form>
-          <% } %>
 
-            <form id="punishForm" action="/admin/reports/<%= report._id %>/punish" method="POST">
-              <label for="type">Vrsta kazne:</label>
-              <select name="type" id="type" required>
-                <option value="" disabled selected>Odaberi...</option>
-                <option value="ban">Ban</option>
-                <option value="mute">Mute</option>
-              </select>
-
-              <label for="reason">Razlog kazne:</label>
-              <input type="text" name="reason" id="reason" required>
-
-              <label for="duration">Trajanje:</label>
-              <input type="date" name="duration" id="duration" required
-                min="<%= new Date(Date.now() + 86400000).toISOString().split('T')[0] %>">
-
-              <button type="submit" class="punish-btn">Izvrši kaznu</button>
+          <% if (report.reportType==='comment' && report.relatedId) { %>
+            <form action="/news/comments/<%= report.relatedId %>/delete" method="POST" class="delete-form"
+              onsubmit="return confirm('Sigurno obrisati komentar?');">
+              <button type="submit" class="punish-btn btn-danger">Obriši komentar</button>
             </form>
+            <% } %>
+
+              <form id="punishForm" action="/admin/reports/<%= report._id %>/punish" method="POST">
+                <label for="type">Vrsta kazne:</label>
+                <select name="type" id="type" required>
+                  <option value="" disabled selected>Odaberi...</option>
+                  <option value="ban">Ban</option>
+                  <option value="mute">Mute</option>
+                </select>
+
+                <label for="reason">Razlog kazne:</label>
+                <input type="text" name="reason" id="reason" required>
+
+                <label for="duration">Trajanje:</label>
+                <input type="date" name="duration" id="duration" required
+                  min="<%= new Date(Date.now() + 86400000).toISOString().split('T')[0] %>">
+
+                <button type="submit" class="punish-btn">Izvrši kaznu</button>
+              </form>
+        </div>
       </div>
-    </div>

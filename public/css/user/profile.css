@@ -12,9 +12,17 @@ body {
 }
 
 @keyframes gradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 .profile-container {
@@ -134,4 +142,29 @@ button#deleteFriendBtn {
 
 button#deleteFriendBtn:hover {
     background-color: #d68c90;
+}
+
+.text-danger {
+    color: #c25d62;
+}
+
+.text-success {
+    color: #28a745;
+}
+
+.btn-link {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    color: #007bff !important;
+    text-decoration: underline !important;
+    cursor: pointer !important;
+    display: inline !important;
+    width: auto !important;
+    font-weight: normal !important;
+    font-size: inherit !important;
+}
+
+.btn-link:hover {
+    color: #0056b3 !important;
 }

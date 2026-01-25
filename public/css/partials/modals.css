@@ -1,0 +1,136 @@
+.report-backdrop,
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: none;
+    place-items: center;
+    z-index: 1000;
+}
+
+.report-backdrop.active,
+.modal-backdrop.active {
+    display: grid;
+}
+
+.report-modal-chat {
+    background: #0f1115;
+    color: white;
+    width: 360px;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .4);
+    text-align: center;
+    position: relative;
+}
+
+.report-modal-chat h2 {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    color: #04bcf9d4;
+    text-transform: uppercase;
+}
+
+.report-modal-chat .report-preview {
+    font-size: 0.9rem;
+    color: #ddd;
+    max-height: 80px;
+    overflow-y: auto;
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    margin-bottom: 10px;
+    text-align: left;
+    word-break: break-word;
+}
+
+.report-modal-chat textarea {
+    width: 100%;
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #666;
+    background: #1a1d23;
+    color: white;
+    box-sizing: border-box;
+}
+
+.report-modal-comment {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    color: #333;
+}
+
+.report-modal-comment h3 {
+    margin-top: 0;
+    color: #333;
+    text-transform: uppercase;
+}
+
+.report-modal-comment .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.report-modal-comment label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.report-modal-comment textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-family: inherit;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-modal {
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    border: none;
+}
+
+.btn-modal:hover {
+    transform: scale(1.05);
+}
+
+.btn-report-confirm-chat {
+    background: linear-gradient(135deg, #04bcf9d4, #007bff);
+    color: white;
+}
+
+.btn-cancel-chat {
+    background: #555;
+    color: white;
+}
+
+.btn-report-confirm-comment {
+    background: #ff6b6b;
+    color: white;
+    border-radius: 6px;
+    padding: 0.6rem 1.2rem;
+}
+
+.btn-cancel-comment {
+    background: #eee;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 0.6rem 1.2rem;
+}

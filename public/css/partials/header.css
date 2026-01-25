@@ -1,0 +1,85 @@
+:root {
+    --bg: #B0D9E9;
+    --accent: #748CAB;
+    --light: #ffffffcc;
+    --text: #4C5B66;
+    --beige: #EAD7BB;
+    --danger: #d68c90;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--light);
+    backdrop-filter: blur(10px);
+    padding: 0.4rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.navbar a,
+.navbar form button {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.navbar a:hover {
+    background: var(--accent);
+    color: var(--light);
+}
+
+.navbar form button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.navbar form button:hover {
+    background: var(--danger);
+    color: var(--light);
+}
+
+.navbar .user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.navbar .user-profile img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent);
+}
+
+.navbar .user-profile a {
+    padding: 0;
+}
+
+.navbar .user-profile a:hover {
+    background: none;
+    color: var(--accent);
+}
+
+.navbar .center-links {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex: 1;
+}
+
+.right-section {
+    display: flex;
+    align-items: center;
+}
