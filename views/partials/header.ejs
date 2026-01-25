@@ -1,43 +1,74 @@
 <head>
     <link rel="stylesheet" href="/css/partials/header.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
     <nav class="navbar" id="navbar">
-        <% if (typeof currentUser !=='undefined' ) { %>
-            <div class="user-profile">
-                <a href="/user/profile">
-                    <img src="<%= locals.currentUser.profilePicture || 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg' %>"
-                        alt="Profile Picture">
-                </a>
-                <a href="/user/profile">
-                    <%= locals.currentUser.name %>
-                </a>
-            </div>
-            <div class="center-links">
-                <a href="/">Početna stranica</a>
-                <a href="/questions/new">Stvori pitanje</a>
-                <a href="/rooms">Popis soba</a>
-                <a href="/news">Vijesti</a>
-                <a href="/user/list">Popis korisnika</a>
-                <a href="/friends">Prijatelji</a>
-                <a href="/teams">Timovi</a>
-                <% if (locals.currentUser.adminLevel> 0) { %>
-                    <a href="/admin/dashboard">Admin</a>
+        <div class="nav-mobile-header">
+            <% if (typeof currentUser !=='undefined' ) { %>
+                <div class="user-profile">
+                    <a href="/user/profile">
+                        <img src="<%= locals.currentUser.profilePicture || 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg' %>"
+                            alt="Profile Picture">
+                    </a>
+                    <a href="/user/profile" class="user-name">
+                        <%= locals.currentUser.name %>
+                    </a>
+                </div>
+                <% } else { %>
+                    <div class="navbar-brand">PubSub</div>
                     <% } %>
-            </div>
-            <div class="right-section">
-                <form action="/auth/logout" method="POST" class="navbar-logout">
-                    <button type="submit">Odjava</button>
-                </form>
-            </div>
-            <% } else { %>
+
+                        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                            <i class="fas fa-bars"></i>
+                        </button>
+        </div>
+
+        <div class="nav-menu" id="navMenu">
+            <% if (typeof currentUser !=='undefined' ) { %>
                 <div class="center-links">
                     <a href="/">Početna stranica</a>
-                    <a href="/auth/login">Prijava</a>
-                    <a href="/auth/register">Registracija</a>
+                    <a href="/questions/new">Stvori pitanje</a>
+                    <a href="/rooms">Popis soba</a>
                     <a href="/news">Vijesti</a>
+                    <a href="/user/list">Popis korisnika</a>
+                    <a href="/friends">Prijatelji</a>
+                    <a href="/teams">Timovi</a>
+                    <% if (locals.currentUser.adminLevel> 0) { %>
+                        <a href="/admin/dashboard">Admin</a>
+                        <% } %>
                 </div>
-                <% } %>
+
+                <div class="right-section">
+                    <form action="/auth/logout" method="POST" class="navbar-logout">
+                        <button type="submit">Odjava</button>
+                    </form>
+                </div>
+                <% } else { %>
+                    <div class="center-links">
+                        <a href="/">Početna stranica</a>
+                        <a href="/news">Vijesti</a>
+                    </div>
+                    <div class="center-links auth-links">
+                        <a href="/auth/login">Prijava</a>
+                        <a href="/auth/register">Registracija</a>
+                    </div>
+                    <% } %>
+        </div>
     </nav>
+
+    <script>
+        document.getElementById('navToggle').addEventListener('click', function () {
+            document.getElementById('navMenu').classList.toggle('active');
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+    </script>
 </body>

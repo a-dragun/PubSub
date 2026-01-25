@@ -1,6 +1,13 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
 <nav class="news-navbar">
-    <div class="news-brand">PubSub Vijesti</div>
-    <div class="news-links">
+    <div class="news-header">
+        <div class="news-brand">PubSub Vijesti</div>
+        <button class="news-nav-toggle" id="newsNavToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+    <div class="news-links" id="newsLinks">
         <a href="/news">Naslovnica</a>
         <% if (locals.currentUser && (locals.currentUser.adminLevel> 0 || locals.currentUser.isEditor)) { %>
             <a href="/news/create">Nova vijest</a>
@@ -8,3 +15,17 @@
                 <a href="/">Natrag na Kviz</a>
     </div>
 </nav>
+
+<script>
+    document.getElementById('newsNavToggle').addEventListener('click', function () {
+        document.getElementById('newsLinks').classList.toggle('active');
+        const icon = this.querySelector('i');
+        if (icon.classList.contains('fa-bars')) {
+            icon.classList.remove('fa-bars');
+            icon.classList.add('fa-times');
+        } else {
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
+    });
+</script>

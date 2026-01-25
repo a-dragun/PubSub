@@ -243,3 +243,48 @@ button {
 .btn-danger:hover {
     background-color: #c82333;
 }
+
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .report-box {
+        padding: 1.5rem;
+    }
+
+    .reported-user {
+        font-size: 1.4rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .message-preview,
+    .message-detail {
+        font-size: 1.1rem;
+    }
+
+    .report-meta {
+        font-size: 1rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    /* Buttons and Inputs */
+    input[type="text"],
+    input[type="date"],
+    select {
+        padding: 1rem;
+        font-size: 1.1rem;
+    }
+
+    button {
+        padding: 1rem;
+        font-size: 1.2rem;
+    }
+}

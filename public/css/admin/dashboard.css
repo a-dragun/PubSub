@@ -238,3 +238,44 @@ h2 {
     white-space: pre;
     font-family: monospace;
 }
+
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .link-card {
+        padding: 2rem;
+    }
+
+    .link-card h2 {
+        font-size: 1.8rem;
+    }
+
+    .user-box,
+    .question-box {
+        padding: 1.5rem;
+    }
+
+    .user-box h2,
+    .question-box h2 {
+        font-size: 1.5rem;
+    }
+
+    .user-box p,
+    .question-box p {
+        font-size: 1.1rem;
+    }
+
+    .user-action-btn,
+    .question-action-btn {
+        padding: 0.8rem 1.2rem;
+        font-size: 1.1rem;
+        display: inline-block;
+        margin-top: 0.8rem;
+    }
+}

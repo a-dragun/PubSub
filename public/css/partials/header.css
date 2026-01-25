@@ -20,6 +20,37 @@
     align-items: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     z-index: 1000;
+    flex-wrap: wrap;
+}
+
+.nav-mobile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: auto;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--accent);
+}
+
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text);
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.nav-menu {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .navbar a,
@@ -72,9 +103,13 @@
     color: var(--accent);
 }
 
+.navbar .user-name {
+    font-weight: 600;
+}
+
 .navbar .center-links {
     display: flex;
-    gap: 2rem;
+    gap: 1rem;
     justify-content: center;
     flex: 1;
 }
@@ -82,4 +117,67 @@
 .right-section {
     display: flex;
     align-items: center;
+}
+
+@media (max-width: 992px) {
+    .navbar {
+        padding: 0.5rem 1rem;
+    }
+
+    .nav-mobile-header {
+        width: 100%;
+        display: flex;
+    }
+
+    .nav-toggle {
+        display: block;
+    }
+
+    .nav-menu {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background: white;
+        padding: 1rem 0;
+        gap: 0.5rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 0 0 12px 12px;
+        margin-top: 0.5rem;
+    }
+
+    .nav-menu.active {
+        display: flex;
+    }
+
+    .navbar .center-links {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.2rem;
+    }
+
+    .navbar .center-links a {
+        width: 100%;
+        text-align: center;
+        padding: 1rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    .right-section {
+        width: 100%;
+        justify-content: center;
+        padding-top: 0.5rem;
+        border-top: 1px solid #eee;
+    }
+
+    .navbar-logout {
+        width: 100%;
+    }
+
+    .navbar-logout button {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
 }

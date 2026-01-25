@@ -168,3 +168,35 @@ button#deleteFriendBtn:hover {
 .btn-link:hover {
     color: #0056b3 !important;
 }
+
+@media (max-width: 768px) {
+    .profile-container {
+        width: 95%;
+        padding: 1.5rem;
+    }
+
+    h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .profile-picture {
+        width: 180px;
+        height: 180px;
+    }
+
+    p {
+        font-size: 1.2rem;
+        line-height: 1.6;
+    }
+
+    a.edit-link,
+    button,
+    button#deleteBtn,
+    button#deleteFriendBtn {
+        padding: 1rem 1.5rem;
+        font-size: 1.2rem;
+        width: 100%;
+        max-width: none;
+    }
+}
