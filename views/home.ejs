@@ -10,6 +10,7 @@
         <h1>Dobrodošli na PubSub!</h1>
         <% if (user) { %>
             <%- include('partials/messaging') %>
+            <%- include('partials/happyHour') %> 
             <p> <a href="rooms/">Klikni i započni avanturu!</a></p>
         <% } else { %>
             <a href="auth/login">Prijava</a>

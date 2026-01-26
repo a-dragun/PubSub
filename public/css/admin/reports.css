@@ -274,8 +274,6 @@ button {
         flex-direction: column;
         gap: 0.5rem;
     }
-
-    /* Buttons and Inputs */
     input[type="text"],
     input[type="date"],
     select {

@@ -16,6 +16,8 @@ const teamsRoutes = require("./routes/teams");
 const teamJoinRequestsRoutes = require("./routes/teamJoinRequests");
 const messagingRoutes = require("./routes/messaging");
 const conversationRoutes = require("./routes/conversation");
+const happyHourRoutes = require("./routes/happyHour");
+const HappyHour = require('./models/HappyHour');
 const methodOverride = require("method-override");
 const http = require('http');
 const socketIO = require('socket.io');
@@ -55,6 +57,22 @@ app.use((req, res, next) => {
     res.locals.currentUser = req.session.user;
   next();
 });
+
+app.use(async (req, res, next) => {
+  try {
+    const hh = await HappyHour.findOne({ isActive: true });
+    if (hh && new Date() < new Date(hh.endsAt)) {
+      res.locals.globalHappyHour = hh;
+    } else {
+      res.locals.globalHappyHour = null;
+    }
+  } catch (err) {
+    res.locals.globalHappyHour = null;
+  }
+  next();
+});
+
+
 
 io.use((socket, next) => {
   sessionMiddleware(socket.request, {}, () => {
@@ -98,6 +116,7 @@ app.use("/friends", authMiddleware.requireAuth, authMiddleware.checkBan, friends
 app.use("/news", newsRoutes);
 app.use("/teams", authMiddleware.requireAuth, teamsRoutes);
 app.use("/team-join-requests", authMiddleware.requireAuth, teamJoinRequestsRoutes);
+app.use("/api/happy-hour", authMiddleware.requireAuth, authMiddleware.checkBan, authMiddleware.checkAdminLevel(2), happyHourRoutes);
 app.use('/api/reports', authMiddleware.requireAuth, authMiddleware.checkBan, reportRoutes);
 app.use('/api/messaging', authMiddleware.requireAuth, messagingRoutes);
 app.use('/api/conversation', authMiddleware.requireAuth, conversationRoutes);
