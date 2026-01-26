@@ -8,14 +8,25 @@
 </head>
 <body>
   <%- include('../partials/header') %>
-  <form oninput="checkPassword()" method="POST" action="/auth/register" class="register-form">
-    <h1>Registracija</h1>
-    <input type="text" id="username" name="name" placeholder="Korisničko ime" required />
-    <input type="email" name="email" placeholder="E-mail" required />
-    <input type="password" name="password" placeholder="Zaporka" required />
-    <input type="password" name="password_repeat" placeholder="Ponovi zaporku" required />
-    <span id="message"></span>
-    <button type="submit">Registriraj se</button>
-  </form>
+  
+  <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+    
+    <% if (typeof error !== 'undefined' && error) { %>
+        <div class="auth-error">
+            <%= error %>
+        </div>
+    <% } %>
+
+    <form oninput="checkPassword()" method="POST" action="/auth/register" class="register-form">
+      <h1>Registracija</h1>
+      <input type="text" id="username" name="name" placeholder="Korisničko ime" required />
+      <input type="email" name="email" placeholder="E-mail" required />
+      <input type="password" name="password" placeholder="Zaporka" required />
+      <input type="password" name="password_repeat" placeholder="Ponovi zaporku" required />
+      <span id="message"></span>
+      <button type="submit">Registriraj se</button>
+    </form>
+    
+  </div>
 </body>
 </html>

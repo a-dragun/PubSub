@@ -13,7 +13,8 @@ exports.getNews = async (req, res) => {
         });
     } catch (err) {
         console.error(err);
-        res.status(500).send('Server Error');
+        return res.status(500).render('error', { status: 500, message: "Greška na serveru!" });
+
     }
 };
 
@@ -53,7 +54,7 @@ exports.getNewsDetail = async (req, res) => {
     try {
         const newsItem = await News.findById(req.params.id).populate('author', 'name');
         if (!newsItem) {
-            return res.status(404).send('News not found');
+            return res.status(404).render('error', { status: 404, message: "News ne postoji!" });
         }
 
         const comments = await Comment.find({ newsItem: req.params.id })
@@ -68,7 +69,7 @@ exports.getNewsDetail = async (req, res) => {
         });
     } catch (err) {
         console.error(err);
-        res.status(500).send('Server Error');
+        return res.status(500).render('error', { status: 500, message: "Greška na serveru!" });
     }
 };
 
@@ -101,21 +102,21 @@ exports.postToggleHighlight = async (req, res) => {
         res.redirect('/news');
     } catch (err) {
         console.error(err);
-        res.status(500).send('Server Error');
+        return res.status(500).render('error', { status: 500, message: "Greška na serveru!" });
     }
 };
 
 exports.deleteComment = async (req, res) => {
     try {
         if (!req.session.user || req.session.user.adminLevel < 2) {
-            return res.status(403).send('Unauthorized');
+            return res.status(403).render('error', { status: 403, message: "Nemaš ovlasti za ovu radnju!" });
         }
 
         const commentId = req.params.id;
         const comment = await Comment.findById(commentId);
 
         if (!comment) {
-            return res.status(404).send('Comment not found');
+            return res.status(404).render('error', { status: 404, message: "Komentar ne postoji!" });
         }
 
         comment.isDeleted = true;
@@ -127,7 +128,7 @@ exports.deleteComment = async (req, res) => {
         res.redirect('back');
     } catch (err) {
         console.error(err);
-        res.status(500).send('Server Error');
+        return res.status(500).render('error', { status: 500, message: "Greška na serveru!" });
     }
 };
 
@@ -137,11 +138,11 @@ exports.deleteNews = async (req, res) => {
         const newsItem = await News.findById(newsId);
 
         if (!newsItem) {
-            return res.status(404).send('News not found');
+            return res.status(404).render('error', { status: 404, message: "News ne postoji!" });
         }
 
         if (newsItem.author.toString() !== req.session.user.id && req.session.user.adminLevel < 1) {
-            return res.status(403).send('Unauthorized');
+            return res.status(403).render('error', { status: 403, message: "Nemaš ovlasti za ovu radnju!" });
         }
 
         await Comment.deleteMany({ newsItem: newsId });
@@ -151,6 +152,6 @@ exports.deleteNews = async (req, res) => {
         res.redirect('/news');
     } catch (err) {
         console.error(err);
-        res.status(500).send('Server Error');
+        return res.status(500).render('error', { status: 500, message: "Greška na serveru!" });
     }
 };

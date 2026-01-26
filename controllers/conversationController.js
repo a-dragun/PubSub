@@ -61,7 +61,7 @@ async function openDirectConversation(req, res) {
 
   } catch (err) {
     console.error("DEBUG ERROR:", err); 
-    res.status(500).json({ message: "Greška pri otvaranju direct conversationa." });
+    return res.status(500).json({ message: "Greška pri otvaranju direct conversationa." });
   }
 }
 
@@ -97,7 +97,7 @@ async function openTeamConversation(req, res) {
 
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Greška pri otvaranju team conversationa." });
+    return res.status(500).json({ message: "Greška pri otvaranju team conversationa." });
   }
 }
 

@@ -40,11 +40,9 @@ exports.getFriends = async (req, res) => {
       totalFriendships
     });
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', { status: 500, message: error.message });
   }
 };
-
-
 
 exports.sendFriendRequest = async (req, res) => {
   try {
@@ -52,11 +50,11 @@ exports.sendFriendRequest = async (req, res) => {
     const { receiverId } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(receiverId)) {
-      return res.send("Error: Neispravan ID korisnika");
+      return res.status(404).render('error', { status: 404, message: "Neispravan ID korisnika." });
     }
 
     if (requesterId === receiverId) {
-      return res.send("Error: Ne možeš poslati zahtjev samom sebi");
+      return res.status(403).render('error', { status: 403, message: "Ne možete poslati zahtjev samom sebi." });
     }
 
     const existing = await Friendship.findOne({
@@ -67,7 +65,7 @@ exports.sendFriendRequest = async (req, res) => {
     });
 
     if (existing) {
-      return res.send("Error: Zahtjev ili prijateljstvo već postoji");
+      return res.status(403).render('error', { status: 403, message: "Zahtjev ili prijateljstvo već postoji." });
     }
 
     await Friendship.create({
@@ -77,7 +75,7 @@ exports.sendFriendRequest = async (req, res) => {
 
     res.redirect(`/user/${receiverId}`);
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', { status: 500, message: error.message });
   }
 };
 
@@ -101,7 +99,7 @@ exports.acceptFriendRequest = async (req, res) => {
 
     res.redirect("/friends");
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', { status: 500, message: error.message });
   }
 };
 
@@ -116,13 +114,13 @@ exports.deleteFriend = async (req, res) => {
       ]
     });
 
-    if (!friendship) return res.send("Error: Prijateljstvo nije pronađeno");
+    if (!friendship) return res.status(404).render('error', { status: 404, message: "Prijateljstvo nije pronađeno." });
 
     await Friendship.deleteOne({ _id: friendship._id });
 
     return res.redirect(`/user/${friendId}`);
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', { status: 500, message: error.message });
   }
 };
 

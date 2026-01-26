@@ -40,7 +40,7 @@ exports.getAdminDashboard = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 };
 
@@ -106,7 +106,7 @@ exports.getUsers = async (req, res) => {
       sort,
     });
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 };
 
@@ -162,7 +162,7 @@ exports.getQuestions = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).send('Server Error');
+    return res.status(500).render('error', { status: 500, message: "Server error" });
   }
 };
 
@@ -176,10 +176,10 @@ exports.getUser = async (req, res) => {
       return res.render("admin/users/user", { filteredUser });
     }
     else {
-      res.send("User id does not exist");
+      return res.status(404).render('error', { status: 404, message: "ID usera ne postoji." });
     }
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 }
 
@@ -195,7 +195,7 @@ exports.getQuestion = async (req, res) => {
     }
     return res.render("admin/questions/question", { question, username });
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 }
 
@@ -210,7 +210,7 @@ exports.updateUser = async (req, res) => {
 
     return res.redirect(`/admin/users/${id}`);
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 }
 
@@ -228,7 +228,7 @@ exports.approveQuestion = async (req, res) => {
     await question.save();
     return res.redirect("/admin/questions");
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 }
 
@@ -238,7 +238,7 @@ exports.deleteQuestion = async (req, res) => {
     await Question.findByIdAndDelete(id);
     return res.redirect("/admin/questions/");
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 }
 
@@ -260,7 +260,7 @@ exports.deleteUser = async (req, res) => {
       return res.redirect("/admin/users/");
     }
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 }
 
@@ -304,7 +304,7 @@ exports.bulkUpdate = async (req, res) => {
 
     return res.json({ success: true });
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 }
 
@@ -312,7 +312,7 @@ exports.getCreateRoomPage = (req, res) => {
   try {
     res.render('admin/rooms/create_room', { categories });
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 }
 
@@ -321,12 +321,12 @@ exports.createRoom = async (req, res) => {
     const { name, type, categories } = req.body;
 
     if (!name || !type || !categories) {
-      return res.status(400).send('All fields are required');
+      return res.status(400).render('error', { status: 400, message: "Sva polja su obavezna." });
     }
 
     const selectedCategories = JSON.parse(categories);
     if (selectedCategories.length === 0) {
-      return res.status(400).send('You must select at least one category');
+      return res.status(400).render('error', { status: 400, message: "Moraš odabrati barem jednu kategoriju." });
     }
 
     await Room.create({
@@ -336,7 +336,7 @@ exports.createRoom = async (req, res) => {
     });
     res.redirect("/admin/dashboard");
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 }
 
@@ -345,7 +345,7 @@ exports.getRooms = async (req, res) => {
     let rooms = await Room.find().lean();
     return res.render("admin/rooms/index", { rooms });
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 }
 
@@ -375,7 +375,7 @@ exports.getReports = async (req, res) => {
 
     return res.render("admin/reports/index", { reports });
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 };
 
@@ -384,7 +384,7 @@ exports.getReport = async (req, res) => {
     const reportId = req.params.id;
     let report = await Report.findById(reportId).lean();
     if (!report) {
-      return res.status(404).send("Report nije pronađen.");
+      return res.status(404).render('error', { status: 404, message: "Report nije pronađen." });
     }
 
     const userIds = [report.authorId, report.reportedUserId];
@@ -402,7 +402,7 @@ exports.getReport = async (req, res) => {
 
   } catch (error) {
     console.error(error);
-    return res.status(500).send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 };
 
@@ -413,7 +413,7 @@ exports.getRoom = async (req, res) => {
     let room = await Room.findById(roomId).lean();
     return res.render("admin/rooms/room", { room });
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 }
 
@@ -421,14 +421,14 @@ exports.deleteRoom = async (req, res) => {
   try {
     const id = req.params.id;
     if (!socketHandler.isRoomEmpty(id)) {
-      res.send("Soba nije prazna i ne može se obrisati!");
+      return res.status(400).render('error', { status: 400, message: "Soba nije prazna i ne može se obrisati." });
     }
     else {
       await Room.findByIdAndDelete(id);
       return res.redirect("/admin/rooms/");
     }
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 }
 
@@ -446,7 +446,7 @@ exports.banUser = async (req, res) => {
       today.setHours(0, 0, 0, 0);
 
       if (selectedDate <= today) {
-        return res.send("Error: Ban duration must be a date after today.");
+        return res.status(400).render('error', { status: 400, message: "Trajanje bana mora trajati dulje." });
       }
       await user.updateOne({ 'isBanned': true, 'banReason': banReason, 'banDuration': banDuration });
 
@@ -462,7 +462,7 @@ exports.banUser = async (req, res) => {
       return res.redirect(backUrl);
     }
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 }
 
@@ -472,7 +472,7 @@ exports.unbanUser = async (req, res) => {
     await User.findByIdAndUpdate(id, { 'isBanned': false, 'banReason': '', 'banDuration': null });
     return res.redirect("/admin/users/");
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 }
 
@@ -493,7 +493,7 @@ exports.muteUser = async (req, res) => {
     const backUrl = req.get('Referer') || '/admin/users';
     return res.redirect(backUrl);
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 }
 
@@ -503,7 +503,7 @@ exports.unmuteUser = async (req, res) => {
     await User.findByIdAndUpdate(id, { 'isMuted': false, 'muteReason': '', 'muteDuration': null });
     return res.redirect("/admin/users/");
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 }
 
@@ -512,12 +512,12 @@ exports.dismissReport = async (req, res) => {
     const reportId = req.params.id;
 
     const report = await Report.findByIdAndUpdate(reportId, { status: 'resolved' }, { new: true });
-    if (!report) return res.status(404).send("Report nije pronađen.");
+    if (!report) return res.status(404).render('error', { status: 404, message: "Report nije pronađen." });
 
     return res.redirect(`/admin/reports/${reportId}`);
   } catch (err) {
     console.error(err);
-    return res.status(500).send("Greška pri ažuriranju reporta.");
+    return res.status(500).render('error', { status: 500, message: "Greška pri ažuriranju reporta." });
   }
 };
 
@@ -525,7 +525,7 @@ exports.punishUserFromReport = async (req, res) => {
   try {
     const reportId = req.params.id;
     const report = await Report.findById(reportId);
-    if (!report) return res.status(404).send("Report nije pronađen.");
+    if (!report) return res.status(404).render('error', { status: 404, message: "Report nije pronađen." });
 
     const userId = report.reportedUserId;
     req.params.id = userId;
@@ -543,7 +543,7 @@ exports.punishUserFromReport = async (req, res) => {
     await report.save();
   } catch (err) {
     console.error(err);
-    return res.status(500).send("Greška pri kažnjavanju korisnika.");
+    return res.status(500).render('error', { status: 500, message: "Greška pri kažnjavanju korisnika." });
   }
 };
 
@@ -553,7 +553,7 @@ exports.handleEditorRequest = async (req, res) => {
     const { action } = req.body;
     const user = await User.findById(userId);
 
-    if (!user) return res.status(404).send("User not found");
+    if (!user) return res.status(404).render('error', { status: 404, message: "User ne postoji." });
 
     if (action === 'approve') {
       user.isEditor = true;
@@ -567,6 +567,6 @@ exports.handleEditorRequest = async (req, res) => {
     res.redirect('/admin/dashboard');
   } catch (error) {
     console.error(error);
-    res.status(500).send("Server Error");
+    return res.status(500).render('error', error.message);
   }
 };

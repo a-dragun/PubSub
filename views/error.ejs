@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Greška! - PubSub</title>
+    <link rel="stylesheet" href="/css/home.css">
+    <style>
+        .error-code {
+            font-size: 15rem; 
+            font-weight: 900;
+            margin: 0;
+            line-height: 0.8;
+            color: var(--accent);
+            opacity: 1; 
+            letter-spacing: -10px;
+            filter: drop-shadow(5px 5px 0px var(--light));
+        }
+
+        .error-message {
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: var(--text);
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .error-description {
+            
+            display: block;
+            margin: 2rem auto;
+            max-width: 80%;
+            font-size: 1.8rem; 
+            color: var(--danger);
+            font-weight: 900;
+            text-transform: uppercase;
+            border-top: 4px solid var(--text); 
+            border-bottom: 4px solid var(--text);
+            padding: 1.5rem 0;
+        }
+
+        .actions {
+            margin-top: 3rem;
+        }
+
+        
+        .error-code {
+            animation: shake 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes shake {
+            from { transform: skewX(-3deg); }
+            to { transform: skewX(3deg); }
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/header') %>
+
+    <div class="content">
+        <div class="error-code"><%= status || 500 %></div>
+        <h1 class="error-message">PRISTUP ODBIJEN!</h1>
+        
+        <div class="error-description">
+            <%= message || "DOŠLO JE DO NEOČEKIVANE POGREŠKE NA SERVERU!" %>
+        </div>
+
+        <div class="actions">
+            <a href="/">NA POČETNU</a>
+            <a href="javascript:history.back()">IDI NATRAG</a>
+        </div>
+    </div>
+</body>
+</html>

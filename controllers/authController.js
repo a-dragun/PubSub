@@ -8,7 +8,7 @@ exports.getRegister = (req, res) => {
   try {
     return res.render("auth/register");
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 };
 
@@ -16,16 +16,24 @@ exports.postRegister = async (req, res) => {
   try {
     const { name, email, password, password_repeat } = req.body;
     if (!name || !email || !password || !password_repeat) {
-      return res.send("All fields required.");
+      return res.render('auth/register', { 
+        error: "Sva polja su obavezna!" 
+    });
     }
     if (name.length > 15 || name.includes(' ')) {
-      return res.send("Username cannot contain more than 15 characters and has to be one word.");
+      return res.render('auth/register', { 
+        error: "Korisničko ime ne smije biti dulje od 15 znakova i mora biti jedna riječ!" 
+    });
     }
     if (password.length < 8) {
-      return res.send("Password must contain at least 8 characters.");
+      return res.render('auth/register', { 
+        error: "Lozinka mora sadržavati barem 8 znakova!" 
+    });
     }
     if (password !== password_repeat) {
-      return res.send("Passwords do not match.");
+      return res.render('auth/login', { 
+        error: "Lozinke se ne podudaraju!" 
+    });
     }
     let showStreakModal = true;
 
@@ -44,7 +52,7 @@ exports.postRegister = async (req, res) => {
     return res.redirect("/");
 
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 };
 
@@ -52,7 +60,7 @@ exports.getLogin = (req, res) => {
   try {
     return res.render("auth/login");
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 };
 
@@ -62,7 +70,9 @@ exports.postLogin = async (req, res) => {
     const user = await User.findOne({ name: username });
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.send("Invalid username or password");
+      return res.render('auth/login', { 
+          error: "Pogrešna lozinka ili korisničko ime!" 
+      });
     }
 
     const loggedInYesterday = isYesterday(user.lastLoginAt);
@@ -102,14 +112,14 @@ exports.postLogin = async (req, res) => {
 
     return res.redirect("/");
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', error.message);
   }
 };
 
 exports.logout = (req, res) => {
   req.session.destroy((err) => {
     if (err) {
-      return res.send("Logout failed: " + err.message);
+      return res.status(500).render('error', { status: 500, message: "Greška pri logoutu." });
     }
     res.clearCookie('connect.sid');
     return res.redirect('/');

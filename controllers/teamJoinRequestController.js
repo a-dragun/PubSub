@@ -15,7 +15,7 @@ exports.sendJoinRequest = async (req, res) => {
     }
 
     const team = await Team.findById(teamId);
-    if (!team) return res.send("Team not found");
+    if (!team) return res.status(404).render('error', { status: 404, message: "Tim ne postoji!" });
 
     const alreadyMember = team.members.some(
       m => m.userId.toString() === userId
@@ -37,7 +37,7 @@ exports.sendJoinRequest = async (req, res) => {
 
     return res.redirect(`/teams/${teamId}`);
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', { status: 500, message: error.message });
   }
 };
 
@@ -47,7 +47,7 @@ exports.acceptJoinRequest = async (req, res) => {
       .populate("team")
       .populate("sender");
 
-    if (!request) return res.send("Request not found");
+    if (!request) return res.status(404).render('error', { status: 404, message: "Zahtjev ne postoji!" });
     const alreadyInTeam = await Team.findOne({
       "members.userId": request.sender._id
     });
@@ -70,7 +70,7 @@ exports.acceptJoinRequest = async (req, res) => {
 
     return res.redirect(`/teams/${request.team._id}`);
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', { status: 500, message: error.message });
   }
 };
 
@@ -82,6 +82,6 @@ exports.rejectJoinRequest = async (req, res) => {
 
     return res.redirect("back");
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', { status: 500, message: error.message });
   }
 };

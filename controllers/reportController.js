@@ -31,11 +31,11 @@ exports.createReport = async (req, res) => {
       reason
     });
 
-    res.status(201).json({ success: true, report });
+    return res.status(201).json({ success: true, report });
 
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Greška na serveru.' });
+    return res.status(500).json({ message: 'Greška na serveru.' });
   }
 };
 
@@ -71,10 +71,10 @@ exports.createCommentReport = async (req, res) => {
       reason
     });
 
-    res.status(201).json({ success: true, report });
+    return res.status(201).json({ success: true, report });
 
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Greška na serveru.' });
+    return res.status(500).json({ message: 'Greška na serveru.' });
   }
 };

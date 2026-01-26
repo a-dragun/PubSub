@@ -31,7 +31,10 @@ async function checkBan(req, res, next) {
   const user = await User.findById(req.session.user.id);
 
   if (user && user.isBanned) {
-    return res.status(403).send(`Pristup odbijen. Bannani ste do: ${user.banDuration}.\nRazlog: ${user.banReason}`);
+    return res.status(403).render('error', { 
+        status: 403, 
+        message: `Pristup odbijen. Bannani ste do: ${user.banDuration}.\nRazlog: ${user.banReason}`
+    });
   }
   next();
 };
