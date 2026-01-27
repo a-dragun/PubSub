@@ -25,7 +25,7 @@ exports.getRoomsPage = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        return res.status(500).send("Error: " + error.message);
+        return res.status(500).render('error', { status: 500, message: "Greška na serveru!" });
     }
 };
 
@@ -41,7 +41,7 @@ exports.getRoomPage = async (req, res) => {
         const room = await Room.findById(roomId);
         
         if (!room) {
-            return res.status(404).send("Soba ne postoji!");
+            return res.status(404).render('error', { status: 404, message: "Soba ne postoji!" });
         }
         if (room.password && !req.session.user.adminLevel > 0) {
             const isAuthorized = req.session.authorizedRooms && req.session.authorizedRooms.includes(roomId);
@@ -56,7 +56,7 @@ exports.getRoomPage = async (req, res) => {
         const { password, ...user } = dbUser;
 
         if (room.name === user.name) {
-             return res.status(403).send("Ne možete pristupiti ovoj sobi!");
+             return res.status(403).render('error', { status: 403, message: "Nemate ovlasti pristupiti ovoj sobi!" });
         }
 
         return res.render("rooms/room", { room, user });
@@ -95,6 +95,6 @@ exports.verifyPasswordAndAuthorize = async (req, res) => {
         }
     } catch (error) {
         console.error("Greška kod provjere lozinke:", error);
-        return res.status(500).send("Greška na poslužitelju.");
+        return res.status(500).render('error', { status: 500, message: "Greška na serveru!" });
     }
 };

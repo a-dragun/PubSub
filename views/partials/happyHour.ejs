@@ -1,0 +1,60 @@
+<head>
+    <link rel="stylesheet" href="/css/partials/happyHour.css">
+    <script>
+      window.HH_INITIAL_DATA = {
+        isActive: <%= !!locals.globalHappyHour %>,
+        multiplier: <%= locals.globalHappyHour ? locals.globalHappyHour.multiplier : 1 %>,
+        endsAt: "<%= locals.globalHappyHour ? locals.globalHappyHour.endsAt : '' %>"
+      };
+    </script>
+    <script src="/js/partials/happyHour.js" defer></script>
+</head>
+<body>
+<div id="hh-status-bar" class="hh-status-bar hidden">
+  <div class="hh-marquee">
+    &nbsp;&nbsp;&nbsp;&nbsp; • &nbsp;&nbsp&nbsp;&nbsp;
+    HAPPY HOUR JE AKTIVAN!
+    &nbsp;&nbsp;&nbsp;&nbsp; • &nbsp;&nbsp&nbsp;&nbsp;
+    SVAKI TOČAN ODGOVOR NA PITANJE VRIJEDI <span id="hh-bar-mult"></span>x 
+    &nbsp;&nbsp;&nbsp;&nbsp; • &nbsp;&nbsp&nbsp;&nbsp;
+    PREOSTALO VRIJEME: <span id="hh-bar-timer"></span> 
+    &nbsp;&nbsp;&nbsp;&nbsp; • &nbsp;&nbsp&nbsp;&nbsp;
+  </div>
+</div>
+
+<% if (locals.currentUser && locals.currentUser.adminLevel === 2) { %>
+  <div id="happy-hour-fab" class="hh-fab">
+    <div class="hh-icon">🎉</div>
+    <div id="hh-timer" class="hh-timer"></div>
+  </div>
+
+  <div id="hh-modal" class="hh-modal hidden">
+    <div onclick="toggleHHModal()" style="float:right; cursor:pointer;">✕</div>
+    <h3>Happy Hour</h3>
+    
+    <div id="hh-inputs-container">
+        <label>Trajanje (min)</label>
+        <input type="number" 
+              id="hh-duration" 
+              value="30" 
+              min="1" 
+              step="1" 
+              onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+              oninput="this.value = !!this.value && Math.abs(this.value) >= 1 ? Math.abs(Math.floor(this.value)) : null">
+              
+        <label>Multiplier</label>
+        <input type="number" 
+              id="hh-multiplier" 
+              value="2" 
+              min="1" 
+              step="1" 
+              onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+              oninput="this.value = !!this.value && Math.abs(this.value) >= 1 ? Math.abs(Math.floor(this.value)) : null">
+    </div>
+
+    <div class="actions">
+      <button id="hh-action-btn"></button>
+    </div>
+  </div>
+<% } %>
+</body>

@@ -88,7 +88,7 @@ async function getDrawer(req, res) {
     res.json({ friends: friendData, team: teamData });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Greška pri dohvaćanju drawer-a." });
+    return res.status(500).json({ message: "Greška pri dohvaćanju drawer-a." });
   }
 }
 

@@ -17,7 +17,7 @@ exports.deleteUser = async (req, res) => {
       req.session.destroy(() => res.redirect("/"));
     }
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', { status: 500, message: error.message });
   }
 }
 
@@ -72,7 +72,7 @@ exports.getUserList = async (req, res) => {
       sort,
     });
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', { status: 500, message: error.message });
   }
 };
 
@@ -85,7 +85,7 @@ exports.getProfile = async (req, res) => {
     return res.render("user/profile", { user });
 
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', { status: 500, message: error.message });
   }
 }
 
@@ -96,15 +96,15 @@ exports.editUser = async (req, res) => {
 
     if (newPassword || repeatPassword) {
       if (newPassword !== repeatPassword) {
-        return res.send("Passwords do not match.");
+        return res.status(400).render('error', { status: 400, message: "Lozinke se ne podudaraju!" });
       }
       if (!newPassword || newPassword.length < 8) {
-        return res.send("Password must have at least 8 characters.");
+        return res.status(400).render('error', { status: 400, message: "Lozinka mora imati barem 8 znakova!" });
       }
     }
 
     if (username && (username.length > 15 || username.includes(' '))) {
-      return res.send("Username cannot contain more than 15 characters and has to be one word.");
+              return res.status(400).render('error', { status: 400, message: "Korisničko ime mora imati barem 15 znakova i mora biti jedna riječ!" });
     }
 
 
@@ -141,7 +141,7 @@ exports.editUser = async (req, res) => {
 
     return res.redirect("/user/profile/");
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', { status: 500, message: error.message });
   }
 };
 
@@ -153,7 +153,7 @@ exports.getEditUserPage = async (req, res) => {
     return res.render("user/editUser", { user });
 
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', { status: 500, message: error.message });
   }
 }
 exports.getUserPage = async (req, res) => {
@@ -162,7 +162,7 @@ exports.getUserPage = async (req, res) => {
     let currentUser = req.session.user;
 
     let user = await User.findById(userId).lean();
-    if (!user) return res.send("Error: Korisnik nije pronađen");
+    if (!user) return res.status(404).render('error', { status: 404, message: "Korisnik nije pronađen!" });
 
     let friendshipStatus;
     let canSendFriendRequest = false;
@@ -185,7 +185,7 @@ exports.getUserPage = async (req, res) => {
     return res.render("user/getUserPage", { user, currentUser, canSendFriendRequest, friendshipStatus });
 
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', { status: 500, message: error.message });
   }
 };
 
@@ -201,6 +201,6 @@ exports.requestEditorAccess = async (req, res) => {
     res.redirect('/user/profile');
   } catch (error) {
     console.error(error);
-    res.status(500).send("Server Error");
+    return res.status(500).render('error', { status: 500, message: "Greška na serveru!" });
   }
 };

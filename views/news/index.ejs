@@ -14,6 +14,7 @@
 <body>
     <%- include('../partials/news_header') %>
         <%- include('../partials/messaging') %>
+        <%- include('../partials/happyHour') %>
 
             <div class="news-container">
                 <% let heroNews=null; let secondaryHighlighted=[]; let regularNews=[]; const
@@ -25,8 +26,6 @@
 
                     regularNews = others;
                     %>
-
-                    <!-- 1. HERO SECTION (Latest Pinned) -->
                     <% if (heroNews) { %>
                         <a href="/news/<%= heroNews._id %>" class="news-link">
                             <div class="news-hero">
@@ -62,8 +61,6 @@
                             </div>
                         </a>
                         <% } %>
-
-                            <!-- 2. SECONDARY HIGHLIGHTED (List View) -->
                             <% if (secondaryHighlighted.length> 0) { %>
                                 <h3 class="section-title">Izdvojeno</h3>
                                 <div class="news-list-section">
@@ -102,7 +99,6 @@
                                 </div>
                                 <% } %>
 
-                                    <!-- 3. REGULAR NEWS (Grid View) -->
                                     <h3 class="section-title">Sve Vijesti</h3>
                                     <div class="news-grid">
                                         <% if (regularNews.length===0 && !heroNews) { %>

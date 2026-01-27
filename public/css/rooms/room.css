@@ -107,11 +107,12 @@ header {
 
 .drawer-toggle {
     position: absolute;
+    top: 80px;
     right: 0;
     background-color: var(--beige);
     border: none;
     border-radius: 8px 0 0 8px;
-    padding: 1.3rem 1.3rem;
+    padding: 1rem 1rem;
     cursor: pointer;
     font-weight: bold;
     color: var(--text);

@@ -2,6 +2,7 @@ const cron = require('node-cron');
 const User = require('../models/User');
 const Report = require('../models/Report');
 const Team = require('../models/Team');
+const HappyHour = require("../models/HappyHour");
 
 cron.schedule('0 0 * * *', async () => {
   const now = new Date();
@@ -63,3 +64,21 @@ if (now.getDate() === 18) {
     console.error('[SCHEDULER ERROR]:', err.message);
   }
 });
+
+
+
+cron.schedule('*/2 * * * *', async () => {
+  try {
+    const now = new Date();
+    const activeHH = await HappyHour.findOne({ isActive: true });
+
+    if (activeHH && activeHH.endsAt <= now) {
+      activeHH.isActive = false;
+      await activeHH.save();
+      console.log('[HAPPY HOUR]: Ended.');
+    }
+  } catch (err) {
+    console.error('[HAPPY HOUR CRON ERROR]:', err.message);
+  }
+});
+

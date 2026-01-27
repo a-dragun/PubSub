@@ -40,6 +40,6 @@ exports.getHome = async (req, res) => {
 
     return res.render("home", { user, streakData});
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', { status: 500, message: error.message });
   }
 };

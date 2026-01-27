@@ -64,7 +64,7 @@ exports.getAllTeams = async (req, res) => {
       monthlyTopTeams
     });
   } catch (error) {
-    return res.status(500).send("Error: " + error.message);
+    return res.status(500).render('error', { status: 500, message: "Greška na serveru!" });
   }
 };
 
@@ -81,7 +81,7 @@ exports.getCreateTeam = async (req, res) => {
       return res.render("teams/create");
     }
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', { status: 500, message: error.message });
   }
 };
 
@@ -91,11 +91,11 @@ exports.createTeam = async (req, res) => {
     const userId = req.session.user.id;
     const existingTeam = await Team.findOne({ "members.userId": userId });
     if (existingTeam) {
-      return res.send("Ne možete kreirati novi tim dok ste član drugog tima.");
+      return res.status(403).render('error', { status: 403, message: "Ne možete kreirati tim dok ste član drugog tima." });
     }
 
     const owner = await User.findById(userId);
-    if (!owner) return res.send("Korisnik nije pronađen.");
+    if (!owner) return res.status(404).render('error', { status: 404, message: "Korisnik ne postoji!" });
 
     await Team.create({
       name: name,
@@ -106,7 +106,7 @@ exports.createTeam = async (req, res) => {
 
     return res.redirect("/teams");
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', { status: 500, message: error.message });
   }
 };
 
@@ -115,7 +115,7 @@ exports.getTeamById = async (req, res) => {
     const team = await Team.findById(req.params.id)
       .populate("members.userId", "name profilePicture");
 
-    if (!team) return res.send("Team not found");
+    if (!team) return res.status(404).render('error', { status: 404, message: "Tim ne postoji!" });
 
     const userId = req.session.user.id;
 
@@ -162,7 +162,7 @@ exports.getTeamById = async (req, res) => {
       canSendJoinRequest
     });
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', { status: 500, message: error.message });
   }
 };
 
@@ -172,7 +172,7 @@ exports.leaveTeam = async (req, res) => {
     const userId = req.session.user.id;
     const memberIndex = team.members.findIndex(m => m.userId.toString() === userId);
 
-    if (memberIndex === -1) return res.send("Niste član ovog tima.");
+    if (memberIndex === -1) return res.status(403).render('error', { status: 403, message: "Niste član ovog tima!" });
 
     const leavingMember = team.members[memberIndex];
 
@@ -193,7 +193,7 @@ exports.leaveTeam = async (req, res) => {
     await team.save();
     return res.redirect("/teams");
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', { status: 500, message: error.message });
   }
 };
 
@@ -202,13 +202,13 @@ exports.kickMember = async (req, res) => {
     const { teamId, memberId } = req.params;
     const team = await Team.findById(teamId);
     const requester = team.members.find(m => m.userId.toString() === req.session.user.id);
-    if (!requester || requester.role !== "owner") return res.send("Nemate ovlasti.");
+    if (!requester || requester.role !== "owner") return res.status(403).render('error', { status: 403, message: "Nemate ovlasti za ovu radnju!" });
 
     team.members = team.members.filter(m => m.userId.toString() !== memberId);
     await team.save();
     res.redirect(`/teams/${teamId}`);
   } catch (error) {
-    res.send("Error: " + error.message);
+    res.status(500).render('error', { status: 500, message: error.message });
   }
 };
 
@@ -219,7 +219,7 @@ exports.updateMemberRole = async (req, res) => {
       const team = await Team.findById(teamId);
   
       const requester = team.members.find(m => m.userId.toString() === req.session.user.id);
-      if (!requester || requester.role !== "owner") return res.send("Nemate ovlasti.");
+      if (!requester || requester.role !== "owner") return res.status(403).render('error', { status: 403, message: "Nemate ovlasti za ovu radnju!" });
   
       const member = team.members.find(m => m.userId.toString() === memberId);
       if (member) {
@@ -228,7 +228,7 @@ exports.updateMemberRole = async (req, res) => {
       }
       res.redirect(`/teams/${teamId}`);
     } catch (error) {
-      res.send("Error: " + error.message);
+      res.status(500).render('error', { status: 500, message: error.message });
     }
   };
 
@@ -238,13 +238,13 @@ exports.deleteTeam = async (req, res) => {
     const requester = team.members.find(m => m.userId.toString() === req.session.user.id);
     
     if (!requester || requester.role !== "owner") {
-        return res.send("Samo vlasnik može obrisati tim.");
+        return res.status(403).render('error', { status: 403, message: "Nemate ovlasti za ovu radnju!" });
     }
 
     await Team.findByIdAndDelete(req.params.id);
     return res.redirect("/teams");
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', { status: 500, message: error.message });
   }
 };
 
@@ -255,9 +255,9 @@ exports.updateTeam = async (req, res) => {
       req.body,
       { new: true }
     );
-    if (!team) return res.send("Team not found");
+    if (!team) return res.status(404).render('error', { status: 404, message: "Tim ne postoji!" });
     return res.redirect("/teams");
   } catch (error) {
-    return res.send("Error: " + error.message);
+    return res.status(500).render('error', { status: 500, message: error.message });
   }
 };

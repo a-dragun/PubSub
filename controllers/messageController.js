@@ -54,7 +54,7 @@ async function getMessages(req, res) {
 
   } catch (err) {
     console.error("Greška u getMessages:", err);
-    res.status(500).json({ message: "Greška pri dohvaćanju poruka." });
+    return res.status(500).json({ message: "Greška pri dohvaćanju poruka." });
   }
 }
 
@@ -112,13 +112,11 @@ async function sendMessage(req, res) {
     if (io) {
       io.to(`conversation:${conversationId}`).emit("message:new", messageData);
     }
-
-    
-    res.status(201).json(messageData);
+    return res.status(201).json(messageData);
 
   } catch (err) {
     console.error("Greška u sendMessage:", err);
-    res.status(500).json({ message: "Greška pri slanju poruke." });
+    return res.status(500).json({ message: "Greška pri slanju poruke." });
   }
 }
 
@@ -162,7 +160,7 @@ async function markAsRead(req, res) {
 
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Greška pri markiranju poruka kao pročitanih." });
+    return res.status(500).json({ message: "Greška pri markiranju poruka kao pročitanih." });
   }
 }
 

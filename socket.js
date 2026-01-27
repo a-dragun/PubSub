@@ -1,6 +1,7 @@
 const Room = require("./models/Room");
 const Question = require("./models/Question");
 const User = require("./models/User");
+const HappyHour = require("./models/HappyHour");
 const {levels, getLevelByScore} = require('./config/levels');
 const scoreService = require("./helpers/scoreService");
 const userSocketMap = new Map();
@@ -20,7 +21,6 @@ function setupSocketHandlers(io) {
   const roomTimers = {};
   const roomTimeouts = {};
   const activeQuestions = {};
-
   io.on('connection', (socket) => {
     socket.on('joinRoom', async ({ roomId, username }) => {
       const room = await Room.findById(roomId);
@@ -62,9 +62,14 @@ function setupSocketHandlers(io) {
           currentQuestion.answered = true;
 
           const room = await Room.findById(roomId);
-          user.totalScore += room.points;
+          const happyHour = await HappyHour.findOne({ isActive: true });
+          var points = room.points;
+          if(happyHour) {
+            points *= Math.floor(happyHour.multiplier);
+          }
+          user.totalScore += points;
           await user.save();
-          scoreService.addPoints(user.id, room.points);
+          scoreService.addPoints(user.id, points);
 
           const newLevelNumber = user.currentLevel;
 
@@ -88,7 +93,7 @@ function setupSocketHandlers(io) {
 
           io.to(roomId).emit('chatMessage', {
             username: currentQuestion.room.name,
-            message: `Točan odgovor je: <strong>${currentQuestion.answers[0]}</strong>!\n<strong>${username}</strong> je točno odgovorio ["${message}"] i zaradio <strong>${room.points} bodova</strong>!`,
+            message: `Točan odgovor je: <strong>${currentQuestion.answers[0]}</strong>!\n<strong>${username}</strong> je točno odgovorio ["${message}"] i zaradio <strong>${points} bodova</strong>!`,
             correct: true
           });
 
@@ -281,6 +286,11 @@ async function emitUserList(roomId, io, roomUsers) {
       .replace(/[čć]/g, 'c')
       .replace(/ž/g, 'z');
   }
+
+  function broadcastHappyHour(io, data) {
+    io.emit('happyHourUpdate', data);
+  }
+
   //setupSocketHandlers.userSocketMap = userSocketMap;
 
   return io;
