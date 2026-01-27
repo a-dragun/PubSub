@@ -2,6 +2,7 @@ const User = require("../models/User");
 const Question = require("../models/Question");
 const Room = require('../models/Room');
 const Report = require("../models/Report");
+const Feedback = require('../models/Feedback');
 const categories = require('../config/categories');
 const socketHandler = require("../socket");
 const userSocketMap = socketHandler.userSocketMap;
@@ -567,6 +568,32 @@ exports.handleEditorRequest = async (req, res) => {
     res.redirect('/admin/dashboard');
   } catch (error) {
     console.error(error);
+    res.status(500).send("Server Error");
+  }
+};
+
+exports.getFeedback = async (req, res) => {
+  try {
+    const feedbackItems = await Feedback.find()
+      .populate('userId', 'name')
+      .sort({ createdAt: -1 });
+
+    res.render('admin/feedback/index', { feedbackItems });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+};
+
+exports.updateFeedbackStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    await Feedback.findByIdAndUpdate(id, { status });
+    res.redirect('/admin/feedback');
+  } catch (err) {
+    console.error(err);
     res.status(500).send("Server Error");
   }
 };

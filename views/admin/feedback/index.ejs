@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="hr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Korisničke Povratne Informacije</title>
+    <link rel="stylesheet" href="/css/admin/dashboard.css">
+    <link rel="stylesheet" href="/css/admin/feedback.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <%- include('../../partials/header') %>
+        <%- include('../../partials/messaging') %>
+
+            <div class="section">
+                <h1>Korisničke Povratne Informacije</h1>
+                <a href="/admin/dashboard" class="back-link">&larr; Natrag na Dashboard</a>
+
+                <% if (feedbackItems.length===0) { %>
+                    <p class="no-items">Nema povratnih informacija.</p>
+                    <% } else { %>
+                        <div class="feedback-grid">
+                            <% feedbackItems.forEach(item=> { %>
+                                <div class="feedback-card <%= item.type || 'other' %>">
+                                    <div class="feedback-meta">
+                                        <span>
+                                            <i class="fas fa-user"></i>
+                                            <%= item.userId ? item.userId.name : 'Unknown' %>
+                                        </span>
+                                        <span>
+                                            <i class="far fa-calendar"></i>
+                                            <%= new Date(item.createdAt).toLocaleDateString() %>
+                                        </span>
+                                    </div>
+
+                                    <div class="feedback-type">
+                                        <strong>Tip:</strong>
+                                        <%= (item.type || 'Other' ).toUpperCase() %>
+                                            <span class="current-status status-badge-<%= item.status %>">
+                                                <%= item.status %>
+                                            </span>
+                                    </div>
+
+                                    <p class="feedback-message">
+                                        <%= item.message %>
+                                    </p>
+
+                                    <div class="status-actions">
+                                        <form action="/admin/feedback/<%= item._id %>/status" method="POST"
+                                            class="feedback-form">
+                                            <input type="hidden" name="status" value="pending">
+                                            <button type="submit" class="status-btn pending" title="Mark as Pending"
+                                                <%=item.status==='pending' ? 'disabled' : '' %>>
+                                                <i class="fas fa-clock"></i>
+                                            </button>
+                                        </form>
+                                        <form action="/admin/feedback/<%= item._id %>/status" method="POST"
+                                            class="feedback-form">
+                                            <input type="hidden" name="status" value="reviewed">
+                                            <button type="submit" class="status-btn reviewed" title="Mark as Reviewed"
+                                                <%=item.status==='reviewed' ? 'disabled' : '' %>>
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </form>
+                                        <form action="/admin/feedback/<%= item._id %>/status" method="POST"
+                                            class="feedback-form">
+                                            <input type="hidden" name="status" value="implemented">
+                                            <button type="submit" class="status-btn implemented"
+                                                title="Mark as Implemented" <%=item.status==='implemented' ? 'disabled'
+                                                : '' %>>
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <% }); %>
+                        </div>
+                        <% } %>
+            </div>
+</body>
+
+</html>

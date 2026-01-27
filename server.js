@@ -100,6 +100,9 @@ app.use("/teams", authMiddleware.requireAuth, teamsRoutes);
 app.use("/team-join-requests", authMiddleware.requireAuth, teamJoinRequestsRoutes);
 app.use('/api/reports', authMiddleware.requireAuth, authMiddleware.checkBan, reportRoutes);
 app.use('/api/messaging', authMiddleware.requireAuth, messagingRoutes);
+const feedbackRoutes = require("./routes/feedback"); // Import feedback routes
+
 app.use('/api/conversation', authMiddleware.requireAuth, conversationRoutes);
+app.use('/support', authMiddleware.requireAuth, authMiddleware.checkBan, feedbackRoutes); // Register feedback routes
 
 server.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

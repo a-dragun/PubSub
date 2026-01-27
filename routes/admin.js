@@ -13,6 +13,8 @@ router.get("/rooms", adminController.getRooms);
 router.get("/rooms/:id", adminController.getRoom);
 router.get("/reports", adminController.getReports);
 router.get("/reports/:id", adminController.getReport);
+router.get("/feedback", adminController.getFeedback);
+router.post("/feedback/:id/status", adminController.updateFeedbackStatus);
 
 router.post("/bulk_update", adminController.bulkUpdate);
 router.post("/rooms", adminController.createRoom);

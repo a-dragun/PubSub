@@ -1,0 +1,146 @@
+.feedback-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.feedback-card {
+    background: #ffffff99;
+    backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid transparent;
+}
+
+.feedback-card.feature {
+    border-left-color: #3498db;
+}
+
+.feedback-card.bug {
+    border-left-color: #e74c3c;
+}
+
+.feedback-card.other {
+    border-left-color: #95a5a6;
+}
+
+.feedback-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.feedback-message {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    white-space: pre-wrap;
+}
+
+.status-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+.status-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: opacity 0.2s;
+}
+
+.status-btn.pending {
+    background: #f1c40f;
+    color: #fff;
+}
+
+.status-btn.reviewed {
+    background: #3498db;
+    color: #fff;
+}
+
+.status-btn.implemented {
+    background: #2ecc71;
+    color: #fff;
+}
+
+.status-btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.current-status {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-left: 0.5rem;
+}
+
+.status-badge-pending {
+    background: #f1c40f;
+    color: #fff;
+}
+
+.status-badge-reviewed {
+    background: #3498db;
+    color: #fff;
+}
+
+.status-badge-implemented {
+    background: #2ecc71;
+    color: #fff;
+}
+
+.back-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.feedback-type {
+    margin-bottom: 0.5rem;
+}
+
+.feedback-form {
+    display: inline;
+}
+
+@media (max-width: 768px) {
+    .feedback-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .feedback-card {
+        padding: 1.5rem;
+    }
+
+    .feedback-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .feedback-message {
+        font-size: 1.2rem;
+    }
+
+    .status-actions {
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .status-btn {
+        flex: 1;
+        padding: 0.8rem;
+        font-size: 1rem;
+    }
+}

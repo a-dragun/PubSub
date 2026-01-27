@@ -66,7 +66,7 @@ Dostupno na linku: https://pubsub-51xj.onrender.com/
 | UX-04    | The system must provide a fully responsive interface optimized for mobile devices.               | User Experience        | IDLE   |
 | UX-05    | The system shall display clear and informative error messages to users.                          | User Experience        | IDLE   |
 | EV-01    | The system must allow administrators to schedule Happy Hours events.                             | Events                 | IDLE   |
-| SF-02    | The system must allow the user to give feedback or ideas for new features.                        | Support & Feedback     | IDLE   |
+| SF-02    | The system must allow the user to give feedback or ideas for new features.                        | Support & Feedback     | DONE   |
 | RM-10    | The system must provide users the option to prevent viewing messages sent by others.             | Room Management        | DONE   |
 | SF-03    | The system must prevent users from spamming in chat.                                              | Support & Feedback     | DONE   |
 | UM-06    | The system must allow users to search for other registered users.                               | User Management        | DONE   |

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="hr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link rel="stylesheet" href="/css/feedback.css">
+    <link rel="stylesheet" href="/css/partials/header.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <%- include('../partials/header') %>
+        <%- include('../partials/messaging') %>
+
+            <div class="feedback-container">
+                <h1>Pošalji Povratne Informacije</h1>
+
+                <% if (locals.success) { %>
+                    <div class="alert alert-success">
+                        Hvala! Tvoje povratne informacije su uspješno poslane.
+                    </div>
+                    <% } %>
+
+                        <% if (locals.error) { %>
+                            <div class="alert alert-danger">
+                                <%= error %>
+                            </div>
+                            <% } %>
+
+                                <form action="/support/feedback" method="POST">
+                                    <div class="form-group">
+                                        <label for="type">Vrsta povratne informacije</label>
+                                        <select name="type" id="type" required>
+                                            <option value="" disabled selected>Odaberi...</option>
+                                            <option value="feature">Ideja za novu značajku</option>
+                                            <option value="bug">Prijava greške</option>
+                                            <option value="other">Ostalo</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="message">Poruka</label>
+                                        <textarea name="message" id="message" rows="6" required
+                                            placeholder="Opiši svoju ideju ili problem..."></textarea>
+                                    </div>
+
+                                    <button type="submit">Pošalji</button>
+                                </form>
+            </div>
+</body>
+
+</html>
