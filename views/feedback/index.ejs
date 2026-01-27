@@ -17,11 +17,11 @@
         <%- include('../partials/messaging') %>
 
             <div class="feedback-container">
-                <h1>Pošalji Povratne Informacije</h1>
+                <h1>Pošalji feedback</h1>
 
                 <% if (locals.success) { %>
                     <div class="alert alert-success">
-                        Hvala! Tvoje povratne informacije su uspješno poslane.
+                        Hvala! Tvoj feedback uspješno je poslan.
                     </div>
                     <% } %>
 
@@ -33,7 +33,7 @@
 
                                 <form action="/support/feedback" method="POST">
                                     <div class="form-group">
-                                        <label for="type">Vrsta povratne informacije</label>
+                                        <label for="type">Vrsta feedbacka</label>
                                         <select name="type" id="type" required>
                                             <option value="" disabled selected>Odaberi...</option>
                                             <option value="feature">Ideja za novu značajku</option>

@@ -64,7 +64,7 @@ Dostupno na linku: https://pubsub-51xj.onrender.com/
 | NW-07    | The system must allow reporting of comments.                                    | News                   | DONE   |
 | NW-08    | The system must allow admins to delete comments.                             | News                   | DONE   |
 | UX-04    | The system must provide responsive interface optimized for using basic functions and playing quiz on mobile devices.               | User Experience        | IDLE   |
-| UX-05    | The system shall display clear and informative error messages to users.                          | User Experience        | IDLE   |
+| UX-05    | The system shall display clear and informative error messages to users.                          | User Experience        | DONE   |
 | EV-01    | The system must allow administrators to schedule Happy Hours events.                             | Events                 | DONE  |
 | SF-02    | The system must allow the user to give feedback or ideas for new features.                        | Support & Feedback     | DONE   |
 | RM-10    | The system must provide users the option to prevent viewing messages sent by others.             | Room Management        | DONE   |

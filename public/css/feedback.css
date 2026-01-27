@@ -69,6 +69,7 @@ textarea {
     font-family: inherit;
     font-size: 1rem;
     box-sizing: border-box;
+    max-width: 100%;
 }
 
 button[type="submit"] {
