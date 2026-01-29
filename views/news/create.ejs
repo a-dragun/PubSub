@@ -12,59 +12,73 @@
 
 <body>
     <%- include('../partials/news_header') %>
-    <%- include('../partials/messaging') %>
-    <%- include('../partials/happyHour') %>
+        <%- include('../partials/messaging') %>
+            <%- include('../partials/happyHour') %>
 
-        <div class="news-container">
-            <div class="form-container">
-                <h1 style="margin-bottom: 2rem;">Objavi novu vijest</h1>
+                <div class="news-container">
+                    <div class="form-container">
+                        <h1><i class="fas fa-pen-nib" style="margin-right: 15px;"></i>Objavi novu vijest</h1>
 
-                <% if (typeof error !=='undefined' ) { %>
-                    <div
-                        style="background: #fee; color: #c0392b; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
-                        <%= error %>
+                        <% if (typeof error !=='undefined' ) { %>
+                            <div class="error-alert">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <%= error %>
+                            </div>
+                            <% } %>
+
+                                <form action="/news/create" method="POST">
+                                    <div class="form-group">
+                                        <label for="title"><i class="fas fa-heading"
+                                                style="margin-right: 8px; color: var(--news-accent);"></i>Naslov</label>
+                                        <input type="text" id="title" name="title" class="form-control"
+                                            placeholder="Unesite naslov vijesti..." required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="category"><i class="fas fa-tags"
+                                                style="margin-right: 8px; color: var(--news-accent);"></i>Kategorija</label>
+                                        <select id="category" name="category" class="form-control">
+                                            <option value="General">Općenito</option>
+                                            <option value="Events">Događaji</option>
+                                            <option value="Updates">Ažuriranja</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="imageUrl"><i class="fas fa-image"
+                                                style="margin-right: 8px; color: var(--news-accent);"></i>URL Slike
+                                            (opcionalno)</label>
+                                        <input type="url" id="imageUrl" name="imageUrl" class="form-control"
+                                            placeholder="https://images.unsplash.com/...">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="content"><i class="fas fa-align-left"
+                                                style="margin-right: 8px; color: var(--news-accent);"></i>Sadržaj</label>
+                                        <textarea id="content" name="content" class="form-control" rows="10"
+                                            placeholder="Napišite sadržaj vaše vijesti ovdje..." required></textarea>
+                                    </div>
+
+                                    <% if (locals.currentUser && locals.currentUser.adminLevel>= 1) { %>
+                                        <div class="form-group">
+                                            <label class="checkbox-group" for="isHighlighted">
+                                                <input type="checkbox" id="isHighlighted" name="isHighlighted">
+                                                <span><i class="fas fa-thumbtack"
+                                                        style="margin-right: 8px; color: #f1c40f;"></i>Istakni ovu
+                                                    vijest (Pinned)</span>
+                                            </label>
+                                        </div>
+                                        <% } %>
+
+                                            <div class="form-actions">
+                                                <button type="submit" class="btn-primary btn-submit">
+                                                    <i class="fas fa-paper-plane" style="margin-right: 10px;"></i>Objavi
+                                                    vijest
+                                                </button>
+                                            </div>
+                                </form>
                     </div>
-                    <% } %>
-
-                        <form action="/news/create" method="POST">
-                            <div class="form-group">
-                                <label for="title">Naslov</label>
-                                <input type="text" id="title" name="title" class="form-control" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="category">Kategorija</label>
-                                <select id="category" name="category" class="form-control">
-                                    <option value="General">Općenito</option>
-                                    <option value="Events">Događaji</option>
-                                    <option value="Updates">Ažuriranja</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="imageUrl">URL Slike (opcionalno)</label>
-                                <input type="url" id="imageUrl" name="imageUrl" class="form-control"
-                                    placeholder="https://...">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="content">Sadržaj</label>
-                                <textarea id="content" name="content" class="form-control" rows="10"
-                                    required></textarea>
-                            </div>
-
-                            <% if (locals.currentUser && locals.currentUser.adminLevel>= 1) { %>
-                                <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <input type="checkbox" id="isHighlighted" name="isHighlighted" style="width: auto;">
-                                    <label for="isHighlighted" style="margin: 0; cursor: pointer;">Istakni ovu vijest
-                                        (Pinned)</label>
-                                </div>
-                                <% } %>
-
-                                    <button type="submit" class="btn-primary">Objavi vijest</button>
-                        </form>
-            </div>
-        </div>
+                </div>
 </body>
 
 </html>
