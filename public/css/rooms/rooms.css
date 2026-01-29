@@ -214,3 +214,36 @@ a {
 .lock-icon {
     font-size: 30px;
 }
+
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    .grid-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    #global-leaderboard {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 20px 0;
+        zoom: 0.8;
+    }
+
+    .leaderboard-table {
+        min-width: 450px; 
+        font-size: 0.85rem;
+    }
+
+    .leaderboard-table th, 
+    .leaderboard-table td {
+        padding: 6px;
+    }
+}

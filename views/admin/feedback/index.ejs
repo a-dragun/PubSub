@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Korisničke Povratne Informacije</title>
+    <title>Korisnički feedback</title>
     <link rel="stylesheet" href="/css/admin/dashboard.css">
     <link rel="stylesheet" href="/css/admin/feedback.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -14,11 +14,11 @@
         <%- include('../../partials/messaging') %>
 
             <div class="section">
-                <h1>Korisničke Povratne Informacije</h1>
+                <h1>Korisnički feedback</h1>
                 <a href="/admin/dashboard" class="back-link">&larr; Natrag na Dashboard</a>
 
                 <% if (feedbackItems.length===0) { %>
-                    <p class="no-items">Nema povratnih informacija.</p>
+                    <p class="no-items">Nema feedbacka.</p>
                     <% } else { %>
                         <div class="feedback-grid">
                             <% feedbackItems.forEach(item=> { %>
@@ -43,7 +43,7 @@
                                     </div>
 
                                     <p class="feedback-message">
-                                        <%= item.message %>
+                                        <strong>Opis:</strong><%= item.message %>
                                     </p>
 
                                     <div class="status-actions">

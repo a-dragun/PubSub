@@ -2,6 +2,7 @@ const User = require("../models/User");
 const Friendship = require("../models/Friendship");
 const socketHandler = require("../socket");
 const userSocketMap = socketHandler.userSocketMap;
+const levels = require("../config/levels");
 
 exports.deleteUser = async (req, res) => {
   try {
@@ -82,7 +83,8 @@ exports.getProfile = async (req, res) => {
     let userId = req.session.user.id;
     let dbUser = await User.findById(userId).lean();
     const { password, ...user } = dbUser;
-    return res.render("user/profile", { user });
+    const levelData = levels.levels.find(l => l.level === user.currentLevel) || levels[0];
+    return res.render("user/profile", { user, levelData });
 
   } catch (error) {
     return res.status(500).render('error', { status: 500, message: error.message });
@@ -181,8 +183,8 @@ exports.getUserPage = async (req, res) => {
         friendshipStatus = existingFriendship.status;
       }
     }
-
-    return res.render("user/getUserPage", { user, currentUser, canSendFriendRequest, friendshipStatus });
+    const levelData = levels.levels.find(l => l.level === user.currentLevel) || levels[0];
+    return res.render("user/getUserPage", { user, currentUser, canSendFriendRequest, friendshipStatus, levelData });
 
   } catch (error) {
     return res.status(500).render('error', { status: 500, message: error.message });

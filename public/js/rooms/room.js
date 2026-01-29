@@ -172,6 +172,7 @@ socket.on('userListUpdated', (userList) => {
   const tooltip = document.getElementById('user-tooltip');
 
 document.addEventListener('mouseover', (e) => {
+  if (window.innerWidth <= 768) return;
   const target = e.target.closest('.user-card-link');
   if (!target || !target.dataset.tooltip) return;
 
@@ -182,6 +183,7 @@ document.addEventListener('mouseover', (e) => {
 });
 
 document.addEventListener('mousemove', (e) => {
+  if (window.innerWidth <= 768 || !tooltip.classList.contains('visible')) return;
   if (!tooltip.classList.contains('visible')) return;
   positionTooltip(e);
 });

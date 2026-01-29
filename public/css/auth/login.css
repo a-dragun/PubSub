@@ -81,3 +81,58 @@ h1 {
     25% { transform: translateX(-5px); }
     75% { transform: translateX(5px); }
 }
+
+@media (max-width: 768px) {
+     body > div {
+        margin-top: 150px;
+    }
+    body {
+        height: auto;
+        min-height: 100vh;
+        padding: 40px 10px;
+        box-sizing: border-box;
+        align-items: flex-start;
+    }
+
+    .login-form {
+        width: 100%;
+        padding: 1.5rem;
+        gap: 1.2rem;
+        box-sizing: border-box;
+    }
+
+    h1 {
+        font-size: 1.6rem;
+        margin-bottom: 0.5rem;
+    }
+
+    input {
+        padding: 1.1rem;
+        font-size: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    button {
+        padding: 1.2rem;
+        font-size: 1.1rem;
+        width: 100%;
+    }
+
+    .nav-toggle {
+        width: auto !important;
+        padding: 0.5rem !important;
+        background: none !important;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+    .nav-toggle:hover, 
+    .nav-toggle:active, 
+    .nav-toggle:focus {
+        background: none !important;
+        background-color: transparent !important;
+        color: var(--text) !important;
+    }
+}

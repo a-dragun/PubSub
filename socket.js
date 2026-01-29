@@ -26,19 +26,16 @@ function setupSocketHandlers(io) {
       const room = await Room.findById(roomId);
       const user = await User.findOne({ name: username });
 
-      io.to(roomId).emit('chatMessage', {
-            username: room.name,
-            message: `Korisnik ${user.name} se pridružio sobi!`
-      });
-
       userSocketMap.set(username, { socket, isMuted: user.isMuted });
-
       socket.join(roomId);
       socket.username = username;
       socket.roomId = roomId;
-
       addUserToRoom(roomId, username);
 
+      io.to(roomId).emit('chatMessage', {
+            username: room.name,
+            message: `Korisnik <strong>${user.name}</strong> se pridružio sobi!`
+      });
 
       await emitUserList(roomId, io, roomUsers);
 
@@ -136,7 +133,7 @@ function setupSocketHandlers(io) {
           const room = await Room.findById(socket.roomId);
           io.to(socket.roomId).emit('chatMessage', {
             username: room.name,
-            message: `Korisnik ${username} je napustio sobu!`
+            message: `Korisnik <strong>${username}</strong> je napustio sobu!`
           });
           break;
         }
@@ -230,7 +227,7 @@ async function emitUserList(roomId, io, roomUsers) {
 
     io.to(roomId).emit('chatMessage', {
       username: room.name,
-      message: `${question.category.toUpperCase()} : ${question.text}`,
+      message: `<strong>${question.category.toUpperCase()}:</strong> ${question.text}`,
     });
 
     if (question.image) {
@@ -244,7 +241,7 @@ async function emitUserList(roomId, io, roomUsers) {
       if (question.hint) {
         io.to(roomId).emit('chatMessage', {
           username: room.name,
-          message: `Hint: ${question.hint}`
+          message: `<strong>Hint:</strong> ${question.hint}`
         });
       }
     }, room.hintTime * 1000);

@@ -247,3 +247,9 @@
     font-weight: bold;
     font-size: 16px;
 }
+
+@media (max-width: 768px) {
+    .msg-chat-container {
+        display: none !important;
+    }
+}

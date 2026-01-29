@@ -87,6 +87,11 @@ a.edit-link:hover {
     justify-content: center;
 }
 
+.levelName {
+    margin-top: -12px;
+    font-size: 22px;
+}
+
 button#deleteBtn {
     padding: 1rem;
     background-color: #c25d62;
@@ -171,8 +176,9 @@ button#deleteFriendBtn:hover {
 
 @media (max-width: 768px) {
     .profile-container {
-        width: 95%;
+        width: 80%;
         padding: 1.5rem;
+        zoom: 0.85;
     }
 
     h2 {
@@ -194,9 +200,39 @@ button#deleteFriendBtn:hover {
     button,
     button#deleteBtn,
     button#deleteFriendBtn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
         padding: 1rem 1.5rem;
         font-size: 1.2rem;
         width: 100%;
         max-width: none;
+        box-sizing: border-box;
+    }
+
+    .nav-toggle {
+        position: fixed !important;
+        right: 15px !important;
+        top: 10px !important;
+        display: block !important;
+        z-index: 9999 !important;
+        width: auto !important;
+        height: auto !important;
+        padding: 0.5rem !important;
+        background: none !important;
+        background-color: transparent !important;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+        color: #4C5B66 !important;
+    }
+
+    .nav-toggle:hover, 
+    .nav-toggle:active, 
+    .nav-toggle:focus {
+        background: none !important;
+        background-color: transparent !important;
+        color: #4C5B66 !important;
     }
 }

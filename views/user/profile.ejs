@@ -21,6 +21,11 @@
         <p><strong>Bodovi:</strong>
           <%= user.totalScore %>
         </p>
+        <p><strong>Level:</strong>
+          <%= levelData.level %>
+        </p>
+        <img src="<%= levelData.icon %>" alt="<%= levelData.name %>" class="level-big-icon"  width="80px" height="80px">
+        <strong class="levelName"><%= levelData.name %></strong>
         <p><strong>Stvoren:</strong>
           <%= user.createdAt.toLocaleDateString() %>
         </p>

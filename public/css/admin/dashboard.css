@@ -55,8 +55,8 @@ h2 {
 
 .links-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 220px));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 180px));
+    gap: 1.1rem;
     margin-bottom: 2rem;
     justify-content: center;
 }

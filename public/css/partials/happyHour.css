@@ -77,3 +77,15 @@
 .activate { background: gold; color: #000; }
 .deactivate { background: #444; color: #fff; }
 .hidden { display: none !important; }
+
+@media (max-width: 768px) {
+    .hh-status-bar {
+        display: none !important;
+    }
+    .hh-modal {
+      display: none !important;
+    }
+    .hh-fab {
+      display: none !important;
+    }
+}

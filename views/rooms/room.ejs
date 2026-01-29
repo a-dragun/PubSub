@@ -12,17 +12,17 @@
   <%- include('../partials/messaging') %>
   <%- include('../partials/happyHour') %>
   <header><%= room.name %></header>
-  <button class="drawer-toggle" id="drawer-toggle">❌</button>
+  <button class="drawer-toggle" id="drawer-toggle">👥</button>
 
   <div class="chat-container">
     <div class="chat-main">
       <ul id="messages"></ul>
       <form id="chat-form">
         <input id="message-input" autocomplete="off" placeholder="Unesi poruku..." />
-        <button type="submit">Pošalji</button>
+        <button type="submit" hidden>Pošalji</button>
       </form>
     </div>
-    <div class="user-drawer" id="drawer">
+    <div class="user-drawer closed" id="drawer">
       <h3>Korisnici u sobi:</h3>
       <div id="user-list"></div>
       <div class="switch-container">

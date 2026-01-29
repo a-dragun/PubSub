@@ -88,11 +88,12 @@ header {
 }
 
 #message-input {
-    flex: 1;
+    flex: none;
     padding: 0.8rem;
     border-radius: 8px;
     border: 1px solid var(--accent);
     font-size: 1rem;
+    width: 93%;
 }
 
 #chat-form button {
@@ -352,4 +353,118 @@ header {
 .report-flag:hover {
   opacity: 1;
   transform: translateY(-50%) scale(1.4);
+}
+
+@media (max-width: 768px) {
+    body {
+        height: 100vh;
+        height: 100svh !important; 
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    header {
+        height: 40px;
+        flex-shrink: 0;
+        margin-top: 55px;
+        font-size: 0.9rem;
+    }
+
+    .chat-container {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    .chat-main {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        min-height: 0;
+        padding: 5px 10px;
+        padding-bottom: env(safe-area-inset-bottom, 15px); 
+    }
+
+    #messages {
+        flex-grow: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        background: #f1f1f1;
+        margin-bottom: 8px;
+    }
+
+    #chat-form {
+        display: flex;
+        flex-shrink: 0;
+        padding: 10px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+        margin-bottom: env(safe-area-inset-bottom, 10px);
+    }
+
+    #message-input {
+        flex: 1;
+        height: 45px;
+        font-size: 16px;
+        border: 2px solid var(--accent);
+        padding: 0 10px;
+    }
+
+    #chat-form button {
+        padding: 0 1rem !important;
+    }
+
+    .drawer-toggle {
+        left: 0 !important;
+        top: 60px !important;
+        z-index: 1001 !important;
+    }
+
+    .user-drawer {
+        position: fixed !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        height: 100vh !important;
+        height: 100svh !important;
+        background-color: #ffffff !important;
+        z-index: 1000 !important;
+        padding: 110px 15px 40px 15px !important;
+        box-sizing: border-box !important;
+        overflow-y: auto;
+    }
+
+    .user-drawer.closed {
+        display: none !important;
+    }
+
+    .user-card {
+        padding: 8px !important;
+        margin-bottom: 8px !important;
+        font-size: 0.85rem !important;
+    }
+
+    .user-card img {
+        width: 32px !important;
+        height: 32px !important;
+        margin-right: 8px !important;
+    }
+
+    .user-info strong {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 110px;
+    }
+
+    .switch-container {
+        transform: scale(0.9);
+        margin-top: 15px;
+    }
 }

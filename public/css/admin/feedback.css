@@ -34,12 +34,6 @@
     margin-bottom: 1rem;
 }
 
-.feedback-message {
-    font-size: 1.1rem;
-    margin-bottom: 1.5rem;
-    white-space: pre-wrap;
-}
-
 .status-actions {
     display: flex;
     gap: 0.5rem;
@@ -142,5 +136,46 @@
         flex: 1;
         padding: 0.8rem;
         font-size: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .feedback-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .feedback-card {
+        padding: 1rem;
+    }
+
+    .feedback-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .feedback-message {
+        text-align: left;
+        font-size: 1rem;
+        margin-left: 0;
+    }
+
+    .status-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .status-btn {
+        width: 100%;
+        text-align: center;
+        padding: 0.8rem;
+    }
+
+    .current-status {
+        margin-left: 0;
+        display: block;
+        width: fit-content;
+        margin-top: 0.5rem;
     }
 }

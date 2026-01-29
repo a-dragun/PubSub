@@ -15,6 +15,11 @@
     <img src="<%= user.profilePicture %>" alt="Profile Picture" class="profile-picture">
     <p><strong>E-mail adresa:</strong> <%= user.email %></p>
     <p><strong>Bodovi:</strong> <%= user.totalScore %></p>
+    <p><strong>Level:</strong>
+      <%= levelData.level %>
+    </p>
+    <img src="<%= levelData.icon %>" alt="<%= levelData.name %>" class="level-big-icon"  width="80px" height="80px">
+    <strong class="levelName"><%= levelData.name %></strong>
     <p><strong>Stvoren:</strong> <%= user.createdAt.toLocaleDateString() %></p>
     <p><strong>Admin razina:</strong> Level <%= user.adminLevel %></p>
     <p>Zadnji put logiran: <%= user.lastLoginAt ? user.lastLoginAt.toLocaleDateString() : 'Nepoznato' %></p>

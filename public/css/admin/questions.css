@@ -190,3 +190,56 @@
       font-size: 1rem;
       text-align: center;
     }
+
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+        margin-top: 20px;
+    }
+
+    h1 {
+        font-size: 1.6rem;
+    }
+
+    .search-filter-container {
+        flex-direction: column;
+        width: 100%;
+        position: relative;
+        top: 80px;
+        gap: 0.8rem;
+        margin-bottom: 6rem;
+    }
+
+    .search-filter-container input,
+    .search-filter-container select {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .pending-questions-grid,
+    .approved-questions-grid,
+    .users-grid {
+        grid-template-columns: 1fr;
+        width: 100%;
+        margin-top: 2rem;
+    }
+
+    .question-box,
+    .question-card,
+    .user-box {
+        padding: 1.2rem;
+        text-align: left;
+    }
+
+    .question-box h2,
+    .question-card h2,
+    .question-box p,
+    .question-card p {
+        text-align: left;
+    }
+
+    .pagination a {
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
+    }
+}
