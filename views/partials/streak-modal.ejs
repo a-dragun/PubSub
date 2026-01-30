@@ -1,17 +1,135 @@
-<link rel="stylesheet" href="/css/partials/streak-modal.css">
+<style>
+.streak-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.55);
+    display: grid;
+    place-items: center;
+    z-index: 1000;
+}
+
+.streak-modal {
+    background: #0f1115;
+    color: white;
+    width: 360px;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.4);
+}
+
+header {
+    text-align: center;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 22px;
+}
+
+.calendar-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 14px 0;
+}
+
+.calendar-title {
+    flex: 1;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+}
+
+.weekdays div {
+    font-size: 12px;
+    opacity: .6;
+    text-align: center;
+}
+
+.day {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+}
+
+.day.active {
+    background: linear-gradient(135deg, #ff7a18, #ffb347);
+    color: black;
+}
+
+.empty {
+    pointer-events: none;
+}
+
+.day.today.latest {
+    position: relative;
+    animation: streakPop 0.6s ease-out;
+}
+
+.day.today.latest::after {
+    content: "";
+    position: absolute;
+    inset: -10px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(255,183,71,0.6) 0%,
+        rgba(255,183,71,0.35) 40%,
+        rgba(255,183,71,0) 70%
+    );
+    animation: streakSplash 0.7s ease-out forwards;
+    pointer-events: none;
+}
+
+.day.today.active {
+    box-shadow: 0 0 0 2.5px #04bcf9d4;
+}
+
+.day.next-bonus {
+    background: linear-gradient(135deg, #9f6af5, #5725ee);
+    color: black;
+}
+
+@keyframes streakPop {
+    0% { transform: scale(0.5); }
+    80% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+@keyframes streakSplash {
+    from {
+        opacity: 1;
+        transform: scale(0.6);
+    }
+    to {
+        opacity: 0;
+        transform: scale(1.6);
+    }
+}
+</style>
+
 
 <div class="streak-backdrop">
   <div class="streak-modal">
 
     <header>
-      <h2 style="color: #ffb347">🔥 <%= streakLength %> dana u nizu!</h2>
-      <p>Danas ste zaradili <strong style="color: #ff7a18">
-          <%= todayBonus %> bodova
-        </strong>.</p>
-      <p>Sljedeći bonus bodovi za <strong style="color: #5725ee">
-          <%= daysToNextBonus %> dana
-        </strong>.</p>
-      <button class="close-btn" onclick="closeStreak()">×</button>
+        <h2 style="color: #ffb347">🔥 <%= streakLength %> dana u nizu!</h2>
+        <p>Danas ste zaradili <strong style="color: #ff7a18"><%= todayBonus %> bodova</strong>.</p>
+        <p>Sljedeći bonus bodovi za <strong style="color: #5725ee"><%= daysToNextBonus %> dana</strong>.</p>
+        <button class="close-btn" onclick="closeStreak()">×</button>
     </header>
 
 
@@ -21,10 +139,78 @@
 </div>
 
 <script>
-  window.streakData = {
-    activeDates: <% - JSON.stringify(activeDates) %>,
-    today: "<%= today.toISOString() %>",
-    daysToNextBonus: <%= daysToNextBonus %>
-    };
+const activeDates = <%- JSON.stringify(activeDates) %>;
+let current = new Date("<%= today.toISOString() %>");
+const todayISO = "<%= today.toISOString().slice(0, 10) %>";
+
+const nextBonusDate = new Date("<%= today.toISOString() %>");
+nextBonusDate.setDate(nextBonusDate.getDate() + <%= daysToNextBonus %>);
+const nextBonusISO = nextBonusDate.toISOString().slice(0,10);
+
+
+function renderCalendar() {
+  const y = current.getFullYear();
+  const m = current.getMonth();
+  const first = new Date(y, m, 1);
+  const last = new Date(y, m + 1, 0);
+
+  const startDay = (first.getDay() + 6) % 7;
+
+  let html = `
+    <div class="calendar-nav">
+      <button onclick="prevMonth()">←</button>
+       <span class="calendar-title">${current.toLocaleString("hr-HR", { month: "long", year: "numeric" })}</span>
+       <button onclick="nextMonth()">→</button>
+    </div>
+    <div class="grid weekdays">
+      ${["P","U","S","Č","P","S","N"].map(d => `<div>${d}</div>`).join("")}
+    </div>
+    <div class="grid">
+  `;
+
+  for (let i = 0; i < startDay; i++) {
+    html += `<div class="empty"></div>`;
+  }
+
+  for (let d = 1; d <= last.getDate(); d++) {
+    const iso = `${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+
+    let classes = "day";
+
+    if (activeDates.includes(iso)) {
+      classes += " active";
+    }
+
+    if (iso === todayISO && activeDates.includes(iso)) {
+      classes += " today latest";
+    }
+
+    if (iso === nextBonusISO) {
+        classes += " next-bonus";
+    }
+
+    html += `<div class="${classes}">${d}</div>`;
+  }
+
+  html += "</div>";
+  document.getElementById("calendar").innerHTML = html;
+}
+
+
+function prevMonth() {
+  current.setMonth(current.getMonth() - 1);
+  renderCalendar();
+}
+
+function nextMonth() {
+  current.setMonth(current.getMonth() + 1);
+  renderCalendar();
+}
+
+
+function closeStreak() {
+  document.querySelector(".streak-backdrop").remove();
+}
+
+renderCalendar();
 </script>
-<script src="/js/partials/streak-modal.js"></script>
