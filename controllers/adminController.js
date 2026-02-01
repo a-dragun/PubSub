@@ -6,6 +6,7 @@ const Feedback = require('../models/Feedback');
 const categories = require('../config/categories');
 const socketHandler = require("../socket");
 const userSocketMap = socketHandler.userSocketMap;
+const bcrypt = require('bcryptjs');
 
 exports.getAdminDashboard = async (req, res) => {
   try {
@@ -319,7 +320,7 @@ exports.getCreateRoomPage = (req, res) => {
 
 exports.createRoom = async (req, res) => {
   try {
-    const { name, type, categories } = req.body;
+    const { name, type, categories, password } = req.body;
 
     if (!name || !type || !categories) {
       return res.status(400).render('error', { status: 400, message: "Sva polja su obavezna." });
@@ -329,15 +330,22 @@ exports.createRoom = async (req, res) => {
     if (selectedCategories.length === 0) {
       return res.status(400).render('error', { status: 400, message: "Moraš odabrati barem jednu kategoriju." });
     }
+    let hashedPassword = null;
+    if (password && password.trim() !== "") {
+      const salt = await bcrypt.genSalt(10);
+      hashedPassword = await bcrypt.hash(password, salt);
+    }
 
     await Room.create({
       'name': name,
       'type': type,
-      'categories': selectedCategories
+      'categories': selectedCategories,
+      'password': hashedPassword
     });
+
     res.redirect("/admin/dashboard");
   } catch (error) {
-    return res.status(500).render('error', error.message);
+    return res.status(500).render('error', { status: 500, message: error.message });
   }
 }
 
